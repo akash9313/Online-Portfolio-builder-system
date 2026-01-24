@@ -1,0 +1,357 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: #020617;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* 🔮 Animated Background Blobs */
+.bg-blob {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  background: linear-gradient(45deg, #38bdf8, #6366f1);
+  filter: blur(140px);
+  opacity: 0.65;
+  animation: float 10s infinite alternate ease-in-out;
+  z-index: 0;
+}
+
+.blob1 {
+  top: -120px;
+  left: -120px;
+}
+
+.blob2 {
+  bottom: -120px;
+  right: -120px;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(60px, -40px) scale(1.1); }
+  100% { transform: translate(-20px, 40px) scale(1); }
+}
+
+/* 🔝 Fixed Navbar */
+/* 🔝 Premium Fixed Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 70px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(56,189,248,0.15),
+      rgba(99,102,241,0.15),
+      rgba(2,6,23,0.85)
+    );
+
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(56,189,248,0.35);
+  box-shadow: 
+    0 8px 30px rgba(0,0,0,0.6),
+    inset 0 -1px 0 rgba(56,189,248,0.4);
+
+  z-index: 1000;
+}
+
+
+.logo {
+  font-size: 1.7rem;
+  font-weight: 600;
+  animation: slideDown 0.8s ease forwards;
+}
+
+.logo span {
+  color: #38bdf8;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Navbar Buttons */
+.navbar div {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.navbar a {
+  background: #38bdf8;
+  padding: 8px 22px;
+  border-radius: 22px;
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  box-shadow: 0 0 15px rgba(56,189,248,0.5);
+  transition: all 0.35s ease;
+}
+
+.navbar a:hover {
+  transform: translateY(-3px) scale(1.12);
+  box-shadow: 0 0 35px rgba(56,189,248,0.9);
+}
+
+.navbar a:active {
+  transform: scale(0.95);
+}
+
+/* 🚀 Hero Section */
+.hero {
+  text-align: center;
+  padding: 180px 20px 80px; /* space for fixed navbar */
+  position: relative;
+  z-index: 2;
+}
+
+.reveal-text {
+  font-size: 3.5rem;
+  animation: textReveal 1.3s cubic-bezier(.17,.67,.32,1.25) forwards;
+}
+
+.reveal-text span {
+  color: #38bdf8;
+}
+
+@keyframes textReveal {
+  from {
+    opacity: 0;
+    transform: translateY(70px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-delay {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #cbd5f5;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.9s;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 🔥 Hero Button */
+.hero-buttons {
+  margin-top: 45px;
+}
+
+.hero-buttons a {
+  padding: 16px 42px;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.4s ease;
+}
+
+.primary {
+  background: #38bdf8;
+  color: black;
+}
+
+.primary:hover {
+  transform: translateY(-6px) scale(1.15);
+}
+
+/* Glow Animation */
+.glow {
+  box-shadow: 0 0 25px #38bdf8;
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 12px #38bdf8; }
+  50%  { box-shadow: 0 0 45px #38bdf8; }
+  100% { box-shadow: 0 0 12px #38bdf8; }
+}
+
+/* 🧩 Feature Cards */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 80px;
+  position: relative;
+  z-index: 2;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 30px;
+  border-radius: 18px;
+  text-align: center;
+  font-size: 1.1rem;
+  backdrop-filter: blur(12px);
+  transform: translateY(50px) scale(0.95);
+  opacity: 0;
+  animation: cardUp 1.1s ease forwards;
+  transition: all 0.4s ease;
+}
+
+.card:nth-child(1){ animation-delay: 0.3s; }
+.card:nth-child(2){ animation-delay: 0.5s; }
+.card:nth-child(3){ animation-delay: 0.7s; }
+.card:nth-child(4){ animation-delay: 0.9s; }
+
+@keyframes cardUp {
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.1);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+}
+
+/* 👤 Profile Avatar */
+#profileBox {
+  position: relative;
+  cursor: pointer;
+}
+
+#avatar {
+  width: 42px;
+  height: 42px;
+  background: #38bdf8;
+  color: black;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0 0 15px rgba(56,189,248,0.6);
+}
+
+/* Dropdown */
+#dropdown {
+  position: absolute;
+  top: 55px;
+  right: 0;
+  background: #020617;
+  border: 1px solid rgba(56,189,248,0.4);
+  border-radius: 10px;
+  padding: 12px;
+  display: none;
+  min-width: 200px;
+}
+
+#dropdown p {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  color: #cbd5f5;
+  word-break: break-all;
+}
+
+#dropdown button {
+  width: 100%;
+  padding: 8px;
+  background: #ef4444;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+#profileBox:hover #dropdown {
+  display: block;
+}
+
+/* 🚀 Get Started Button */
+.hero-buttons {
+  margin-top: 45px;
+  display: flex;
+  justify-content: center;
+}
+
+.get-started-btn {
+  padding: 16px 52px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  animation: floatBtn 3s ease-in-out infinite;
+  transition: all 0.4s ease;
+}
+
+/* Hover Effect */
+.get-started-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 45px rgba(56,189,248,0.9);
+}
+
+/* Floating Animation */
+@keyframes floatBtn {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+/* Shine Effect */
+.get-started-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+  animation: shine 2.5s infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  60% { left: 100%; }
+  100% { left: 100%; }
+}
+
+/* 🔓 Logout Icon */
+#logoutIcon {
+  margin-left: 14px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #ef4444;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+#logoutIcon:hover {
+  transform: scale(1.3) rotate(-10deg);
+  color: #ff6b6b;
+}

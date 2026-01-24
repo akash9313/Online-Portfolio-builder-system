@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | PortfolioX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Portfolio<span>X</span></div>
+    <button class="logout-btn">Logout</button>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar (Navigation Only) -->
+   <aside class="sidebar">
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="profile.html" >Profile</a>
+    <a href="skills.html">Skills</a>
+    <a href="education.html">Education</a>
+    <a href="projects.html">Projects</a>
+    <a href="templates.html">Templates</a>
+    <a href="preview.html">Preview</a>
+    <a href="publish.html">Publish</a>
+    <a href="settings.html">Settings</a>
+</aside>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard">
+
+        <!-- Welcome -->
+        <section class="welcome">
+            <h1>Welcome Back 👋</h1>
+            <p>Your portfolio is almost ready. Complete remaining steps to publish.</p>
+        </section>
+
+        <!-- Progress -->
+        <section class="progress-box">
+            <div class="progress-text">
+                <span>Portfolio Completion</span>
+                <span>68%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <button>+ Add Project</button>
+            <button>+ Add Skill</button>
+            <button>Update Profile</button>
+        </section>
+
+        <!-- Status Cards -->
+        <section class="stats">
+            <div class="stat-card">
+                <h3>Profile</h3>
+                <p>Status: Completed</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Skills</h3>
+                <p>6 Skills Added</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Projects</h3>
+                <p>3 Projects Added</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Portfolio</h3>
+                <p>Status: Not Published</p>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | PortfolioX</title>
+  <link rel="stylesheet" href="loginpage.css">
+</head>
+<body>
+
+<div class="bg-blob blob1"></div>
+<div class="bg-blob blob2"></div>
+
+<div class="login-box">
+  <h2>Login to <span>PortfolioX</span></h2>
+
+  <!-- ✅ Login Form -->
+  <form id="loginForm">
+
+    <div class="field">
+      <input type="email" id="email" required>
+      <label>Email</label>
+    </div>
+
+    <div class="field">
+      <input type="password" id="password" required>
+      <label>Password</label>
+    </div>
+
+    <button class="primary glow" type="submit">Login</button>
+
+    <p class="signup-text">
+      Don’t have an account?
+      <a href="usersignup.html">Signup</a>
+    </p>
+
+  </form>
+</div>
+
+<!-- ✅ Firebase Login Script -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+    authDomain: "portfoliox-2e787.firebaseapp.com",
+    projectId: "portfoliox-2e787",
+    storageBucket: "portfoliox-2e787.firebasestorage.app",
+    messagingSenderId: "562709786891",
+    appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+
+      // ✅ Save login state
+      localStorage.setItem("email", userCred.user.email);
+
+      alert("Login successful ✅");
+
+      // 🔁 SMART REDIRECT
+      const redirectPage = localStorage.getItem("redirectAfterLogin");
+
+      if (redirectPage) {
+        localStorage.removeItem("redirectAfterLogin");
+        window.location.href = redirectPage;   // → dashboard.html
+      } else {
+        window.location.href = "homepage.html";
+      }
+
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+</script>
+
+
+</body>
+</html>

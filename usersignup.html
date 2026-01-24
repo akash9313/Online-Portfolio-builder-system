@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup | PortfolioX</title>
+  <link rel="stylesheet" href="usersignup.css">
+</head>
+<body>
+
+<div class="bg-blob blob1"></div>
+<div class="bg-blob blob2"></div>
+
+<div class="login-box">
+  <h2>Create <span>Account</span></h2>
+
+  <!-- ✅ Added form ID -->
+  <form id="signupForm">
+
+    <div class="field">
+      <input type="text" id="username" required>
+      <label>Username</label>
+    </div>
+
+    <div class="field">
+      <input type="email" id="email">
+      <label>Email</label>
+    </div>
+
+    <div class="field">
+      <input type="password" id="password" required>
+      <label>Password</label>
+    </div>
+
+    <div class="field">
+      <input type="password" id="confirmPassword" required>
+      <label>Confirm Password</label>
+    </div>
+
+    <button class="primary glow" type="submit">Signup</button>
+
+    <p class="signup-text">
+      Already have an account?
+      <a href="loginpage.html">Login</a>
+    </p>
+
+  </form>
+</div>
+
+<!-- ✅ Backend Connection Script -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+    authDomain: "portfoliox-2e787.firebaseapp.com",
+    projectId: "portfoliox-2e787",
+    storageBucket: "portfoliox-2e787.firebasestorage.app",
+    messagingSenderId: "562709786891",
+    appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  document.getElementById("signupForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("Signup successful ✅");
+      window.location.href = "loginpage.html";
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+</script>
+
+</body>
+</html>

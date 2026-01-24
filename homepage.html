@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Online Portfolio Builder</title>
+  <link rel="stylesheet" href="homepage.css">
+</head>
+<body>
+
+<div class="bg-blob blob1"></div>
+<div class="bg-blob blob2"></div>
+
+<nav class="navbar">
+  <h2 class="logo">Portfolio<span>X</span></h2>
+
+  <div id="navActions">
+    <!-- Login Button -->
+    <a href="loginpage.html" id="loginBtn">Login</a>
+
+    <!-- Profile + Logout -->
+    <div id="profileBox" style="display:none; align-items:center; gap:12px;">
+      <div id="avatar"></div>
+      <span id="logoutIcon" title="Logout">⎋</span>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1 class="reveal-text">
+    Build Your <span>Professional</span> Portfolio
+  </h1>
+  <p class="fade-delay">
+    Create, customize and publish job‑ready portfolios in minutes.
+  </p>
+
+  <div class="hero-buttons">
+    <button id="getStartedBtn" class="get-started-btn glow">
+      Get Started 🚀
+    </button>
+  </div>
+</section>
+
+<section class="features">
+  <div class="card">🎨 Ready‑made Templates</div>
+  <div class="card">🧠 Job‑Based Skill Suggestions</div>
+  <div class="card">⚙️ Admin Controlled System</div>
+  <div class="card">🌍 Public Portfolio Link</div>
+</section>
+
+<script>
+  // 🔐 Login state
+  const email = localStorage.getItem("email");
+
+  const loginBtn = document.getElementById("loginBtn");
+  const profileBox = document.getElementById("profileBox");
+  const avatar = document.getElementById("avatar");
+  const logoutIcon = document.getElementById("logoutIcon");
+  const getStartedBtn = document.getElementById("getStartedBtn");
+
+  // Navbar toggle
+  if (email) {
+    loginBtn.style.display = "none";
+    profileBox.style.display = "flex";
+    avatar.innerText = email.charAt(0).toUpperCase();
+  } else {
+    loginBtn.style.display = "block";
+    profileBox.style.display = "none";
+  }
+
+  // 🔓 Logout
+  logoutIcon.addEventListener("click", () => {
+    localStorage.removeItem("email");
+    localStorage.removeItem("redirectAfterLogin");
+
+    alert("Logged out successfully");
+
+    profileBox.style.display = "none";
+    loginBtn.style.display = "block";
+  });
+
+  // 🚀 Get Started logic
+  getStartedBtn.addEventListener("click", () => {
+    if (!email) {
+      localStorage.setItem("redirectAfterLogin", "dashboard.html");
+      window.location.href = "loginpage.html";
+    } else {
+      window.location.href = "dashboard.html";
+    }
+  });
+</script>
+
+</body>
+</html>
