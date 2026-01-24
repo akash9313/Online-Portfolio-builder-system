@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile | PortfolioX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Portfolio<span>X</span></div>
+    <button class="logout-btn">Logout</button>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html" class="active">Profile</a>
+    <a href="skills.html">Skills</a>
+    <a href="education.html">Education</a>
+    <a href="project.html">Projects</a>
+    <a href="templates.html">Templates</a>
+    <a href="preview.html">Preview</a>
+    <a href="publish.html">Publish</a>
+    <a href="settings.html">Settings</a>
+</aside>
+
+    <!-- Profile Content -->
+    <main class="profile">
+
+        <!-- Header -->
+        <section class="profile-header">
+            <div class="avatar">KB</div>
+            <div>
+                <h1>Your Profile</h1>
+                <p>Update your personal information</p>
+            </div>
+        </section>
+
+        <!-- Form -->
+        <form class="profile-form">
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="text" placeholder="Enter phone number">
+            </div>
+
+            <div class="form-group full">
+                <label>About You</label>
+                <textarea placeholder="Write a short bio"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" placeholder="City, Country">
+            </div>
+
+            <div class="form-group">
+                <label>Role / Title</label>
+                <input type="text" placeholder="Web Developer, Designer, etc.">
+            </div>
+
+            <!-- Social Links -->
+            <div class="form-group">
+                <label>GitHub</label>
+                <input type="text" placeholder="GitHub profile link">
+            </div>
+
+            <div class="form-group">
+                <label>LinkedIn</label>
+                <input type="text" placeholder="LinkedIn profile link">
+            </div>
+
+            <!-- Save -->
+            <div class="form-actions">
+                <button type="submit">Save Profile</button>
+            </div>
+
+        </form>
+
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Settings | PortfolioX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="logo">Portfolio<span>X</span></div>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="profile.html">Profile</a>
+        <a href="skills.html">Skills</a>
+        <a href="education.html">Education</a>
+        <a href="project.html">Projects</a>
+        <a href="templates.html">Templates</a>
+        <a href="preview.html">Preview</a>
+        <a href="publish.html">Publish</a>
+        <a class="active">Settings</a>
+    </aside>
+
+    <!-- Settings -->
+    <main class="settings">
+
+        <h1>Settings</h1>
+        <p class="subtitle">Manage account details and portfolio controls</p>
+
+        <div class="settings-grid">
+
+            <!-- Account -->
+            <section class="settings-card">
+                <h2>Account Information</h2>
+
+                <div class="field">
+                    <label>Email Address</label>
+                    <input type="text" value="keval@email.com" disabled>
+                </div>
+
+                <button class="primary-btn">Change Password</button>
+            </section>
+
+            <!-- Portfolio -->
+            <section class="settings-card">
+                <h2>Portfolio Controls</h2>
+
+                <div class="control">
+                    <span>Portfolio Visibility</span>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="control">
+                    <span>Allow updates after publishing</span>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Access / Actions -->
+            <section class="settings-card critical">
+                <h2>Account Actions</h2>
+
+                <p class="note">
+                    These actions affect the visibility and availability of your portfolio.
+                </p>
+
+                <button class="critical-btn soft">Unpublish Portfolio</button>
+                <button class="critical-btn">Delete Account</button>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

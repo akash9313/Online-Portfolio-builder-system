@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Skills | PortfolioX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="skills.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Portfolio<span>X</span></div>
+    <button class="logout-btn">Logout</button>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="profile.html">Profile</a>
+        <a class="active" href="skills.html">Skills</a>
+        <a href="education.html">Education</a>
+        <a href="projects.html">Projects</a>
+        <a href="templates.html">Templates</a>
+        <a href="preview.html">Preview</a>
+        <a href="publish.html">Publish</a>
+        <a href="settings.html">Settings</a>
+    </aside>
+
+    <!-- Skills Content -->
+    <main class="skills">
+
+        <section class="skills-header">
+            <h1>Skills</h1>
+            <p>Add and manage your professional skills</p>
+        </section>
+
+        <!-- Add Skill -->
+        <section class="add-skill">
+            <h2>Add Skill</h2>
+
+            <div class="skill-form">
+                <input type="text" placeholder="Skill name (e.g. Java, React)">
+
+                <!-- Custom Dropdown -->
+                <div class="custom-select" id="skillLevel">
+                    <div class="selected">Select level</div>
+                    <div class="options">
+                        <div>Beginner</div>
+                        <div>Intermediate</div>
+                        <div>Advanced</div>
+                    </div>
+                </div>
+
+                <button>Add Skill</button>
+            </div>
+        </section>
+
+        <!-- Skill List -->
+        <section class="skill-list">
+            <h2>Your Skills</h2>
+
+            <div class="skill-item">
+                <span>HTML</span>
+                <span class="level">Advanced</span>
+            </div>
+
+            <div class="skill-item">
+                <span>CSS</span>
+                <span class="level">Advanced</span>
+            </div>
+
+            <div class="skill-item">
+                <span>JavaScript</span>
+                <span class="level">Intermediate</span>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- JS (ONLY for dropdown state) -->
+<script>
+const select = document.getElementById("skillLevel");
+const selected = select.querySelector(".selected");
+const options = select.querySelectorAll(".options div");
+
+selected.addEventListener("click", (e) => {
+    e.stopPropagation();
+    select.classList.toggle("open");
+});
+
+options.forEach(option => {
+    option.addEventListener("click", () => {
+        selected.textContent = option.textContent;
+        select.classList.remove("open");
+    });
+});
+
+document.addEventListener("click", () => {
+    select.classList.remove("open");
+});
+</script>
+
+</body>
+</html>
