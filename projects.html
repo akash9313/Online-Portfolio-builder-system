@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Projects | PortfolioX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="project.css">
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">Portfolio<span>X</span></div>
+  <button class="logout-btn">Logout</button>
+</header>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="skills.html">Skills</a>
+    <a href="education.html">Education</a>
+    <a class="active" href="projects.html">Projects</a>
+    <a href="templates.html">Templates</a>
+    <a href="preview.html">Preview</a>
+    <a href="publish.html">Publish</a>
+    <a href="settings.html">Settings</a>
+  </aside>
+
+  <!-- Projects Content -->
+  <main class="projects">
+
+    <section class="projects-header">
+      <h1>Projects</h1>
+      <p>Showcase your practical work and real-world experience</p>
+    </section>
+
+    <!-- Add Project -->
+    <section class="add-project">
+      <h2>Add Project</h2>
+
+      <div class="project-form">
+        <input type="text" id="title" placeholder="Project Title">
+        <input type="text" id="tech" placeholder="Technologies Used (HTML, CSS, JS)">
+        <input type="text" id="link" placeholder="Project Link (GitHub / Live URL)">
+        <textarea id="description" placeholder="Project Description"></textarea>
+        <button id="addProjectBtn">Add Project</button>
+      </div>
+    </section>
+
+    <!-- Project List -->
+    <section class="project-list">
+      <h2>Your Projects</h2>
+      <div id="projectsContainer"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ================= FIREBASE SCRIPT ================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+    authDomain: "portfoliox-2e787.firebaseapp.com",
+    projectId: "portfoliox-2e787",
+    storageBucket: "portfoliox-2e787.firebasestorage.app",
+    messagingSenderId: "562709786891",
+    appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const titleInput = document.getElementById("title");
+  const techInput = document.getElementById("tech");
+  const linkInput = document.getElementById("link");
+  const descInput = document.getElementById("description");
+  const addBtn = document.getElementById("addProjectBtn");
+  const container = document.getElementById("projectsContainer");
+  const logoutBtn = document.querySelector(".logout-btn");
+
+  let currentUser = null;
+
+  /* 🔐 Auth protection */
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "loginpage.html";
+      return;
+    }
+    currentUser = user;
+    loadProjects();
+  });
+
+  /* 📥 Load projects */
+  async function loadProjects() {
+    container.innerHTML = "";
+
+    const ref = collection(db, "users", currentUser.uid, "projects");
+    const snap = await getDocs(ref);
+
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+
+      const div = document.createElement("div");
+      div.className = "project-card";
+      div.innerHTML = `
+        <button class="delete-btn" data-id="${docSnap.id}">🗑️</button>
+        <h3>${data.title}</h3>
+        <p class="tech">${data.tech}</p>
+        <p class="desc">${data.description}</p>
+        ${data.link ? `<a href="${data.link}" target="_blank" class="project-link">View Project</a>` : ""}
+      `;
+
+      container.appendChild(div);
+    });
+
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        await deleteDoc(doc(db, "users", currentUser.uid, "projects", btn.dataset.id));
+        loadProjects();
+      });
+    });
+  }
+
+  /* ➕ Add project */
+  addBtn.addEventListener("click", async () => {
+    const title = titleInput.value.trim();
+    const tech = techInput.value.trim();
+    const link = linkInput.value.trim();
+    const description = descInput.value.trim();
+
+    if (!title || !tech || !description) {
+      alert("Please fill required fields");
+      return;
+    }
+
+    await addDoc(collection(db, "users", currentUser.uid, "projects"), {
+      title,
+      tech,
+      link,
+      description,
+      createdAt: new Date()
+    });
+
+    titleInput.value = "";
+    techInput.value = "";
+    linkInput.value = "";
+    descInput.value = "";
+
+    loadProjects();
+  });
+
+  /* 🚪 Logout */
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    localStorage.clear();
+    window.location.href = "homepage.html";
+  });
+</script>
+
+</body>
+</html>

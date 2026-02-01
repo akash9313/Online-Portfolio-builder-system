@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Preview | PortfolioX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Portfolio<span>X</span></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="profile.html">Profile</a>
+        <a href="skills.html">Skills</a>
+        <a href="education.html">Education</a>
+        <a href="project.html">Projects</a>
+        <a href="templates.html">Templates</a>
+        <a class="active">Preview</a>
+        <a href="publish.html">Publish</a>
+        <a href="settings.html">Settings</a>
+    </aside>
+
+    <!-- Preview Content -->
+    <main class="preview">
+
+        <section class="preview-header">
+            <h1>Portfolio Preview</h1>
+            <p id="templateName">Loading selected template...</p>
+        </section>
+
+        <!-- Preview Frame -->
+        <section class="preview-frame" id="previewFrame">
+            <!-- Template preview injected here -->
+        </section>
+
+    </main>
+</div>
+
+<script>
+const selectedTemplate = localStorage.getItem("finalTemplate");
+const frame = document.getElementById("previewFrame");
+const title = document.getElementById("templateName");
+
+if (!selectedTemplate) {
+    title.textContent = "No template selected";
+    frame.innerHTML = "<p>Please select a template first.</p>";
+} else {
+    title.textContent = "Selected Template: " + selectedTemplate;
+
+    // SIMPLE VISUAL DIFFERENT PREVIEWS
+    if (selectedTemplate.includes("Classic")) {
+        frame.innerHTML = `
+            <div class="classic">
+                <h2>Keval Bamarotiya</h2>
+                <p>Web Developer</p>
+                <hr>
+                <h3>Skills</h3>
+                <ul>
+                    <li>HTML, CSS, JavaScript</li>
+                    <li>React, MySQL</li>
+                </ul>
+            </div>
+        `;
+    }
+
+    else if (selectedTemplate.includes("Modern")) {
+        frame.innerHTML = `
+            <div class="modern">
+                <h2>Keval Bamarotiya</h2>
+                <p class="tag">Full Stack Developer</p>
+                <div class="card">Projects • Skills • Education</div>
+            </div>
+        `;
+    }
+
+    else if (selectedTemplate.includes("Creative")) {
+        frame.innerHTML = `
+            <div class="creative">
+                <h2>Keval</h2>
+                <p>Creative Portfolio</p>
+                <div class="blocks">
+                    <span>Design</span>
+                    <span>UI/UX</span>
+                    <span>Frontend</span>
+                </div>
+            </div>
+        `;
+    }
+
+    else if (selectedTemplate.includes("Minimal")) {
+        frame.innerHTML = `
+            <div class="minimal">
+                <h2>Keval B.</h2>
+                <p>Minimal Resume</p>
+                <small>Email | GitHub | LinkedIn</small>
+            </div>
+        `;
+    }
+}
+
+function goPublish() {
+    window.location.href = "publish.html";
+}
+</script>
+
+</body>
+</html>

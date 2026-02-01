@@ -13,44 +13,68 @@
 <div class="login-box">
   <h2>Create <span>Account</span></h2>
 
-  <!-- ✅ Added form ID -->
   <form id="signupForm">
 
     <div class="field">
-      <input type="text" id="username" required>
-      <label>Username</label>
-    </div>
-
-    <div class="field">
-      <input type="email" id="email">
+      <input type="email" id="email" required>
       <label>Email</label>
     </div>
 
-    <div class="field">
+    <!-- 🔐 Password -->
+    <div class="field" style="position:relative;">
       <input type="password" id="password" required>
       <label>Password</label>
+      <span id="togglePassword" style="
+        position:absolute;
+        right:14px;
+        top:50%;
+        transform:translateY(-50%);
+        cursor:pointer;
+      ">👁️</span>
     </div>
 
-    <div class="field">
+    <!-- 🔐 Confirm Password -->
+    <div class="field" style="position:relative;">
       <input type="password" id="confirmPassword" required>
       <label>Confirm Password</label>
+      <span id="toggleConfirmPassword" style="
+        position:absolute;
+        right:14px;
+        top:50%;
+        transform:translateY(-50%);
+        cursor:pointer;
+      ">👁️</span>
     </div>
 
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px;">
+      Password must be at least 8 characters and include uppercase,
+      lowercase, number, and special character.
+    </p>
+
     <button class="primary glow" type="submit">Signup</button>
+
+    <div style="margin:15px 0;text-align:center;">OR</div>
+
+    <button type="button" id="googleSignup" class="primary glow">
+      Continue with Google
+    </button>
 
     <p class="signup-text">
       Already have an account?
       <a href="loginpage.html">Login</a>
     </p>
-
   </form>
 </div>
 
-<!-- ✅ Backend Connection Script -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword }
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+    GoogleAuthProvider,
+    signInWithPopup
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
@@ -64,26 +88,47 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  const password = document.getElementById("password");
+  const confirmPassword = document.getElementById("confirmPassword");
+
+  // 👁️ Toggle passwords
+  document.getElementById("togglePassword").onclick = () => {
+    password.type = password.type === "password" ? "text" : "password";
+  };
+  document.getElementById("toggleConfirmPassword").onclick = () => {
+    confirmPassword.type =
+      confirmPassword.type === "password" ? "text" : "password";
+  };
+
+  function isStrongPassword(pw) {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{8,}$/.test(pw);
+  }
+
   document.getElementById("signupForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+    if (!isStrongPassword(password.value))
+      return alert("Password not strong enough");
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+    if (password.value !== confirmPassword.value)
+      return alert("Passwords do not match");
 
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("Signup successful ✅");
-      window.location.href = "loginpage.html";
-    } catch (error) {
-      alert(error.message);
-    }
+    const cred = await createUserWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    );
+
+    await sendEmailVerification(cred.user);
+    alert("📧 Verification email sent (check Spam).");
+    window.location.href = "loginpage.html";
   });
+
+  document.getElementById("googleSignup").onclick = async () => {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+    window.location.href = "dashboard.html";
+  };
 </script>
 
 </body>

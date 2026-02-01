@@ -1,105 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Skills | PortfolioX</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="skills.css">
+  <meta charset="UTF-8" />
+  <title>Skills | PortfolioX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="skills.css" />
 </head>
 <body>
 
 <header class="navbar">
-    <div class="logo">Portfolio<span>X</span></div>
-    <button class="logout-btn">Logout</button>
+  <div class="logo">Portfolio<span>X</span></div>
+  <button class="logout-btn">Logout</button>
 </header>
 
 <div class="layout">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profile.html">Profile</a>
-        <a class="active" href="skills.html">Skills</a>
-        <a href="education.html">Education</a>
-        <a href="projects.html">Projects</a>
-        <a href="templates.html">Templates</a>
-        <a href="preview.html">Preview</a>
-        <a href="publish.html">Publish</a>
-        <a href="settings.html">Settings</a>
-    </aside>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">Profile</a>
+    <a class="active" href="skills.html">Skills</a>
+    <a href="education.html">Education</a>
+    <a href="projects.html">Projects</a>
+    <a href="templates.html">Templates</a>
+    <a href="preview.html">Preview</a>
+    <a href="publish.html">Publish</a>
+    <a href="settings.html">Settings</a>
+  </aside>
 
-    <!-- Skills Content -->
-    <main class="skills">
+  <!-- Skills Content -->
+  <main class="skills">
 
-        <section class="skills-header">
-            <h1>Skills</h1>
-            <p>Add and manage your professional skills</p>
-        </section>
+    <section class="skills-header">
+      <h1>Skills</h1>
+      <p>Add and manage your professional skills</p>
+    </section>
 
-        <!-- Add Skill -->
-        <section class="add-skill">
-            <h2>Add Skill</h2>
+    <!-- Add Skill -->
+    <section class="add-skill">
+      <h2>Add Skill</h2>
 
-            <div class="skill-form">
-                <input type="text" placeholder="Skill name (e.g. Java, React)">
+      <div class="skill-form">
+        <input
+          type="text"
+          id="skillName"
+          list="skillsList"
+          placeholder="Skill name (e.g. HTML, React)"
+        />
 
-                <!-- Custom Dropdown -->
-                <div class="custom-select" id="skillLevel">
-                    <div class="selected">Select level</div>
-                    <div class="options">
-                        <div>Beginner</div>
-                        <div>Intermediate</div>
-                        <div>Advanced</div>
-                    </div>
-                </div>
+        <datalist id="skillsList">
+          <option value="HTML">
+          <option value="CSS">
+          <option value="JavaScript">
+          <option value="React">
+          <option value="Node.js">
+          <option value="Express">
+          <option value="MongoDB">
+          <option value="Firebase">
+          <option value="Python">
+          <option value="Java">
+          <option value="C++">
+          <option value="Git">
+          <option value="GitHub">
+        </datalist>
 
-                <button>Add Skill</button>
-            </div>
-        </section>
+        <!-- Level dropdown -->
+        <div class="custom-select" id="skillLevel">
+          <div class="selected" id="selectedLevel">Select level</div>
+          <div class="options">
+            <div>Beginner</div>
+            <div>Intermediate</div>
+            <div>Advanced</div>
+          </div>
+        </div>
 
-        <!-- Skill List -->
-        <section class="skill-list">
-            <h2>Your Skills</h2>
+        <button type="button" id="addSkillBtn">Add Skill</button>
+      </div>
+    </section>
 
-            <div class="skill-item">
-                <span>HTML</span>
-                <span class="level">Advanced</span>
-            </div>
+    <!-- Skill List -->
+    <section class="skill-list">
+      <h2>Your Skills</h2>
+      <div id="skillsContainer"></div>
+    </section>
 
-            <div class="skill-item">
-                <span>CSS</span>
-                <span class="level">Advanced</span>
-            </div>
-
-            <div class="skill-item">
-                <span>JavaScript</span>
-                <span class="level">Intermediate</span>
-            </div>
-        </section>
-
-    </main>
+  </main>
 </div>
 
-<!-- JS (ONLY for dropdown state) -->
-<script>
-const select = document.getElementById("skillLevel");
-const selected = select.querySelector(".selected");
-const options = select.querySelectorAll(".options div");
+<!-- ================= FIREBASE + LOGIC ================= -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-selected.addEventListener("click", (e) => {
-    e.stopPropagation();
-    select.classList.toggle("open");
+const firebaseConfig = {
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787",
+  storageBucket: "portfoliox-2e787.firebasestorage.app",
+  messagingSenderId: "562709786891",
+  appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const skillNameInput = document.getElementById("skillName");
+const selectedLevel = document.getElementById("selectedLevel");
+const addSkillBtn = document.getElementById("addSkillBtn");
+const skillsContainer = document.getElementById("skillsContainer");
+const logoutBtn = document.querySelector(".logout-btn");
+
+let currentUser = null;
+
+/* 🔐 Protect page */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "loginpage.html";
+    return;
+  }
+  currentUser = user;
+  loadSkills();
 });
 
-options.forEach(option => {
-    option.addEventListener("click", () => {
-        selected.textContent = option.textContent;
-        select.classList.remove("open");
+/* 📥 Load skills */
+async function loadSkills() {
+  skillsContainer.innerHTML = "";
+
+  const ref = collection(db, "users", currentUser.uid, "skills");
+  const snap = await getDocs(ref);
+
+  snap.forEach((docSnap) => {
+    const data = docSnap.data();
+
+    const div = document.createElement("div");
+    div.className = "skill-item";
+    div.innerHTML = `
+      <span class="skill-name">${data.name}</span>
+      <div class="skill-actions">
+        <span class="level">${data.level}</span>
+        <button class="delete-btn" title="Remove skill">🗑️</button>
+      </div>
+    `;
+
+    div.querySelector(".delete-btn").addEventListener("click", async () => {
+      await deleteDoc(doc(db, "users", currentUser.uid, "skills", docSnap.id));
+      loadSkills();
     });
+
+    skillsContainer.appendChild(div);
+  });
+}
+
+/* ➕ Add skill */
+addSkillBtn.addEventListener("click", async () => {
+  const name = skillNameInput.value.trim();
+  const level = selectedLevel.textContent;
+
+  if (!name || level === "Select level") {
+    alert("Please enter skill name and level");
+    return;
+  }
+
+  await addDoc(collection(db, "users", currentUser.uid, "skills"), {
+    name,
+    level,
+    createdAt: new Date()
+  });
+
+  skillNameInput.value = "";
+  selectedLevel.textContent = "Select level";
+  loadSkills();
+});
+
+/* 🔽 Dropdown */
+const select = document.getElementById("skillLevel");
+select.querySelector(".selected").addEventListener("click", (e) => {
+  e.stopPropagation();
+  select.classList.toggle("open");
+});
+
+select.querySelectorAll(".options div").forEach(opt => {
+  opt.addEventListener("click", () => {
+    selectedLevel.textContent = opt.textContent;
+    select.classList.remove("open");
+  });
 });
 
 document.addEventListener("click", () => {
-    select.classList.remove("open");
+  select.classList.remove("open");
+});
+
+/* 🚪 Logout */
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+  localStorage.clear();
+  window.location.href = "loginpage.html";
 });
 </script>
 

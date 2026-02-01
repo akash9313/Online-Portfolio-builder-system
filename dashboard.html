@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard | PortfolioX</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="dashboard.css">
+  <meta charset="UTF-8">
+  <title>Dashboard | PortfolioX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
 
 <header class="navbar">
-    <div class="logo">Portfolio<span>X</span></div>
-    <button class="logout-btn">Logout</button>
+  <div class="logo">Portfolio<span>X</span></div>
+  <button class="logout-btn" id="logoutBtn">Logout</button>
 </header>
 
 <div class="layout">
 
-    <!-- Sidebar (Navigation Only) -->
-   <aside class="sidebar">
+  <!-- Sidebar -->
+  <aside class="sidebar">
     <a href="dashboard.html" class="active">Dashboard</a>
-    <a href="profile.html" >Profile</a>
+    <a href="profile.html">Profile</a>
     <a href="skills.html">Skills</a>
     <a href="education.html">Education</a>
     <a href="projects.html">Projects</a>
@@ -26,60 +26,149 @@
     <a href="preview.html">Preview</a>
     <a href="publish.html">Publish</a>
     <a href="settings.html">Settings</a>
-</aside>
+  </aside>
 
-    <!-- Dashboard Content -->
-    <main class="dashboard">
+  <!-- Dashboard Content -->
+  <main class="dashboard">
 
-        <!-- Welcome -->
-        <section class="welcome">
-            <h1>Welcome Back 👋</h1>
-            <p>Your portfolio is almost ready. Complete remaining steps to publish.</p>
-        </section>
+    <!-- Welcome -->
+    <section class="welcome">
+      <h1 id="welcomeText">Welcome Back 👋</h1>
+      <p>Your portfolio progress is shown below.</p>
+    </section>
 
-        <!-- Progress -->
-        <section class="progress-box">
-            <div class="progress-text">
-                <span>Portfolio Completion</span>
-                <span>68%</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-        </section>
+    <!-- Progress -->
+    <section class="progress-box">
+      <div class="progress-text">
+        <span>Portfolio Completion</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </section>
 
-        <!-- Quick Actions -->
-        <section class="quick-actions">
-            <button>+ Add Project</button>
-            <button>+ Add Skill</button>
-            <button>Update Profile</button>
-        </section>
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+      <button onclick="location.href='projects.html'">+ Add Project</button>
+      <button onclick="location.href='skills.html'">+ Add Skill</button>
+      <button onclick="location.href='profile.html'">Update Profile</button>
+    </section>
 
-        <!-- Status Cards -->
-        <section class="stats">
-            <div class="stat-card">
-                <h3>Profile</h3>
-                <p>Status: Completed</p>
-            </div>
+    <!-- Status Cards -->
+    <section class="stats">
 
-            <div class="stat-card">
-                <h3>Skills</h3>
-                <p>6 Skills Added</p>
-            </div>
+      <div class="stat-card">
+        <h3>Profile</h3>
+        <p id="profileStatus">Checking...</p>
+      </div>
 
-            <div class="stat-card">
-                <h3>Projects</h3>
-                <p>3 Projects Added</p>
-            </div>
+      <div class="stat-card">
+        <h3>Skills</h3>
+        <p id="skillsCount">0 Skills Added</p>
+      </div>
 
-            <div class="stat-card">
-                <h3>Portfolio</h3>
-                <p>Status: Not Published</p>
-            </div>
-        </section>
+      <div class="stat-card">
+        <h3>Education</h3>
+        <p id="educationCount">0 Records Added</p>
+      </div>
 
-    </main>
+      <div class="stat-card">
+        <h3>Projects</h3>
+        <p id="projectsCount">0 Projects Added</p>
+      </div>
+
+    </section>
+
+  </main>
 </div>
+
+<!-- ================= FIREBASE LOGIC ================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from
+    "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+    authDomain: "portfoliox-2e787.firebaseapp.com",
+    projectId: "portfoliox-2e787",
+    storageBucket: "portfoliox-2e787.firebasestorage.app",
+    messagingSenderId: "562709786891",
+    appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  const skillsCountEl = document.getElementById("skillsCount");
+  const educationCountEl = document.getElementById("educationCount");
+  const projectsCountEl = document.getElementById("projectsCount");
+  const profileStatusEl = document.getElementById("profileStatus");
+
+  const progressFill = document.getElementById("progressFill");
+  const progressPercent = document.getElementById("progressPercent");
+
+  /* 🔐 Protect Dashboard */
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = "homepage.html";
+      return;
+    }
+
+    loadDashboard(user.uid);
+  });
+
+  async function loadDashboard(uid) {
+
+    // Fetch counts
+    const skillsSnap = await getDocs(collection(db, "users", uid, "skills"));
+    const eduSnap = await getDocs(collection(db, "users", uid, "education"));
+    const projSnap = await getDocs(collection(db, "users", uid, "projects"));
+
+    const skillsCount = skillsSnap.size;
+    const eduCount = eduSnap.size;
+    const projCount = projSnap.size;
+
+    skillsCountEl.textContent = `${skillsCount} Skills Added`;
+    educationCountEl.textContent = `${eduCount} Records Added`;
+    projectsCountEl.textContent = `${projCount} Projects Added`;
+
+    // Profile status
+    const profileDoc = await getDoc(doc(db, "users", uid));
+    const profileCompleted = profileDoc.exists();
+
+    profileStatusEl.textContent =
+      profileCompleted ? "Status: Completed" : "Status: Incomplete";
+
+    // Progress calculation (simple weighted logic)
+    let completed = 0;
+    if (profileCompleted) completed += 25;
+    if (skillsCount > 0) completed += 25;
+    if (eduCount > 0) completed += 25;
+    if (projCount > 0) completed += 25;
+
+    progressFill.style.width = completed + "%";
+    progressPercent.textContent = completed + "%";
+  }
+
+  /* 🚪 Logout */
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    localStorage.clear();
+    window.location.href = "homepage.html";
+  });
+</script>
 
 </body>
 </html>

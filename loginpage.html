@@ -13,7 +13,21 @@
 <div class="login-box">
   <h2>Login to <span>PortfolioX</span></h2>
 
-  <!-- ✅ Login Form -->
+  <!-- 🔔 Email verification info -->
+  <div id="verifyInfo" style="
+    display:none;
+    margin-bottom:14px;
+    padding:10px;
+    border-radius:10px;
+    background: rgba(255, 193, 7, 0.15);
+    color:#facc15;
+    font-size:13px;
+    text-align:center;
+  ">
+    📧 Verification email may arrive in <b>Spam</b> or <b>Promotions</b>.<br>
+    Please check <b>all folders</b>.
+  </div>
+
   <form id="loginForm">
 
     <div class="field">
@@ -21,26 +35,51 @@
       <label>Email</label>
     </div>
 
-    <div class="field">
+    <!-- 🔐 Password with eye icon -->
+    <div class="field" style="position:relative;">
       <input type="password" id="password" required>
       <label>Password</label>
+      <span id="toggleLoginPassword" style="
+        position:absolute;
+        right:14px;
+        top:50%;
+        transform:translateY(-50%);
+        cursor:pointer;
+        user-select:none;
+      ">👁️</span>
     </div>
 
     <button class="primary glow" type="submit">Login</button>
+
+    <!-- 🔁 Forgot Password -->
+    <p style="text-align:center; margin-top:10px;">
+      <a href="#" id="forgotPassword" style="color:#38bdf8;text-decoration:none;">
+        Forgot password?
+      </a>
+    </p>
+
+    <div style="margin:15px 0; text-align:center;">OR</div>
+
+    <button type="button" id="googleLogin" class="primary glow">
+      Continue with Google
+    </button>
 
     <p class="signup-text">
       Don’t have an account?
       <a href="usersignup.html">Signup</a>
     </p>
-
   </form>
 </div>
 
-<!-- ✅ Firebase Login Script -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword }
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    GoogleAuthProvider,
+    signInWithPopup,
+    sendPasswordResetEmail
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
@@ -54,36 +93,58 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  const verifyInfo = document.getElementById("verifyInfo");
+
+  // 👁️ Toggle password
+  const passwordInput = document.getElementById("password");
+  const toggleLoginPassword = document.getElementById("toggleLoginPassword");
+
+  toggleLoginPassword.addEventListener("click", () => {
+    passwordInput.type =
+      passwordInput.type === "password" ? "text" : "password";
+    toggleLoginPassword.textContent =
+      passwordInput.type === "password" ? "👁️" : "🙈";
+  });
+
+  // 📧 Email Login
   document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value.trim();
+    const password = passwordInput.value;
 
     try {
-      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const cred = await signInWithEmailAndPassword(auth, email, password);
 
-      // ✅ Save login state
-      localStorage.setItem("email", userCred.user.email);
-
-      alert("Login successful ✅");
-
-      // 🔁 SMART REDIRECT
-      const redirectPage = localStorage.getItem("redirectAfterLogin");
-
-      if (redirectPage) {
-        localStorage.removeItem("redirectAfterLogin");
-        window.location.href = redirectPage;   // → dashboard.html
-      } else {
-        window.location.href = "homepage.html";
+      if (!cred.user.emailVerified) {
+        verifyInfo.style.display = "block";
+        return;
       }
 
-    } catch (error) {
-      alert(error.message);
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      alert(err.message);
     }
   });
-</script>
 
+  // 🔁 Forgot Password
+  document.getElementById("forgotPassword").addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    if (!email) return alert("Please enter your email first");
+
+    await sendPasswordResetEmail(auth, email);
+    alert("📩 Password reset email sent.\nCheck Spam / Promotions.");
+  });
+
+  // 🔐 Google Login
+  document.getElementById("googleLogin").addEventListener("click", async () => {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+    window.location.href = "dashboard.html";
+  });
+</script>
 
 </body>
 </html>
