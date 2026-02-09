@@ -1,95 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Templates | PortfolioX</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="templates.css">
+  <meta charset="UTF-8">
+  <title>Templates | PortfolioX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="templates.css">
 </head>
 <body>
 
 <header class="navbar">
-    <div class="logo">Portfolio<span>X</span></div>
-    <button class="logout-btn">Logout</button>
+  <div class="logo">Portfolio<span>X</span></div>
+  <button class="logout-btn">Logout</button>
 </header>
 
 <div class="layout">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profile.html">Profile</a>
-        <a href="skills.html">Skills</a>
-        <a href="education.html">Education</a>
-        <a href="project.html">Projects</a>
-        <a class="active" href="templates.html">Templates</a>
-        <a href="preview.html">Preview</a>
-        <a href="publish.html">Publish</a>
-        <a href="settings.html">Settings</a>
-    </aside>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="skills.html">Skills</a>
+    <a href="education.html">Education</a>
+    <a href="project.html">Projects</a>
+    <a class="active" href="templates.html">Templates</a>
+    <a href="preview.html">Preview</a>
+    <a href="publish.html">Publish</a>
+    <a href="settings.html">Settings</a>
+  </aside>
 
-    <!-- Templates Content -->
-    <main class="templates">
+  <!-- Templates Content -->
+  <main class="templates">
 
-        <!-- Header -->
-        <section class="templates-header">
-            <h1>Portfolio Templates</h1>
-            <p>Choose a design that best represents your professional identity</p>
-        </section>
+    <section class="templates-header">
+      <h1>Portfolio Templates</h1>
+      <p>Choose a design that best represents your professional identity</p>
+    </section>
 
-        <!-- Templates Grid -->
-        <section class="template-grid">
+    <section class="template-grid">
 
-            <div class="template-card active">
-                <div class="template-preview classic"></div>
-                <h3>Classic Developer</h3>
-                <p>Clean layout suitable for developers & students</p>
-                <button class="template-btn">Selected</button>
-            </div>
+      <!-- CLASSIC -->
+      <div class="template-card" data-template="Classic">
+        <div class="template-preview classic"></div>
+        <h3>Classic Developer</h3>
+        <p>Clean layout suitable for developers & students</p>
+        <button class="template-btn">Select Template</button>
+      </div>
 
-            <div class="template-card">
-                <div class="template-preview modern"></div>
-                <h3>Modern Professional</h3>
-                <p>Stylish design for corporate & tech roles</p>
-                <button class="template-btn">Select Template</button>
-            </div>
+      <!-- MODERN -->
+      <div class="template-card" data-template="Modern">
+        <div class="template-preview modern"></div>
+        <h3>Modern Professional</h3>
+        <p>Stylish design for corporate & tech roles</p>
+        <button class="template-btn">Select Template</button>
+      </div>
 
-            <div class="template-card">
-                <div class="template-preview creative"></div>
-                <h3>Creative Designer</h3>
-                <p>Visual-first layout for designers & creatives</p>
-                <button class="template-btn">Select Template</button>
-            </div>
+      <!-- CREATIVE -->
+      <div class="template-card" data-template="Creative">
+        <div class="template-preview creative"></div>
+        <h3>Creative Designer</h3>
+        <p>Visual-first layout for designers & creatives</p>
+        <button class="template-btn">Select Template</button>
+      </div>
 
-            <div class="template-card">
-                <div class="template-preview minimal"></div>
-                <h3>Minimal Resume</h3>
-                <p>Simple and ATS-friendly portfolio</p>
-                <button class="template-btn">Select Template</button>
-            </div>
+      <!-- MINIMAL -->
+      <div class="template-card" data-template="Minimal">
+        <div class="template-preview minimal"></div>
+        <h3>Minimal Resume</h3>
+        <p>Simple and ATS-friendly portfolio</p>
+        <button class="template-btn">Select Template</button>
+      </div>
 
-        </section>
+    </section>
 
-    </main>
+  </main>
 </div>
 
-<!-- ✅ SELECTION LOGIC -->
+<!-- ✅ FIXED SELECTION + SAVE LOGIC -->
 <script>
 const cards = document.querySelectorAll(".template-card");
 
 cards.forEach(card => {
-    card.addEventListener("click", () => {
+  card.addEventListener("click", () => {
+    const templateName = card.querySelector("h3").innerText;
 
-        // Remove active from all cards
-        cards.forEach(c => {
-            c.classList.remove("active");
-            c.querySelector(".template-btn").textContent = "Select Template";
-        });
+    localStorage.setItem("finalTemplate", templateName);
 
-        // Activate clicked card
-        card.classList.add("active");
-        card.querySelector(".template-btn").textContent = "Selected";
+    cards.forEach(c => {
+      c.classList.remove("active");
+      c.querySelector(".template-btn").textContent = "Select Template";
     });
+
+    card.classList.add("active");
+    card.querySelector(".template-btn").textContent = "Selected";
+  });
 });
 </script>
 

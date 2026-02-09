@@ -10,80 +10,303 @@
 <body>
 
 <header class="navbar">
-    <div class="logo">Portfolio<span>X</span></div>
+  <div class="logo">Portfolio<span>X</span></div>
 </header>
 
 <div class="layout">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profile.html">Profile</a>
-        <a href="skills.html">Skills</a>
-        <a href="education.html">Education</a>
-        <a href="project.html">Projects</a>
-        <a href="templates.html">Templates</a>
-        <a href="preview.html">Preview</a>
-        <a href="publish.html">Publish</a>
-        <a class="active">Settings</a>
-    </aside>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="skills.html">Skills</a>
+    <a href="education.html">Education</a>
+    <a href="projects.html">Projects</a>
+    <a href="templates.html">Templates</a>
+    <a href="preview.html">Preview</a>
+    <a href="publish.html">Publish</a>
+    <a class="active">Settings</a>
+  </aside>
 
-    <!-- Settings -->
-    <main class="settings">
+  <!-- Settings -->
+  <main class="settings">
 
-        <h1>Settings</h1>
-        <p class="subtitle">Manage account details and portfolio controls</p>
+    <h1>Settings</h1>
+    <p class="subtitle">Manage your account, portfolio, and preferences</p>
 
-        <div class="settings-grid">
+    <div class="settings-grid">
 
-            <!-- Account -->
-            <section class="settings-card">
-                <h2>Account Information</h2>
+      <!-- ACCOUNT -->
+      <section class="settings-card">
+        <h2>Account</h2>
 
-                <div class="field">
-                    <label>Email Address</label>
-                    <input type="text" value="keval@email.com" disabled>
-                </div>
-
-                <button class="primary-btn">Change Password</button>
-            </section>
-
-            <!-- Portfolio -->
-            <section class="settings-card">
-                <h2>Portfolio Controls</h2>
-
-                <div class="control">
-                    <span>Portfolio Visibility</span>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="control">
-                    <span>Allow updates after publishing</span>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </section>
-
-            <!-- Access / Actions -->
-            <section class="settings-card critical">
-                <h2>Account Actions</h2>
-
-                <p class="note">
-                    These actions affect the visibility and availability of your portfolio.
-                </p>
-
-                <button class="critical-btn soft">Unpublish Portfolio</button>
-                <button class="critical-btn">Delete Account</button>
-            </section>
-
+        <div class="field">
+          <label>Email Address</label>
+          <input type="text" id="userEmail" disabled>
         </div>
-    </main>
+
+        <p class="status success" id="emailStatus"></p>
+
+        <div class="account-actions">
+          <button class="primary-btn" id="changePasswordBtn">
+            Change Password
+          </button>
+
+          <button class="secondary-btn" id="resendVerifyBtn">
+            Resend Verification Email
+          </button>
+        </div>
+      </section>
+
+      <!-- CHANGE PASSWORD MODAL -->
+      <div class="modal" id="passwordModal">
+        <div class="modal-box">
+          <h3>Change Password</h3>
+
+          <input type="password" id="currentPassword" placeholder="Current Password">
+          <input type="password" id="newPassword" placeholder="New Password">
+
+          <p class="note">
+            Password must be at least 8 characters and include uppercase,
+            lowercase, number, and special character.
+          </p>
+
+          <div class="modal-actions">
+            <button class="primary-btn" id="savePassword">
+              Update Password
+            </button>
+            <button class="secondary-btn" id="closeModal">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO CONTROLS -->
+      <section class="settings-card">
+        <h2>Portfolio Controls</h2>
+
+        <div class="control">
+          <span>Portfolio Visibility</span>
+          <label class="switch">
+            <input type="checkbox" id="visibilityToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="control">
+          <span>Allow edits after publishing</span>
+          <label class="switch">
+            <input type="checkbox" id="editToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="control">
+          <span>Allow search engine indexing (SEO)</span>
+          <label class="switch">
+            <input type="checkbox" id="seoToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- PREFERENCES -->
+      <section class="settings-card">
+        <h2>Preferences</h2>
+
+        <div class="control">
+          <span>Email Notifications</span>
+          <label class="switch">
+            <input type="checkbox" id="notifyToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="control">
+          <span>Auto‑save drafts</span>
+          <label class="switch">
+            <input type="checkbox" id="autosaveToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="control">
+          <span>Dark Mode</span>
+          <label class="switch">
+            <input type="checkbox" id="darkToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- DANGER ZONE -->
+      <section class="settings-card critical">
+        <h2>Danger Zone</h2>
+
+        <p class="note">
+          These actions permanently affect your portfolio and account.
+        </p>
+
+        <button class="critical-btn soft">Unpublish Portfolio</button>
+        <button class="critical-btn">Delete Account</button>
+      </section>
+
+    </div>
+  </main>
 </div>
+
+<!-- ================= FIREBASE + AUTH LOGIC ================= -->
+<script type="module">
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+  sendEmailVerification
+} from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp
+} from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* Firebase config */
+const firebaseConfig = {
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* UI Elements */
+const emailInput = document.getElementById("userEmail");
+const emailStatus = document.getElementById("emailStatus");
+
+const visibility = document.getElementById("visibilityToggle");
+const allowEdits = document.getElementById("editToggle");
+const seo = document.getElementById("seoToggle");
+const notify = document.getElementById("notifyToggle");
+const autosave = document.getElementById("autosaveToggle");
+const dark = document.getElementById("darkToggle");
+
+/* Password UI */
+const changePasswordBtn = document.getElementById("changePasswordBtn");
+const resendVerifyBtn = document.getElementById("resendVerifyBtn");
+const passwordModal = document.getElementById("passwordModal");
+const savePassword = document.getElementById("savePassword");
+const closeModal = document.getElementById("closeModal");
+
+const currentPassword = document.getElementById("currentPassword");
+const newPassword = document.getElementById("newPassword");
+
+/* Password validation */
+function isStrongPassword(pwd) {
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{8,}$/.test(pwd);
+}
+
+/* AUTH + SETTINGS */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+
+  emailInput.value = user.email;
+  emailStatus.textContent = user.emailVerified
+    ? "✔ Email Verified"
+    : "⚠ Email Not Verified";
+
+  const settingsRef = doc(db, "users", user.uid, "settings", "preferences");
+
+  /* LOAD SETTINGS */
+  const snap = await getDoc(settingsRef);
+  if (snap.exists()) {
+    const s = snap.data();
+    visibility.checked = s.visibility ?? true;
+    allowEdits.checked = s.allowEdits ?? true;
+    seo.checked = s.seoIndexing ?? true;
+    notify.checked = s.notifications ?? true;
+    autosave.checked = s.autosave ?? true;
+    dark.checked = s.darkMode ?? false;
+  }
+
+  /* SAVE SETTINGS */
+  const saveSettings = async () => {
+    await setDoc(settingsRef, {
+      visibility: visibility.checked,
+      allowEdits: allowEdits.checked,
+      seoIndexing: seo.checked,
+      notifications: notify.checked,
+      autosave: autosave.checked,
+      darkMode: dark.checked,
+      updatedAt: serverTimestamp()
+    });
+  };
+
+  [
+    visibility,
+    allowEdits,
+    seo,
+    notify,
+    autosave,
+    dark
+  ].forEach(el =>
+    el.addEventListener("change", saveSettings)
+  );
+});
+
+/* PASSWORD MODAL */
+changePasswordBtn.onclick = () => {
+  passwordModal.style.display = "flex";
+};
+
+closeModal.onclick = () => {
+  passwordModal.style.display = "none";
+};
+
+/* UPDATE PASSWORD */
+savePassword.onclick = async () => {
+  const user = auth.currentUser;
+
+  if (!isStrongPassword(newPassword.value)) {
+    alert("Password does not meet security requirements");
+    return;
+  }
+
+  try {
+    const credential = EmailAuthProvider.credential(
+      user.email,
+      currentPassword.value
+    );
+
+    await reauthenticateWithCredential(user, credential);
+    await updatePassword(user, newPassword.value);
+
+    alert("Password updated successfully ✅");
+    passwordModal.style.display = "none";
+    currentPassword.value = "";
+    newPassword.value = "";
+
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
+/* RESEND VERIFICATION */
+resendVerifyBtn.onclick = async () => {
+  const user = auth.currentUser;
+  await sendEmailVerification(user);
+  alert("Verification email sent. Check Spam/Promotions 📧");
+};
+</script>
 
 </body>
 </html>

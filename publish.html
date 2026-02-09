@@ -10,97 +10,122 @@
 <body>
 
 <header class="navbar">
-    <div class="logo">Portfolio<span>X</span></div>
+  <div class="logo">Portfolio<span>X</span></div>
 </header>
 
 <div class="layout">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profile.html">Profile</a>
-        <a href="skills.html">Skills</a>
-        <a href="education.html">Education</a>
-        <a href="project.html">Projects</a>
-        <a href="templates.html">Templates</a>
-        <a href="preview.html">Preview</a>
-        <a class="active">Publish</a>
-        <a href="settings.html">Settings</a>
-    </aside>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="skills.html">Skills</a>
+    <a href="education.html">Education</a>
+    <a href="projects.html">Projects</a>
+    <a href="templates.html">Templates</a>
+    <a href="preview.html">Preview</a>
+    <a class="active">Publish</a>
+    <a href="settings.html">Settings</a>
+  </aside>
 
-    <!-- Publish Content -->
-    <main class="publish">
+  <!-- Publish Content -->
+  <main class="publish">
 
-        <h1>Publish Portfolio</h1>
-        <p class="subtitle">Review details before making your portfolio live</p>
+    <h1>Publish Portfolio</h1>
+    <p class="subtitle">Review details before making your portfolio live</p>
 
-        <!-- STATUS BOX -->
-        <section class="status-box">
-            <h2>Portfolio Status</h2>
+    <!-- STATUS -->
+    <section class="status-box">
+      <h2>Portfolio Status</h2>
+      <ul>
+        <li>✔ Profile Completed</li>
+        <li>✔ Skills Added</li>
+        <li>✔ Projects Added</li>
+        <li>✔ Template Selected</li>
+      </ul>
+    </section>
 
-            <ul>
-                <li>✔ Profile Completed</li>
-                <li>✔ Skills Added</li>
-                <li>✔ Projects Added</li>
-                <li>✔ Template Selected</li>
-            </ul>
-        </section>
+    <!-- TEMPLATE INFO -->
+    <section class="template-info">
+      <h2>Selected Template</h2>
+      <p id="templateName">Loading...</p>
+    </section>
 
-        <!-- TEMPLATE INFO -->
-        <section class="template-info">
-            <h2>Selected Template</h2>
-            <p id="templateName">Loading...</p>
-        </section>
+    <!-- PUBLISH ACTION -->
+    <section class="publish-action">
+      <button id="publishBtn">Publish Portfolio</button>
+      <p class="note">
+        Once published, your portfolio will be publicly accessible.
+      </p>
+    </section>
 
-        <!-- PUBLISH ACTION -->
-        <section class="publish-action">
-            <button id="publishBtn">Publish Portfolio</button>
-            <p class="note">Once published, your portfolio will be publicly accessible.</p>
-        </section>
+    <!-- PUBLIC LINK -->
+    <section class="public-link" id="publicLink" style="display:none;">
+      <h2>Your Public Portfolio</h2>
+      <div class="link-box">
+        <input type="text" id="linkInput" readonly>
+        <button id="copyBtn">Copy</button>
+      </div>
+    </section>
 
-        <!-- PUBLIC LINK -->
-        <section class="public-link" id="publicLink" style="display:none;">
-            <h2>Your Public Portfolio</h2>
-            <div class="link-box">
-                <input type="text" id="linkInput" readonly>
-                <button onclick="copyLink()">Copy</button>
-            </div>
-        </section>
-
-    </main>
+  </main>
 </div>
 
 <script>
+/* ================= DATA ================= */
 const template = localStorage.getItem("finalTemplate");
+const published = localStorage.getItem("portfolioStatus");
+
 const publishBtn = document.getElementById("publishBtn");
 const templateName = document.getElementById("templateName");
 const publicLink = document.getElementById("publicLink");
 const linkInput = document.getElementById("linkInput");
+const copyBtn = document.getElementById("copyBtn");
 
+/* ================= TEMPLATE CHECK ================= */
 if (!template) {
-    publishBtn.disabled = true;
-    templateName.textContent = "No template selected";
+  templateName.textContent = "No template selected";
+  publishBtn.disabled = true;
 } else {
-    templateName.textContent = template;
+  templateName.textContent = template;
 }
 
+/* ================= ALREADY PUBLISHED ================= */
+if (published === "published") {
+  showPublicLink();
+}
+
+/* ================= PUBLISH ================= */
 publishBtn.addEventListener("click", () => {
-    localStorage.setItem("portfolioStatus", "published");
-
-    // fake public link (for project)
-    const url = "https://portfoliox.com/keval-bamarotiya";
-    linkInput.value = url;
-
-    publicLink.style.display = "block";
-    publishBtn.textContent = "Published";
-    publishBtn.disabled = true;
+  localStorage.setItem("portfolioStatus", "published");
+  showPublicLink();
 });
 
-function copyLink() {
-    linkInput.select();
-    document.execCommand("copy");
-    alert("Link copied!");
+/* ================= SHOW LINK ================= */
+function showPublicLink() {
+  const username =
+    (localStorage.getItem("email") || "user")
+      .split("@")[0]
+      .replace(/[^a-z0-9]/gi, "")
+      .toLowerCase();
+
+  const url = `https://portfoliox.web.app/${username}`;
+
+  linkInput.value = url;
+  publicLink.style.display = "block";
+  publishBtn.textContent = "Published";
+  publishBtn.disabled = true;
 }
+
+/* ================= COPY ================= */
+copyBtn.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(linkInput.value);
+    alert("Public link copied!");
+  } catch {
+    alert("Copy failed. Please copy manually.");
+  }
+});
 </script>
 
 </body>

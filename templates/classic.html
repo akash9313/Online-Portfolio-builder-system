@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Classic Portfolio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f8fafc;
+  color: #020617;
+  padding: 40px;
+  max-width: 900px;
+  margin: auto;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  color: #1e40af;
+  font-size: 34px;
+}
+
+.role {
+  font-size: 18px;
+  color: #475569;
+}
+
+.contact a {
+  margin-left: 15px;
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+section {
+  margin-top: 40px;
+}
+
+section h2 {
+  border-bottom: 3px solid #2563eb;
+  display: inline-block;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  color: #1e40af;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+.skill {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 8px 14px;
+  margin: 6px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.card {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  margin-bottom: 18px;
+}
+
+footer {
+  margin-top: 50px;
+  text-align: center;
+  color: #64748b;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <h1 id="fullName">Loading...</h1>
+    <p class="role" id="role"></p>
+    <p id="location"></p>
+  </div>
+
+  <div class="contact">
+    <a id="github" target="_blank">GitHub</a>
+    <a id="linkedin" target="_blank">LinkedIn</a>
+  </div>
+</header>
+
+<section>
+  <h2>About</h2>
+  <p id="about"></p>
+</section>
+
+<section>
+  <h2>Skills</h2>
+  <div id="skills"></div>
+</section>
+
+<section>
+  <h2>Projects</h2>
+  <div id="projects"></div>
+</section>
+
+<section>
+  <h2>Education</h2>
+  <div id="education"></div>
+</section>
+
+<footer>
+  © 2026 PortfolioX
+</footer>
+
+<!-- ================= FIREBASE DATA FETCH ================= -->
+<script type="module">
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs
+} from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* Firebase config */
+const firebaseConfig = {
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* UI */
+const fullName = document.getElementById("fullName");
+const role = document.getElementById("role");
+const about = document.getElementById("about");
+const locationEl = document.getElementById("location");
+const github = document.getElementById("github");
+const linkedin = document.getElementById("linkedin");
+
+const skillsEl = document.getElementById("skills");
+const projectsEl = document.getElementById("projects");
+const educationEl = document.getElementById("education");
+
+/* AUTH */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+
+  /* PROFILE */
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
+  const data = snap.data();
+
+  fullName.textContent = data.fullName;
+  role.textContent = data.role;
+  about.textContent = data.about;
+  locationEl.textContent = data.location;
+  github.href = data.github;
+  linkedin.href = data.linkedin;
+
+  /* SKILLS */
+  const skillsSnap = await getDocs(collection(db, "users", user.uid, "skills"));
+  skillsSnap.forEach(doc => {
+    const s = doc.data();
+    skillsEl.innerHTML += `<span class="skill">${s.name}</span>`;
+  });
+
+  /* PROJECTS */
+  const projectSnap = await getDocs(collection(db, "users", user.uid, "projects"));
+  projectSnap.forEach(doc => {
+    const p = doc.data();
+    projectsEl.innerHTML += `
+      <div class="card">
+        <h3>${p.title}</h3>
+        <p>${p.description}</p>
+        <p><strong>Tech:</strong> ${p.tech}</p>
+        ${p.link ? `<a href="${p.link}" target="_blank">View Project</a>` : ""}
+      </div>
+    `;
+  });
+
+  /* EDUCATION */
+  const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
+  eduSnap.forEach(doc => {
+    const e = doc.data();
+    educationEl.innerHTML += `
+      <div class="card">
+        <h3>${e.degree}</h3>
+        <p>${e.institute}</p>
+        <p>${e.year}</p>
+        <p>${e.description || ""}</p>
+      </div>
+    `;
+  });
+});
+</script>
+
+</body>
+</html>
