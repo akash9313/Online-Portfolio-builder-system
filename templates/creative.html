@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Creative Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        [contenteditable="true"]:hover {
+            outline: 2px dashed rgba(255, 255, 255, 0.4);
+            cursor: text;
+            padding: 2px;
+            border-radius: 4px;
+        }
+
+        [contenteditable="true"]:focus {
+            outline: 2px solid #38bdf8;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px;
+            border-radius: 4px;
+        }
+
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #4c1d95 0%, #0f172a 100%);
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 60%);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        #fullName {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            background: linear-gradient(to right, #38bdf8, #a855f7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #role {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            margin-top: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .contact-links {
+            margin-top: 30px;
+        }
+
+        .contact-links a {
+            text-decoration: none;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 25px;
+            border-radius: 30px;
+            margin: 0 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .contact-links a:hover {
+            background: #38bdf8;
+            border-color: #38bdf8;
+            color: #0f172a;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, #a855f7, transparent);
+            margin-left: 20px;
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 800px;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-5px);
+            background: rgba(56, 189, 248, 0.1);
+            border-color: #38bdf8;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #38bdf8, #a855f7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #f8fafc;
+        }
+
+        .project-desc {
+            color: #94a3b8;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .project-tech {
+            font-size: 0.9rem;
+            color: #38bdf8;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .project-link {
+            display: inline-block;
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .project-link:hover {
+            text-decoration: underline;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            background: #a855f7;
+            border-radius: 50%;
+            border: 3px solid #0f172a;
+            z-index: 2;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 10px;
+            width: 2px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .edu-degree {
+            font-size: 1.4rem;
+            margin: 0 0 5px 0;
+            color: #f8fafc;
+        }
+
+        .edu-institute {
+            color: #38bdf8;
+            font-weight: 500;
+            margin: 0 0 5px 0;
+        }
+
+        .edu-meta {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #64748b;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            #fullName {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+    <!-- Add nice fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 id="fullName" contenteditable="true" data-collection="users" data-field="fullName">Loading...</h1>
+            <p class="role" id="role" contenteditable="true" data-collection="users" data-field="role"></p>
+            <p id="location" contenteditable="true" data-collection="users" data-field="location"></p>
+            <div class="contact-links">
+                <a id="github" target="_blank" contenteditable="true" data-collection="users"
+                    data-field="github">GitHub</a>
+                <a id="linkedin" target="_blank" contenteditable="true" data-collection="users"
+                    data-field="linkedin">LinkedIn</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="about-section">
+            <h2 class="section-title">About Me</h2>
+            <p class="about-text" id="about" contenteditable="true" data-collection="users" data-field="about"></p>
+        </section>
+
+        <section class="skills-section">
+            <h2 class="section-title">My Toolkit</h2>
+            <div class="skills-container" id="skills"></div>
+        </section>
+
+        <section class="projects-section">
+            <h2 class="section-title">Featured Work</h2>
+            <div class="projects-grid" id="projects"></div>
+        </section>
+
+        <section class="education-section">
+            <h2 class="section-title">Education Journey</h2>
+            <div class="timeline" id="education"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Crafted with ❤️ using PortfolioX</p>
+    </footer>
+
+    <!-- ================= FIREBASE DATA FETCH & SYNC ================= -->
+    <script type="module">
+        import { initializeApp } from
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            collection,
+            getDocs,
+            updateDoc
+        } from
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+            authDomain: "portfoliox-2e787.firebaseapp.com",
+            projectId: "portfoliox-2e787"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const fullName = document.getElementById("fullName");
+        const role = document.getElementById("role");
+        const about = document.getElementById("about");
+        const locationEl = document.getElementById("location");
+        const github = document.getElementById("github");
+        const linkedin = document.getElementById("linkedin");
+
+        const skillsEl = document.getElementById("skills");
+        const projectsEl = document.getElementById("projects");
+        const educationEl = document.getElementById("education");
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) return;
+            currentUser = user;
+
+            /* PROFILE */
+            const userRef = doc(db, "users", user.uid);
+            const snap = await getDoc(userRef);
+            const data = snap.data();
+
+            fullName.textContent = data.fullName || "Your Name";
+            role.textContent = data.role || "Your Role";
+            about.textContent = data.about || "Your Bio";
+            locationEl.textContent = data.location || "Location";
+            if (data.github) github.href = data.github;
+            if (data.linkedin) linkedin.href = data.linkedin;
+
+            /* SKILLS */
+            const skillsSnap = await getDocs(collection(db, "users", user.uid, "skills"));
+            skillsSnap.forEach(docSnap => {
+                const s = docSnap.data();
+                skillsEl.innerHTML += `<div class="skill-tag" contenteditable="true" data-collection="skills" data-docid="${docSnap.id}" data-field="name">${s.name}</div>`;
+            });
+
+            /* PROJECTS */
+            const projectSnap = await getDocs(collection(db, "users", user.uid, "projects"));
+            projectSnap.forEach(docSnap => {
+                const p = docSnap.data();
+                projectsEl.innerHTML += `
+      <div class="project-card">
+        <h3 class="project-title" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="title">${p.title}</h3>
+        <p class="project-desc" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="description">${p.description}</p>
+        <p class="project-tech"><strong>Tech:</strong> <span contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="tech">${p.tech}</span></p>
+        ${p.link ? `<a href="${p.link}" target="_blank" class="project-link" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="link">View Project</a>` : ""}
+      </div>
+    `;
+            });
+
+            /* EDUCATION */
+            const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
+            eduSnap.forEach(docSnap => {
+                const e = docSnap.data();
+                educationEl.innerHTML += `
+      <div class="timeline-item">
+        <h3 class="edu-degree" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="degree">${e.degree}</h3>
+        <p class="edu-institute" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="institute">${e.institute}</p>
+        <p class="edu-meta"><span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="year">${e.year}</span> | <span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="grade">${e.grade || ""}</span></p>
+      </div>
+    `;
+            });
+
+            /* READ-ONLY MODE CHECK */
+            const urlParams = new URLSearchParams(window.location.search);
+            const isReadOnly = urlParams.get('mode') === 'readonly';
+            if (isReadOnly) {
+                const editableElements = document.querySelectorAll('[contenteditable="true"]');
+                editableElements.forEach(el => el.removeAttribute('contenteditable'));
+            } else {
+                // Prevent link nagivation while in edit mode
+                document.querySelectorAll('a[contenteditable="true"]').forEach(el => {
+                    el.addEventListener('click', (e) => e.preventDefault());
+                });
+            }
+        });
+
+        /* IN-PLACE EDITING (SAVE ON BLUR) */
+        document.addEventListener("blur", async (e) => {
+            if (e.target.hasAttribute("contenteditable") && currentUser) {
+                const el = e.target;
+                const collectionName = el.getAttribute("data-collection");
+                const docId = el.getAttribute("data-docid") || currentUser.uid;
+                const field = el.getAttribute("data-field");
+                const newValue = el.innerText.trim();
+
+                if (collectionName && field) {
+                    try {
+                        let docRef;
+                        if (collectionName === "users") {
+                            docRef = doc(db, "users", docId);
+                        } else {
+                            docRef = doc(db, "users", currentUser.uid, collectionName, docId);
+                        }
+
+                        await updateDoc(docRef, { [field]: newValue });
+                        console.log(`Updated ${field} in ${collectionName}`);
+                    } catch (err) {
+                        console.error("Error updating document:", err);
+                    }
+                }
+            }
+        }, true);
+
+    </script>
+
+</body>
+
+</html>

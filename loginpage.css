@@ -16,7 +16,7 @@ body {
 }
 
 /* ===== Subtle Background Blobs (same as home, professional) ===== */
-.bg-blob {
+/* .bg-blob {
   position: absolute;
   width: 500px;
   height: 500px;
@@ -25,18 +25,18 @@ body {
   opacity: 0.35;
   animation: slowFloat 18s ease-in-out infinite;
   z-index: 0;
-}
+} */
 
-.blob1 {
+/* .blob1 {
   top: -200px;
   left: -200px;
-}
+} */
 
-.blob2 {
+/* .blob2 {
   bottom: -200px;
   right: -200px;
   animation-delay: 6s;
-}
+} */
 
 @keyframes slowFloat {
   0%   { transform: translate(0,0); }

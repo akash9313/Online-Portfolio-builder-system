@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Modern Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Glassmorphism background elements */
+        .bg-shape {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+        }
+
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(99, 102, 241, 0.3);
+            top: -100px;
+            left: -100px;
+        }
+
+        .shape-2 {
+            width: 500px;
+            height: 500px;
+            background: rgba(236, 72, 153, 0.2);
+            bottom: -150px;
+            right: -100px;
+        }
+
+        [contenteditable="true"] {
+            transition: all 0.2s ease;
+            border-radius: 6px;
+            border: 1px solid transparent;
+        }
+
+        [contenteditable="true"]:hover {
+            cursor: text;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px dashed rgba(99, 102, 241, 0.4);
+        }
+
+        [contenteditable="true"]:focus {
+            outline: none;
+            background: #ffffff;
+            border: 1px solid #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Header / Hero */
+        header {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        #fullName {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        #role {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #64748b;
+            margin: 0 0 10px 0;
+        }
+
+        #location {
+            font-size: 1rem;
+            color: #94a3b8;
+            display: inline-block;
+        }
+
+        .contact-links {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .contact-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .contact-links a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+        }
+
+        h2.section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2.section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 4px;
+            background: #6366f1;
+            border-radius: 2px;
+        }
+
+        #about {
+            font-size: 1.1rem;
+            color: #475569;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill-badge {
+            background: white;
+            color: #4f46e5;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: #0f172a;
+        }
+
+        .project-desc {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .project-tech {
+            font-size: 0.85rem;
+            color: #6366f1;
+            font-weight: 500;
+            margin-bottom: 15px;
+            padding: 6px 12px;
+            background: #e0e7ff;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .project-link {
+            display: block;
+            color: #ec4899;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .project-link:hover {
+            text-decoration: underline;
+        }
+
+        .edu-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+        }
+
+        .edu-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #6366f1;
+        }
+
+        .edu-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 25px;
+            width: 2px;
+            height: calc(100% + 5px);
+            background: #e2e8f0;
+        }
+
+        .edu-item:last-child::after {
+            display: none;
+        }
+
+        .edu-degree {
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .edu-institute {
+            margin: 0 0 5px 0;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .edu-meta {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            #fullName {
+                font-size: 2.5rem;
+            }
+
+            .glass-panel {
+                padding: 25px;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="container">
+        <header class="glass-panel">
+            <h1 id="fullName" contenteditable="true" data-collection="users" data-field="fullName">...</h1>
+            <p id="role" contenteditable="true" data-collection="users" data-field="role">...</p>
+            <p id="location" contenteditable="true" data-collection="users" data-field="location"></p>
+
+            <div class="contact-links">
+                <a id="github" target="_blank" contenteditable="true" data-collection="users"
+                    data-field="github">GitHub</a>
+                <a id="linkedin" target="_blank" contenteditable="true" data-collection="users"
+                    data-field="linkedin">LinkedIn</a>
+            </div>
+        </header>
+
+        <section class="glass-panel">
+            <h2 class="section-title">About Me</h2>
+            <p id="about" contenteditable="true" data-collection="users" data-field="about"></p>
+        </section>
+
+        <section class="glass-panel">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-grid" id="skills"></div>
+        </section>
+
+        <section class="glass-panel">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects-grid" id="projects"></div>
+        </section>
+
+        <section class="glass-panel">
+            <h2 class="section-title">Education</h2>
+            <div id="education"></div>
+        </section>
+
+        <footer>
+            <p>© 2026 PortfolioX • Modern Edition</p>
+        </footer>
+    </div>
+
+    <!-- ================= FIREBASE DATA FETCH & SYNC ================= -->
+    <script type="module">
+        import { initializeApp } from
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            collection,
+            getDocs,
+            updateDoc
+        } from
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+            authDomain: "portfoliox-2e787.firebaseapp.com",
+            projectId: "portfoliox-2e787"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const fullName = document.getElementById("fullName");
+        const role = document.getElementById("role");
+        const about = document.getElementById("about");
+        const locationEl = document.getElementById("location");
+        const github = document.getElementById("github");
+        const linkedin = document.getElementById("linkedin");
+
+        const skillsEl = document.getElementById("skills");
+        const projectsEl = document.getElementById("projects");
+        const educationEl = document.getElementById("education");
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) return;
+            currentUser = user;
+
+            /* PROFILE */
+            const userRef = doc(db, "users", user.uid);
+            const snap = await getDoc(userRef);
+            const data = snap.data();
+
+            fullName.textContent = data.fullName || "Your Name";
+            role.textContent = data.role || "Your Role";
+            about.textContent = data.about || "Your Bio";
+            locationEl.textContent = data.location || "Location";
+            if (data.github) github.href = data.github;
+            if (data.linkedin) linkedin.href = data.linkedin;
+
+            /* SKILLS */
+            const skillsSnap = await getDocs(collection(db, "users", user.uid, "skills"));
+            skillsSnap.forEach(docSnap => {
+                const s = docSnap.data();
+                skillsEl.innerHTML += `<div class="skill-badge" contenteditable="true" data-collection="skills" data-docid="${docSnap.id}" data-field="name">${s.name}</div>`;
+            });
+
+            /* PROJECTS */
+            const projectSnap = await getDocs(collection(db, "users", user.uid, "projects"));
+            projectSnap.forEach(docSnap => {
+                const p = docSnap.data();
+                projectsEl.innerHTML += `
+      <div class="project-card">
+        <h3 class="project-title" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="title">${p.title}</h3>
+        <p class="project-desc" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="description">${p.description}</p>
+        <div class="project-tech" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="tech">${p.tech}</div>
+        ${p.link ? `<a href="${p.link}" target="_blank" class="project-link" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="link">View Live Project →</a>` : ""}
+      </div>
+    `;
+            });
+
+            /* EDUCATION */
+            const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
+            eduSnap.forEach(docSnap => {
+                const e = docSnap.data();
+                educationEl.innerHTML += `
+      <div class="edu-item">
+        <h3 class="edu-degree" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="degree">${e.degree}</h3>
+        <p class="edu-institute" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="institute">${e.institute}</p>
+        <p class="edu-meta"><span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="year">${e.year}</span> ${e.grade ? `| <span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="grade">${e.grade}</span>` : ""}</p>
+      </div>
+    `;
+            });
+
+            /* READ-ONLY MODE CHECK */
+            const urlParams = new URLSearchParams(window.location.search);
+            const isReadOnly = urlParams.get('mode') === 'readonly';
+            if (isReadOnly) {
+                const editableElements = document.querySelectorAll('[contenteditable="true"]');
+                editableElements.forEach(el => el.removeAttribute('contenteditable'));
+            } else {
+                document.querySelectorAll('a[contenteditable="true"]').forEach(el => {
+                    el.addEventListener('click', (e) => e.preventDefault());
+                });
+            }
+        });
+
+        /* IN-PLACE EDITING (SAVE ON BLUR) */
+        document.addEventListener("blur", async (e) => {
+            if (e.target.hasAttribute("contenteditable") && currentUser) {
+                const el = e.target;
+                // Don't save empty tags easily to DB unless meant to be empty
+                const collectionName = el.getAttribute("data-collection");
+                const docId = el.getAttribute("data-docid") || currentUser.uid;
+                const field = el.getAttribute("data-field");
+                const newValue = el.innerText.trim();
+
+                if (collectionName && field) {
+                    try {
+                        let docRef;
+                        if (collectionName === "users") {
+                            docRef = doc(db, "users", docId);
+                        } else {
+                            docRef = doc(db, "users", currentUser.uid, collectionName, docId);
+                        }
+
+                        await updateDoc(docRef, { [field]: newValue });
+                        console.log(`Updated ${field} in ${collectionName}`);
+                    } catch (err) {
+                        console.error("Error updating document:", err);
+                    }
+                }
+            }
+        }, true);
+
+    </script>
+
+</body>
+
+</html>

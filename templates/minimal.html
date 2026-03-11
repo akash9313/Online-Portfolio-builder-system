@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Minimal Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #ffffff;
+            color: #111827;
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        [contenteditable="true"]:hover {
+            outline: 1px dashed #d1d5db;
+            cursor: text;
+            background: #f9fafb;
+        }
+
+        [contenteditable="true"]:focus {
+            outline: 1px solid #111827;
+            background: #f3f4f6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        header {
+            margin-bottom: 100px;
+        }
+
+        #fullName {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin: 0 0 10px 0;
+            color: #000000;
+        }
+
+        #role {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #6b7280;
+            margin: 0 0 20px 0;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .contact-info a {
+            color: #111827;
+            text-decoration: none;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 2px;
+            transition: border-color 0.2s;
+        }
+
+        .contact-info a:hover {
+            border-color: #111827;
+        }
+
+        section {
+            margin-bottom: 80px;
+        }
+
+        h2.section-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #9ca3af;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        #about {
+            font-size: 1.1rem;
+            color: #374151;
+            max-width: 650px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-item {
+            font-size: 0.95rem;
+            color: #111827;
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 4px;
+        }
+
+        .project-item {
+            margin-bottom: 40px;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+
+        .project-desc {
+            color: #4b5563;
+            margin: 0 0 15px 0;
+            max-width: 650px;
+        }
+
+        .project-meta {
+            font-size: 0.85rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .project-link {
+            color: #111827;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .project-link:hover {
+            text-decoration: underline;
+        }
+
+        .edu-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .edu-year {
+            font-size: 0.9rem;
+            color: #6b7280;
+            padding-top: 4px;
+        }
+
+        .edu-details h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+        }
+
+        .edu-details p {
+            color: #4b5563;
+            margin: 0;
+        }
+
+        footer {
+            margin-top: 100px;
+            padding-top: 40px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.85rem;
+            color: #9ca3af;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 600px) {
+            .edu-item {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .edu-year {
+                padding-top: 0;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1 id="fullName" contenteditable="true" data-collection="users" data-field="fullName">...</h1>
+            <p id="role" contenteditable="true" data-collection="users" data-field="role">...</p>
+
+            <div class="contact-info">
+                <span id="location" contenteditable="true" data-collection="users" data-field="location"></span>
+                <a id="github" target="_blank" contenteditable="true" data-collection="users"
+                    data-field="github">GitHub</a>
+                <a id="linkedin" target="_blank" contenteditable="true" data-collection="users"
+                    data-field="linkedin">LinkedIn</a>
+            </div>
+        </header>
+
+        <main>
+            <section>
+                <h2 class="section-title">About</h2>
+                <p id="about" contenteditable="true" data-collection="users" data-field="about"></p>
+            </section>
+
+            <section>
+                <h2 class="section-title">Expertise</h2>
+                <div class="skills-list" id="skills"></div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Selected Works</h2>
+                <div id="projects"></div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Education</h2>
+                <div id="education"></div>
+            </section>
+        </main>
+
+        <footer>
+            <div contenteditable="true" data-collection="users" data-field="fullName" id="footerName"></div>
+            <div>Minimalist Theme</div>
+        </footer>
+    </div>
+
+    <!-- ================= FIREBASE DATA FETCH & SYNC ================= -->
+    <script type="module">
+        import { initializeApp } from
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            collection,
+            getDocs,
+            updateDoc
+        } from
+            "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+            authDomain: "portfoliox-2e787.firebaseapp.com",
+            projectId: "portfoliox-2e787"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const fullName = document.getElementById("fullName");
+        const footerName = document.getElementById("footerName");
+        const role = document.getElementById("role");
+        const about = document.getElementById("about");
+        const locationEl = document.getElementById("location");
+        const github = document.getElementById("github");
+        const linkedin = document.getElementById("linkedin");
+
+        const skillsEl = document.getElementById("skills");
+        const projectsEl = document.getElementById("projects");
+        const educationEl = document.getElementById("education");
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) return;
+            currentUser = user;
+
+            /* PROFILE */
+            const userRef = doc(db, "users", user.uid);
+            const snap = await getDoc(userRef);
+            const data = snap.data();
+
+            fullName.textContent = data.fullName || "Name";
+            footerName.textContent = `© ${new Date().getFullYear()} ${data.fullName || "Name"}`;
+            role.textContent = data.role || "Role";
+            about.textContent = data.about || "Bio";
+            locationEl.textContent = data.location || "Location";
+            if (data.github) github.href = data.github;
+            if (data.linkedin) linkedin.href = data.linkedin;
+
+            /* SKILLS */
+            const skillsSnap = await getDocs(collection(db, "users", user.uid, "skills"));
+            skillsSnap.forEach(docSnap => {
+                const s = docSnap.data();
+                skillsEl.innerHTML += `<div class="skill-item" contenteditable="true" data-collection="skills" data-docid="${docSnap.id}" data-field="name">${s.name}</div>`;
+            });
+
+            /* PROJECTS */
+            const projectSnap = await getDocs(collection(db, "users", user.uid, "projects"));
+            projectSnap.forEach(docSnap => {
+                const p = docSnap.data();
+                projectsEl.innerHTML += `
+      <div class="project-item">
+        <h3 class="project-title" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="title">${p.title}</h3>
+        <p class="project-desc" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="description">${p.description}</p>
+        <div class="project-meta">
+          <span contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="tech">${p.tech}</span>
+          ${p.link ? `· <a href="${p.link}" target="_blank" class="project-link" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="link">View</a>` : ""}
+        </div>
+      </div>
+    `;
+            });
+
+            /* EDUCATION */
+            const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
+            eduSnap.forEach(docSnap => {
+                const e = docSnap.data();
+                educationEl.innerHTML += `
+      <div class="edu-item">
+        <div class="edu-year"><span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="year">${e.year}</span></div>
+        <div class="edu-details">
+          <h3 contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="degree">${e.degree}</h3>
+          <p><span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="institute">${e.institute}</span>${e.grade ? ` · <span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="grade">${e.grade}</span>` : ""}</p>
+        </div>
+      </div>
+    `;
+            });
+
+            /* READ-ONLY MODE CHECK */
+            const urlParams = new URLSearchParams(window.location.search);
+            const isReadOnly = urlParams.get('mode') === 'readonly';
+            if (isReadOnly) {
+                const editableElements = document.querySelectorAll('[contenteditable="true"]');
+                editableElements.forEach(el => el.removeAttribute('contenteditable'));
+            } else {
+                document.querySelectorAll('a[contenteditable="true"]').forEach(el => {
+                    el.addEventListener('click', (e) => e.preventDefault());
+                });
+            }
+
+        });
+
+        /* IN-PLACE EDITING (SAVE ON BLUR) */
+        document.addEventListener("blur", async (e) => {
+            if (e.target.hasAttribute("contenteditable") && currentUser) {
+                const el = e.target;
+                // Don't save footerName back to fullName directly since it has copyright text, just ignore it for now or handle cleanly.
+                if (el.id === "footerName") return;
+
+                const collectionName = el.getAttribute("data-collection");
+                const docId = el.getAttribute("data-docid") || currentUser.uid;
+                const field = el.getAttribute("data-field");
+                const newValue = el.innerText.trim();
+
+                if (collectionName && field) {
+                    try {
+                        let docRef;
+                        if (collectionName === "users") {
+                            docRef = doc(db, "users", docId);
+                        } else {
+                            docRef = doc(db, "users", currentUser.uid, collectionName, docId);
+                        }
+
+                        await updateDoc(docRef, { [field]: newValue });
+                        console.log(`Updated ${field} in ${collectionName}`);
+                    } catch (err) {
+                        console.error("Error updating document:", err);
+                    }
+                }
+            }
+        }, true);
+    </script>
+
+</body>
+
+</html>
