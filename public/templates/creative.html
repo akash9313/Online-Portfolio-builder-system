@@ -424,11 +424,15 @@
             const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
             eduSnap.forEach(docSnap => {
                 const e = docSnap.data();
+                const degree = e.degree || e.name || e.university?.degree || e.school?.name || "Degree";
+                const institute = e.institute || e.university?.name || e.school?.board || "Institution";
+                const year = e.year || e.university?.year || e.school?.year || "Year";
+                const grade = e.grade || e.university?.grade || e.school?.grade || "";
                 educationEl.innerHTML += `
       <div class="timeline-item">
-        <h3 class="edu-degree" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="degree">${e.degree}</h3>
-        <p class="edu-institute" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="institute">${e.institute}</p>
-        <p class="edu-meta"><span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="year">${e.year}</span> | <span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="grade">${e.grade || ""}</span></p>
+        <h3 class="edu-degree" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="degree">${degree}</h3>
+        <p class="edu-institute" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="institute">${institute}</p>
+        <p class="edu-meta"><span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="year">${year}</span> | <span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="grade">${grade}</span></p>
       </div>
     `;
             });

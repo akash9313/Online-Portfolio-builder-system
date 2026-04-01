@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | PortfolioX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-base:      #0a0e1a;
+      --bg-card:      rgba(255,255,255,0.04);
+      --border:       rgba(56,189,248,0.18);
+      --border-hover: rgba(56,189,248,0.45);
+      --accent:       #38bdf8;
+      --accent-2:     #6366f1;
+      --accent-3:     #22c55e;
+      --text-primary: #f1f5f9;
+      --text-muted:   #94a3b8;
+      --danger:       #ef4444;
+      --warning:      #f59e0b;
+      --gradient:     linear-gradient(135deg, #38bdf8, #6366f1);
+      --glow:         0 0 40px rgba(56,189,248,0.2);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Animated background ── */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(56,189,248,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56,189,248,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+    }
+
+    .orb {
+      position: fixed; border-radius: 50%; filter: blur(80px);
+      pointer-events: none; z-index: 0; animation: orbFloat 12s ease-in-out infinite;
+    }
+    .orb-1 {
+      width: 500px; height: 500px; top: -160px; left: -140px;
+      background: radial-gradient(circle, rgba(56,189,248,0.12), transparent 70%);
+      animation-delay: 0s;
+    }
+    .orb-2 {
+      width: 420px; height: 420px; bottom: -120px; right: -100px;
+      background: radial-gradient(circle, rgba(99,102,241,0.13), transparent 70%);
+      animation-delay: -6s;
+    }
+    .orb-3 {
+      width: 250px; height: 250px; top: 40%; left: 55%;
+      background: radial-gradient(circle, rgba(34,197,94,0.07), transparent 70%);
+      animation-delay: -3s;
+    }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(24px, -18px) scale(1.04); }
+      66%       { transform: translate(-14px, 12px) scale(0.97); }
+    }
+
+    /* ── Floating particles ── */
+    .particles { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: var(--accent); opacity: 0;
+      animation: particleFade var(--dur, 8s) ease-in-out var(--delay, 0s) infinite;
+    }
+    @keyframes particleFade {
+      0%   { opacity: 0; transform: translateY(0) scale(0); }
+      20%  { opacity: 0.5; }
+      80%  { opacity: 0.2; }
+      100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
+    }
+
+    /* ── Main card ── */
+    .login-wrap {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 460px;
+      padding: 1rem;
+      animation: cardIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(40px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-card {
+      background: rgba(12,17,32,0.9);
+      backdrop-filter: blur(32px);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.8rem 2.6rem;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5), var(--glow);
+      position: relative; overflow: hidden;
+    }
+    .login-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--gradient);
+    }
+    /* Inner glow shimmer */
+    .login-card::after {
+      content: ''; position: absolute;
+      top: -60%; left: -30%; width: 160%; height: 60%;
+      background: linear-gradient(180deg, rgba(56,189,248,0.04) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* ── Header ── */
+    .card-header { text-align: center; margin-bottom: 2.2rem; }
+    .logo-mark {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 1.6rem; font-weight: 800; text-decoration: none; color: var(--text-primary);
+      margin-bottom: 1.4rem;
+    }
+    .logo-mark .icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.25);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent); font-size: 1.1rem;
+    }
+    .logo-mark .x { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    .card-header h1 { font-size: 1.55rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .card-header p  { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* ── Alert banner ── */
+    .alert-banner {
+      display: none; align-items: flex-start; gap: 10px;
+      padding: 0.9rem 1.1rem; border-radius: 14px;
+      font-size: 0.85rem; font-weight: 500; line-height: 1.5;
+      margin-bottom: 1.4rem;
+      animation: fadeSlideUp 0.3s ease both;
+    }
+    .alert-banner.show { display: flex; }
+    .alert-banner.warn {
+      background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: var(--warning);
+    }
+    .alert-banner.error {
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: var(--danger);
+    }
+    .alert-banner.success {
+      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: var(--accent-3);
+    }
+    .alert-banner i { margin-top: 1px; flex-shrink: 0; }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 1.2rem; }
+    .form-label {
+      display: block; font-size: 0.76rem; font-weight: 700;
+      color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.07em; margin-bottom: 0.45rem;
+    }
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-icon {
+      position: absolute; left: 15px; color: var(--text-muted);
+      font-size: 0.88rem; pointer-events: none; transition: color 0.25s; z-index: 1;
+    }
+    .input-wrap:focus-within .input-icon { color: var(--accent); }
+
+    .field-input {
+      width: 100%; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 13px; padding: 13px 16px 13px 42px;
+      color: var(--text-primary); font-family: 'Inter', sans-serif;
+      font-size: 0.93rem; transition: all 0.25s ease; outline: none;
+    }
+    .field-input:focus {
+      border-color: var(--accent);
+      background: rgba(56,189,248,0.05);
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.12);
+    }
+    .field-input::placeholder { color: rgba(148,163,184,0.4); }
+    .field-input.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+
+    .pw-toggle {
+      position: absolute; right: 14px; background: none; border: none;
+      color: var(--text-muted); cursor: pointer; font-size: 0.88rem;
+      transition: color 0.2s; padding: 4px;
+    }
+    .pw-toggle:hover { color: var(--accent); }
+
+    /* Forgot link row */
+    .form-row-meta {
+      display: flex; justify-content: flex-end; margin-top: -0.5rem; margin-bottom: 1.2rem;
+    }
+    .forgot-link {
+      font-size: 0.8rem; color: var(--accent); text-decoration: none; font-weight: 600;
+      transition: opacity 0.2s; padding: 2px 0;
+    }
+    .forgot-link:hover { opacity: 0.75; }
+
+    /* ── Buttons ── */
+    .btn-main {
+      width: 100%; padding: 14px; border-radius: 13px; border: none;
+      font-family: 'Inter', sans-serif; font-size: 0.97rem; font-weight: 700;
+      cursor: pointer; transition: all 0.35s ease;
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      position: relative; overflow: hidden;
+    }
+    .btn-primary {
+      background: var(--gradient); color: white;
+      box-shadow: 0 6px 24px rgba(56,189,248,0.32);
+      margin-bottom: 1rem;
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-3px); box-shadow: 0 16px 40px rgba(56,189,248,0.42);
+    }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .btn-google {
+      background: rgba(255,255,255,0.05); color: var(--text-primary);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .btn-google:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.22); transform: translateY(-2px); }
+
+    .google-icon {
+      width: 20px; height: 20px; flex-shrink: 0;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+      animation: spin 0.75s linear infinite; display: none; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-main.loading .spinner { display: block; }
+    .btn-main.loading .btn-text { opacity: 0.7; }
+
+    /* Divider */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 1.2rem 0; color: var(--text-muted); font-size: 0.8rem; font-weight: 600;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08);
+    }
+
+    /* Footer */
+    .card-footer {
+      text-align: center; margin-top: 1.6rem;
+      font-size: 0.85rem; color: var(--text-muted);
+    }
+    .card-footer a { color: var(--accent); text-decoration: none; font-weight: 600; transition: opacity 0.2s; }
+    .card-footer a:hover { opacity: 0.75; }
+
+    /* Features row */
+    .features-row {
+      display: flex; justify-content: center; gap: 1.4rem;
+      margin-top: 1.8rem; padding-top: 1.6rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      flex-wrap: wrap;
+    }
+    .feature-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; color: var(--text-muted); font-weight: 500;
+    }
+    .feature-item i { color: var(--accent-3); font-size: 0.7rem; }
+
+    /* ── Toast (top center) ── */
+    .toast {
+      position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%) translateY(-120%);
+      background: rgba(17,24,39,0.97); backdrop-filter: blur(20px);
+      border: 1px solid rgba(34,197,94,0.35); border-radius: 14px;
+      padding: 0.9rem 1.4rem; display: flex; align-items: center; gap: 10px;
+      font-size: 0.9rem; font-weight: 500; color: var(--text-primary);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); z-index: 9999;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success i { color: var(--accent-3); }
+    .toast.error   { border-color: rgba(239,68,68,0.35); }
+    .toast.error   i { color: var(--danger); }
+    .toast.warn    { border-color: rgba(245,158,11,0.35); }
+    .toast.warn    i { color: var(--warning); }
+
+    @media (max-width: 480px) {
+      .login-card { padding: 2rem 1.5rem; border-radius: 20px; }
+      .features-row { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="particles" id="particles"></div>
+
+<!-- Toast -->
+<div class="toast success" id="toast">
+  <i class="fas fa-check-circle" id="toastIcon"></i>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- Login Card -->
+<div class="login-wrap">
+  <div class="login-card">
+
+    <!-- Header -->
+    <div class="card-header">
+      <a href="#" class="logo-mark">
+        <div class="icon"><i class="fas fa-rocket"></i></div>
+        Portfolio<span class="x">X</span>
+      </a>
+      <h1>Welcome back</h1>
+      <p>Sign in to continue building your portfolio</p>
+    </div>
+
+    <!-- Alert banner -->
+    <div class="alert-banner warn" id="alertBanner">
+      <i class="fas fa-triangle-exclamation"></i>
+      <span id="alertMsg">Your email is not verified. Please check your Inbox, Spam, or Promotions folder.</span>
+    </div>
+
+    <!-- Form -->
+    <form id="loginForm" novalidate>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-wrap">
+          <i class="fas fa-envelope input-icon"></i>
+          <input class="field-input" type="email" id="email" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock input-icon"></i>
+          <input class="field-input" type="password" id="password" placeholder="Enter your password" autocomplete="current-password" required>
+          <button class="pw-toggle" type="button" id="pwToggle" title="Show/hide password">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-row-meta">
+        <a href="#" class="forgot-link" id="forgotPassword">Forgot password?</a>
+      </div>
+
+      <button class="btn-main btn-primary" type="submit" id="loginBtn">
+        <div class="spinner"></div>
+        <span class="btn-text"><i class="fas fa-arrow-right-to-bracket"></i>&nbsp; Sign In</span>
+      </button>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">OR CONTINUE WITH</div>
+
+    <!-- Google -->
+    <button class="btn-main btn-google" type="button" id="googleBtn">
+      <div class="spinner"></div>
+      <svg class="google-icon btn-text" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      <span class="btn-text">Continue with Google</span>
+    </button>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      Don't have an account? <a href="usersignup.html">Create one free</a>
+    </div>
+
+    <!-- Features -->
+    <div class="features-row">
+      <div class="feature-item"><i class="fas fa-check"></i> Free forever</div>
+      <div class="feature-item"><i class="fas fa-check"></i> No credit card</div>
+      <div class="feature-item"><i class="fas fa-check"></i> Instant publish</div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import {
+    getAuth, setPersistence, browserLocalPersistence,
+    signInWithEmailAndPassword, GoogleAuthProvider,
+    signInWithPopup, sendPasswordResetEmail, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+    authDomain: "portfoliox-2e787.firebaseapp.com",
+    projectId: "portfoliox-2e787",
+    storageBucket: "portfoliox-2e787.firebasestorage.app",
+    messagingSenderId: "562709786891",
+    appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  await setPersistence(auth, browserLocalPersistence);
+
+  /* ── Particles ── */
+  const pWrap = document.getElementById('particles');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1.5;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --dur:${6 + Math.random()*8}s;
+      --delay:${Math.random()*8}s;
+      opacity:${Math.random()*0.4};
+    `;
+    pWrap.appendChild(p);
+  }
+
+  /* ── Toast ── */
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    document.getElementById('toastIcon').className  =
+      type === 'success' ? 'fas fa-check-circle'
+      : type === 'error' ? 'fas fa-times-circle'
+      :                    'fas fa-triangle-exclamation';
+    t.className = `toast ${type}`;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  /* ── Alert banner ── */
+  function showAlert(msg, type = 'warn') {
+    const b = document.getElementById('alertBanner');
+    document.getElementById('alertMsg').textContent = msg;
+    b.className = `alert-banner ${type} show`;
+  }
+  function hideAlert() {
+    document.getElementById('alertBanner').classList.remove('show');
+  }
+
+  /* ── Password toggle ── */
+  const pwInput  = document.getElementById('password');
+  const pwToggle = document.getElementById('pwToggle');
+  pwToggle.addEventListener('click', () => {
+    pwInput.type = pwInput.type === 'password' ? 'text' : 'password';
+    pwToggle.querySelector('i').className = pwInput.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+  });
+
+  /* ── Auto login ── */
+  onAuthStateChanged(auth, user => {
+    if (user && user.emailVerified) window.location.replace('dashboard.html');
+  });
+
+  /* ── Error message humanizer ── */
+  function friendlyError(code) {
+    const map = {
+      'auth/user-not-found':      'No account found with this email.',
+      'auth/wrong-password':      'Incorrect password. Please try again.',
+      'auth/invalid-email':       'Please enter a valid email address.',
+      'auth/too-many-requests':   'Too many attempts. Please wait a moment.',
+      'auth/user-disabled':       'This account has been disabled.',
+      'auth/network-request-failed': 'Network error. Check your connection.',
+      'auth/invalid-credential':  'Invalid email or password.',
+    };
+    return map[code] || 'Something went wrong. Please try again.';
+  }
+
+  /* ── Email login ── */
+  document.getElementById('loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    hideAlert();
+
+    const email = document.getElementById('email').value.trim();
+    const pwd   = document.getElementById('password').value;
+    const btn   = document.getElementById('loginBtn');
+
+    if (!email || !pwd) {
+      showAlert('Please fill in both fields.', 'warn');
+      return;
+    }
+
+    btn.classList.add('loading'); btn.disabled = true;
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, pwd);
+      if (!cred.user.emailVerified) {
+        showAlert('Your email is not verified. Please check your Inbox, Spam, or Promotions folder.', 'warn');
+        btn.classList.remove('loading'); btn.disabled = false;
+        return;
+      }
+      showToast('Signing you in…');
+      setTimeout(() => window.location.replace('dashboard.html'), 800);
+    } catch (err) {
+      showAlert(friendlyError(err.code), 'error');
+      document.getElementById('password').classList.add('error');
+      setTimeout(() => document.getElementById('password').classList.remove('error'), 2500);
+      btn.classList.remove('loading'); btn.disabled = false;
+    }
+  });
+
+  /* Clear error state on typing */
+  document.getElementById('password').addEventListener('input', () => {
+    document.getElementById('password').classList.remove('error');
+    hideAlert();
+  });
+  document.getElementById('email').addEventListener('input', hideAlert);
+
+  /* ── Forgot password ── */
+  document.getElementById('forgotPassword').addEventListener('click', async e => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    if (!email) {
+      showAlert('Enter your email above first, then click Forgot Password.', 'warn');
+      document.getElementById('email').focus();
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      showToast('Reset email sent! Check your inbox & spam.', 'success');
+    } catch (err) {
+      showAlert(friendlyError(err.code), 'error');
+    }
+  });
+
+  /* ── Google login ── */
+  document.getElementById('googleBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('googleBtn');
+    btn.classList.add('loading'); btn.disabled = true;
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      showToast('Signed in with Google!');
+      setTimeout(() => window.location.replace('dashboard.html'), 700);
+    } catch (err) {
+      if (err.code !== 'auth/popup-closed-by-user') {
+        showAlert(friendlyError(err.code), 'error');
+      }
+      btn.classList.remove('loading'); btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

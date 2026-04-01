@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Skills | PortfolioX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-base:      #0a0e1a;
+      --bg-card:      rgba(255,255,255,0.04);
+      --border:       rgba(56,189,248,0.15);
+      --border-hover: rgba(56,189,248,0.4);
+      --accent:       #38bdf8;
+      --accent-2:     #6366f1;
+      --accent-3:     #22c55e;
+      --accent-warn:  #f59e0b;
+      --text-primary: #f1f5f9;
+      --text-muted:   #94a3b8;
+      --danger:       #ef4444;
+      --gradient:     linear-gradient(135deg, #38bdf8, #6366f1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; top: -200px; left: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: ''; position: fixed; bottom: -200px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── Loading ── */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,14,26,0.98);
+      backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9998; transition: opacity 0.4s ease;
+    }
+    .loader-ring {
+      width: 56px; height: 56px;
+      border: 3px solid rgba(56,189,248,0.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 1.2rem;
+    }
+    .loader-content { text-align: center; }
+    .loader-content p { color: var(--text-muted); font-size: 0.95rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; top: 100px; right: 2rem;
+      background: rgba(17,24,39,0.96);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(34,197,94,0.4);
+      border-radius: 14px; padding: 1rem 1.5rem;
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.93rem; font-weight: 500; color: var(--text-primary);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      transform: translateX(130%);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 9999;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast i { color: var(--accent-3); font-size: 1.1rem; }
+    .toast.error { border-color: rgba(239,68,68,0.4); }
+    .toast.error i { color: var(--danger); }
+
+    /* ── Confirm modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 8000;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: #111827; border: 1px solid var(--border);
+      border-radius: 20px; padding: 2rem;
+      max-width: 380px; width: 90%;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .modal-overlay.open .modal-box { transform: scale(1); }
+    .modal-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .modal-box p  { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; }
+    .modal-cancel {
+      background: rgba(255,255,255,0.06); color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+      padding: 10px 20px; font-family: 'Inter', sans-serif;
+      font-weight: 600; font-size: 0.88rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modal-cancel:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+    .modal-confirm {
+      background: rgba(239,68,68,0.15); color: var(--danger);
+      border: 1px solid rgba(239,68,68,0.3); border-radius: 10px;
+      padding: 10px 20px; font-family: 'Inter', sans-serif;
+      font-weight: 600; font-size: 0.88rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modal-confirm:hover { background: rgba(239,68,68,0.25); }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(10,14,26,0.92); backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border); z-index: 1000; padding: 1rem 0;
+    }
+    .nav-container {
+      max-width: 1400px; margin: 0 auto; padding: 0 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 1.5rem; font-weight: 800;
+      text-decoration: none; color: var(--text-primary);
+    }
+    .logo i { color: var(--accent); }
+    .logo .x { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+    .nav-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: 12px; border: none;
+      font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.3s ease; text-decoration: none;
+    }
+    .btn-preview { background: rgba(34,197,94,0.12); color: var(--accent-3); border: 1px solid rgba(34,197,94,0.25); }
+    .btn-preview:hover { background: rgba(34,197,94,0.22); transform: translateY(-2px); }
+    .btn-publish { background: var(--gradient); color: white; box-shadow: 0 4px 15px rgba(56,189,248,0.3); }
+    .btn-publish:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(56,189,248,0.4); }
+    .btn-logout { background: rgba(239,68,68,0.12); color: var(--danger); border: 1px solid rgba(239,68,68,0.25); padding: 10px 16px; }
+    .btn-logout:hover { background: rgba(239,68,68,0.22); transform: translateY(-2px); }
+
+    /* ── Layout ── */
+    .layout { display: flex; min-height: calc(100vh - 72px); margin-top: 72px; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 280px; background: rgba(10,14,26,0.92);
+      backdrop-filter: blur(24px); border-right: 1px solid var(--border);
+      padding: 2rem 0; position: sticky; top: 72px;
+      height: calc(100vh - 72px); overflow-y: auto; flex-shrink: 0;
+    }
+    .sidebar-header { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); margin-bottom: 1.5rem; }
+    .sidebar-header h3 { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; }
+    .sidebar-progress { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+    .sidebar-progress-fill { height: 100%; background: var(--gradient); border-radius: 2px; width: 0%; transition: width 1.5s cubic-bezier(0.4,0,0.2,1); }
+    .sidebar-nav { display: flex; flex-direction: column; }
+    .nav-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 0.9rem 1.5rem; color: var(--text-muted);
+      text-decoration: none; font-weight: 500; font-size: 0.95rem;
+      transition: all 0.25s ease; border-left: 3px solid transparent;
+    }
+    .nav-item:hover { background: rgba(56,189,248,0.07); color: var(--text-primary); border-left-color: rgba(56,189,248,0.4); padding-left: 2rem; }
+    .nav-item.active { background: rgba(56,189,248,0.12); color: var(--accent); border-left-color: var(--accent); padding-left: 2rem; }
+    .nav-item i { width: 18px; font-size: 1rem; }
+
+    /* ── Main ── */
+    .skills-main { flex: 1; padding: 2.5rem; max-width: calc(100% - 280px); overflow-y: auto; position: relative; z-index: 1; }
+
+    .page-title { margin-bottom: 2rem; animation: fadeSlideUp 0.3s ease both; }
+    .page-title h2 { font-size: 1.8rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .page-title p { color: var(--text-muted); margin-top: 0.4rem; font-size: 0.95rem; }
+
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+      margin-bottom: 1.5rem;
+      animation: fadeSlideUp 0.35s ease both;
+    }
+    .stat-pill {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.2rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .stat-pill::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--gradient); opacity: 0; transition: opacity 0.3s;
+    }
+    .stat-pill:hover::before { opacity: 1; }
+    .stat-pill:hover { border-color: var(--border-hover); transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.2); }
+    .stat-pill-icon {
+      width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    }
+    .stat-pill-icon.blue   { background: rgba(56,189,248,0.15); color: var(--accent); }
+    .stat-pill-icon.purple { background: rgba(99,102,241,0.15); color: var(--accent-2); }
+    .stat-pill-icon.green  { background: rgba(34,197,94,0.15);  color: var(--accent-3); }
+    .stat-pill-icon.yellow { background: rgba(245,158,11,0.15); color: var(--accent-warn); }
+    .stat-pill-info { min-width: 0; }
+    .stat-pill-num   { font-size: 1.6rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+    .stat-pill-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
+
+    /* ── Section card ── */
+    .section-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 2rem 2.5rem; margin-bottom: 1.5rem;
+      transition: border-color 0.3s ease;
+      animation: fadeSlideUp 0.4s ease both;
+    }
+    .section-card:hover { border-color: var(--border-hover); }
+
+    .section-title {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 1.05rem; font-weight: 700; color: var(--text-primary);
+      margin-bottom: 1.8rem; padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .section-title .icon-box {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(56,189,248,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent); font-size: 0.9rem;
+    }
+
+    /* ── Add skill form ── */
+    .skill-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    label { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+    .input-wrap { position: relative; }
+    .input-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.88rem; pointer-events: none; transition: color 0.2s; }
+    .input-wrap:focus-within .input-icon { color: var(--accent); }
+
+    input[type="text"], input[type="url"] {
+      width: 100%; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+      padding: 13px 16px 13px 42px;
+      color: var(--text-primary); font-family: 'Inter', sans-serif;
+      font-size: 0.93rem; transition: all 0.25s ease; outline: none;
+    }
+    input:focus { border-color: var(--accent); background: rgba(56,189,248,0.05); box-shadow: 0 0 0 3px rgba(56,189,248,0.1); }
+    input::placeholder { color: rgba(148,163,184,0.45); }
+
+    /* Custom select */
+    .custom-select { position: relative; user-select: none; }
+    .custom-select .selected {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 13px 16px; cursor: pointer;
+      font-size: 0.93rem; color: var(--text-muted);
+      transition: all 0.25s ease;
+    }
+    .custom-select.open .selected,
+    .custom-select .selected:hover { border-color: var(--accent); background: rgba(56,189,248,0.05); }
+    .custom-select .selected .level-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .selected-text { flex: 1; }
+    .custom-select .chevron { transition: transform 0.25s ease; color: var(--text-muted); font-size: 0.8rem; }
+    .custom-select.open .chevron { transform: rotate(180deg); }
+
+    .custom-select .options {
+      position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+      background: #111827; border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+      z-index: 100; opacity: 0; transform: translateY(-6px); pointer-events: none;
+      transition: all 0.2s ease;
+    }
+    .custom-select.open .options { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .custom-select .option {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; cursor: pointer; font-size: 0.93rem;
+      transition: background 0.15s ease;
+    }
+    .custom-select .option:hover { background: rgba(56,189,248,0.08); }
+    .custom-select .option.selected-opt { background: rgba(56,189,248,0.12); color: var(--accent); }
+    .option-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .dot-beginner     { background: var(--accent-warn); }
+    .dot-intermediate { background: var(--accent); }
+    .dot-advanced     { background: var(--accent-3); }
+
+    /* Add button */
+    .btn-add {
+      display: flex; align-items: center; gap: 8px;
+      padding: 13px 24px; background: var(--gradient); color: white;
+      border: none; border-radius: 12px; font-family: 'Inter', sans-serif;
+      font-weight: 700; font-size: 0.93rem; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(56,189,248,0.3);
+      transition: all 0.3s ease; white-space: nowrap;
+    }
+    .btn-add:hover { transform: translateY(-3px); box-shadow: 0 14px 35px rgba(56,189,248,0.4); }
+    .btn-add:active { transform: translateY(-1px); }
+    .btn-add.loading { opacity: 0.7; pointer-events: none; }
+
+    /* ── Search & filter bar ── */
+    .list-toolbar {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+    .search-wrap { position: relative; flex: 1; min-width: 180px; }
+    .search-wrap .input-icon { pointer-events: none; }
+    .search-input {
+      width: 100%; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+      padding: 11px 16px 11px 42px; color: var(--text-primary);
+      font-family: 'Inter', sans-serif; font-size: 0.88rem; outline: none;
+      transition: all 0.25s;
+    }
+    .search-input:focus { border-color: var(--accent); background: rgba(56,189,248,0.05); box-shadow: 0 0 0 3px rgba(56,189,248,0.1); }
+    .search-input::placeholder { color: rgba(148,163,184,0.4); }
+
+    .filter-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .filter-chip {
+      padding: 7px 16px; border-radius: 100px; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04);
+      color: var(--text-muted); transition: all 0.2s ease;
+    }
+    .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-chip.active { background: rgba(56,189,248,0.15); border-color: var(--accent); color: var(--accent); }
+    .filter-chip.all.active    { background: rgba(56,189,248,0.15); border-color: var(--accent);        color: var(--accent); }
+    .filter-chip.beg.active    { background: rgba(245,158,11,0.12); border-color: var(--accent-warn);   color: var(--accent-warn); }
+    .filter-chip.int.active    { background: rgba(56,189,248,0.12); border-color: var(--accent);        color: var(--accent); }
+    .filter-chip.adv.active    { background: rgba(34,197,94,0.12);  border-color: var(--accent-3);      color: var(--accent-3); }
+
+    /* ── Skills grid ── */
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    /* ── Skill card ── */
+    .skill-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 1.4rem;
+      display: flex; align-items: center; gap: 1rem;
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+      animation: cardIn 0.35s ease both;
+    }
+    @keyframes cardIn { from { opacity:0; transform: scale(0.92); } to { opacity:1; transform: scale(1); } }
+    .skill-card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.25); }
+    .skill-card.removing { animation: cardOut 0.3s ease forwards; }
+    @keyframes cardOut { to { opacity: 0; transform: scale(0.88); } }
+
+    /* level stripe */
+    .skill-card::before {
+      content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+    }
+    .skill-card.level-beginner::before     { background: var(--accent-warn); }
+    .skill-card.level-intermediate::before { background: var(--accent); }
+    .skill-card.level-advanced::before     { background: var(--accent-3); }
+
+    .skill-icon-wrap {
+      width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: 800;
+    }
+    .skill-card.level-beginner     .skill-icon-wrap { background: rgba(245,158,11,0.15); color: var(--accent-warn); }
+    .skill-card.level-intermediate .skill-icon-wrap { background: rgba(56,189,248,0.15); color: var(--accent); }
+    .skill-card.level-advanced     .skill-icon-wrap { background: rgba(34,197,94,0.15);  color: var(--accent-3); }
+
+    .skill-info { flex: 1; min-width: 0; }
+    .skill-name { font-size: 0.98rem; font-weight: 700; margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .skill-level-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; font-weight: 600; padding: 3px 10px;
+      border-radius: 100px; border: 1px solid;
+    }
+    .level-beginner     .skill-level-badge { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: var(--accent-warn); }
+    .level-intermediate .skill-level-badge { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3); color: var(--accent); }
+    .level-advanced     .skill-level-badge { background: rgba(34,197,94,0.1);  border-color: rgba(34,197,94,0.3);  color: var(--accent-3); }
+
+    .skill-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    .skill-actions-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.7rem; }
+    .skill-progress-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+    .skill-progress-fill { height: 100%; border-radius: 2px; }
+    .level-beginner     .skill-progress-fill { width: 33%; background: var(--accent-warn); }
+    .level-intermediate .skill-progress-fill { width: 66%; background: var(--accent); }
+    .level-advanced     .skill-progress-fill { width: 100%; background: var(--accent-3); }
+
+    .delete-btn {
+      width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+      background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.15);
+      color: rgba(239,68,68,0.5); font-size: 0.85rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .delete-btn:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.4); color: var(--danger); transform: scale(1.1); }
+
+    /* ── Empty state ── */
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 4rem 2rem; text-align: center;
+    }
+    .empty-icon {
+      width: 80px; height: 80px; border-radius: 20px;
+      background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: var(--accent); margin-bottom: 1.5rem;
+    }
+    .empty-state h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .empty-state p  { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 900px)  { .sidebar { width: 220px; } .skills-main { max-width: calc(100% - 220px); padding: 1.5rem; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid var(--border); padding: 0; }
+      .sidebar-header { display: none; }
+      .sidebar-nav { flex-direction: row; overflow-x: auto; padding: 0 1rem; }
+      .nav-item { padding: 0.8rem 1rem; white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
+      .nav-item.active { border-left: none; border-bottom-color: var(--accent); padding-left: 1rem; }
+      .nav-item:hover { padding-left: 1rem; }
+      .skills-main { max-width: 100%; }
+      .skill-form { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .nav-actions { gap: 0.5rem; }
+    }
+    @media (max-width: 480px) {
+      .section-card { padding: 1.4rem; }
+      .skills-main  { padding: 1rem; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader-content">
+    <div class="loader-ring"></div>
+    <p>Loading your skills…</p>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <i class="fas fa-check-circle" id="toastIcon"></i>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <h3>Remove Skill?</h3>
+    <p>Are you sure you want to remove <strong id="deleteSkillName"></strong>? This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" id="modalCancel">Cancel</button>
+      <button class="modal-confirm" id="modalConfirm"><i class="fas fa-trash"></i> Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="nav-container">
+    <a href="dashboard.html" class="logo">
+      <i class="fas fa-rocket"></i>Portfolio<span class="x">X</span>
+    </a>
+    <div class="nav-actions">
+      <a href="preview.html" class="nav-btn btn-preview" target="_blank"><i class="fas fa-eye"></i><span>Preview</span></a>
+      <a href="publish.html" class="nav-btn btn-publish"><i class="fas fa-rocket"></i><span>Publish</span></a>
+      <button class="nav-btn btn-logout" id="logoutBtn"><i class="fas fa-power-off"></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h3>Portfolio Builder</h3>
+      <div class="sidebar-progress"><div class="sidebar-progress-fill" id="sidebarProgress"></div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+      <a href="profile.html"   class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+      <a href="skills.html"    class="nav-item active"><i class="fas fa-brain"></i><span>Skills</span></a>
+      <a href="education.html" class="nav-item"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
+      <a href="projects.html"  class="nav-item"><i class="fas fa-project-diagram"></i><span>Projects</span></a>
+      <a href="templates.html" class="nav-item"><i class="fas fa-palette"></i><span>Templates</span></a>
+      <a href="preview.html"   class="nav-item" target="_blank"><i class="fas fa-eye"></i><span>Preview</span></a>
+      <a href="publish.html"   class="nav-item"><i class="fas fa-globe"></i><span>Publish</span></a>
+      <a href="settings.html"  class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="skills-main">
+
+    <div class="page-title">
+      <h2>My Skills</h2>
+      <p>Showcase your expertise and proficiency across technologies and tools.</p>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-pill">
+        <div class="stat-pill-icon blue"><i class="fas fa-layer-group"></i></div>
+        <div class="stat-pill-info">
+          <div class="stat-pill-num" id="statTotal">0</div>
+          <div class="stat-pill-label">Total Skills</div>
+        </div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill-icon green"><i class="fas fa-trophy"></i></div>
+        <div class="stat-pill-info">
+          <div class="stat-pill-num" id="statAdvanced">0</div>
+          <div class="stat-pill-label">Advanced</div>
+        </div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill-icon purple"><i class="fas fa-chart-bar"></i></div>
+        <div class="stat-pill-info">
+          <div class="stat-pill-num" id="statIntermediate">0</div>
+          <div class="stat-pill-label">Intermediate</div>
+        </div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill-icon yellow"><i class="fas fa-seedling"></i></div>
+        <div class="stat-pill-info">
+          <div class="stat-pill-num" id="statBeginner">0</div>
+          <div class="stat-pill-label">Beginner</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Skill -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="icon-box"><i class="fas fa-plus"></i></div>
+        Add New Skill
+      </div>
+      <div class="skill-form">
+        <div class="form-group">
+          <label>Skill Name</label>
+          <div class="input-wrap">
+            <i class="fas fa-code input-icon"></i>
+            <input type="text" id="skillName" list="skillsList"
+              placeholder="e.g. React, Python, Figma…" autocomplete="off">
+            <datalist id="skillsList">
+              <option value="HTML"><option value="CSS"><option value="JavaScript">
+              <option value="TypeScript"><option value="React"><option value="Vue.js">
+              <option value="Angular"><option value="Next.js"><option value="Node.js">
+              <option value="Python"><option value="Java"><option value="Go">
+              <option value="Rust"><option value="Swift"><option value="Kotlin">
+              <option value="MongoDB"><option value="PostgreSQL"><option value="MySQL">
+              <option value="Redis"><option value="Docker"><option value="Kubernetes">
+              <option value="AWS"><option value="Azure"><option value="Git">
+              <option value="Figma"><option value="Photoshop"><option value="Illustrator">
+              <option value="Tailwind CSS"><option value="GraphQL"><option value="REST APIs">
+            </datalist>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Proficiency Level</label>
+          <div class="custom-select" id="levelSelect">
+            <div class="selected" id="selectedLevel">
+              <span class="level-dot" id="selectedDot"></span>
+              <span class="selected-text" id="selectedText">Select level</span>
+              <i class="fas fa-chevron-down chevron"></i>
+            </div>
+            <div class="options">
+              <div class="option" data-level="Beginner">
+                <span class="option-dot dot-beginner"></span>Beginner
+              </div>
+              <div class="option" data-level="Intermediate">
+                <span class="option-dot dot-intermediate"></span>Intermediate
+              </div>
+              <div class="option" data-level="Advanced">
+                <span class="option-dot dot-advanced"></span>Advanced
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <button type="button" class="btn-add" id="addSkillBtn">
+            <i class="fas fa-plus"></i> Add Skill
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills List -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="icon-box"><i class="fas fa-brain"></i></div>
+        <span>Your Skills</span>
+        <span id="skillCountBadge" style="margin-left:auto;font-size:0.78rem;font-weight:600;color:var(--text-muted);background:rgba(255,255,255,0.06);padding:4px 12px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);">0 skills</span>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="list-toolbar">
+        <div class="search-wrap">
+          <i class="fas fa-search input-icon"></i>
+          <input type="text" class="search-input" id="searchInput" placeholder="Search skills…">
+        </div>
+        <div class="filter-chips">
+          <button class="filter-chip all active" data-filter="all">All</button>
+          <button class="filter-chip beg" data-filter="Beginner">Beginner</button>
+          <button class="filter-chip int" data-filter="Intermediate">Intermediate</button>
+          <button class="filter-chip adv" data-filter="Advanced">Advanced</button>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon"><i class="fas fa-brain"></i></div>
+        <h3>No skills added yet</h3>
+        <p>Add your first skill using the form above to get started.</p>
+      </div>
+
+      <!-- Grid -->
+      <div class="skills-grid" id="skillsGrid"></div>
+    </div>
+
+  </main>
+</div>
+
+<script type="module">
+  import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+    authDomain: "portfoliox-2e787.firebaseapp.com",
+    projectId: "portfoliox-2e787",
+    storageBucket: "portfoliox-2e787.firebasestorage.app",
+    messagingSenderId: "562709786891",
+    appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  let currentUser  = null;
+  let allSkills    = [];       // { id, name, level }
+  let activeFilter = 'all';
+  let pendingDeleteId   = null;
+  let pendingDeleteName = null;
+
+  /* ── Toast ── */
+  function showToast(msg, isError = false) {
+    const t  = document.getElementById('toast');
+    const tm = document.getElementById('toastMsg');
+    const ti = document.getElementById('toastIcon');
+    tm.textContent = msg;
+    ti.className   = isError ? 'fas fa-times-circle' : 'fas fa-check-circle';
+    t.className    = 'toast' + (isError ? ' error' : '');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ── Helpers ── */
+  function levelClass(level) {
+    return 'level-' + level.toLowerCase();
+  }
+  function skillInitial(name) {
+    return name.trim().charAt(0).toUpperCase();
+  }
+  function levelIcon(level) {
+    if (level === 'Beginner')     return 'fas fa-seedling';
+    if (level === 'Intermediate') return 'fas fa-chart-bar';
+    return 'fas fa-trophy';
+  }
+
+  /* ── Render ── */
+  function renderSkills() {
+    const grid  = document.getElementById('skillsGrid');
+    const empty = document.getElementById('emptyState');
+    const search = document.getElementById('searchInput').value.toLowerCase();
+
+    const filtered = allSkills.filter(s => {
+      const matchFilter = activeFilter === 'all' || s.level === activeFilter;
+      const matchSearch = s.name.toLowerCase().includes(search);
+      return matchFilter && matchSearch;
+    });
+
+    document.getElementById('skillCountBadge').textContent =
+      allSkills.length + (allSkills.length === 1 ? ' skill' : ' skills');
+
+    // Stats
+    document.getElementById('statTotal').textContent        = allSkills.length;
+    document.getElementById('statAdvanced').textContent     = allSkills.filter(s=>s.level==='Advanced').length;
+    document.getElementById('statIntermediate').textContent = allSkills.filter(s=>s.level==='Intermediate').length;
+    document.getElementById('statBeginner').textContent     = allSkills.filter(s=>s.level==='Beginner').length;
+
+    grid.innerHTML = '';
+    if (filtered.length === 0) {
+      empty.style.display = 'flex';
+      empty.querySelector('h3').textContent = allSkills.length === 0 ? 'No skills added yet' : 'No matching skills';
+      empty.querySelector('p').textContent  = allSkills.length === 0
+        ? 'Add your first skill using the form above to get started.'
+        : 'Try a different search or filter.';
+      return;
+    }
+    empty.style.display = 'none';
+
+    filtered.forEach((skill, i) => {
+      const card = document.createElement('div');
+      card.className = `skill-card ${levelClass(skill.level)}`;
+      card.style.animationDelay = (i * 0.04) + 's';
+      card.innerHTML = `
+        <div class="skill-icon-wrap">${skillInitial(skill.name)}</div>
+        <div class="skill-info">
+          <div class="skill-name">${skill.name}</div>
+          <span class="skill-level-badge">
+            <span class="skill-badge-dot"></span>${skill.level}
+          </span>
+          <div class="skill-actions-row">
+            <div class="skill-progress-bar"><div class="skill-progress-fill"></div></div>
+          </div>
+        </div>
+        <button class="delete-btn" title="Remove skill" data-id="${skill.id}" data-name="${skill.name}">
+          <i class="fas fa-trash"></i>
+        </button>`;
+      card.querySelector('.delete-btn').addEventListener('click', () => {
+        pendingDeleteId   = skill.id;
+        pendingDeleteName = skill.name;
+        document.getElementById('deleteSkillName').textContent = skill.name;
+        document.getElementById('deleteModal').classList.add('open');
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  /* ── Load from Firestore ── */
+  async function loadSkills() {
+    const snap = await getDocs(collection(db, 'users', currentUser.uid, 'skills'));
+    allSkills  = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderSkills();
+  }
+
+  /* ── Custom select ── */
+  const levelSelect   = document.getElementById('levelSelect');
+  const selectedText  = document.getElementById('selectedText');
+  const selectedDot   = document.getElementById('selectedDot');
+  let   currentLevel  = '';
+
+  levelSelect.querySelector('.selected').addEventListener('click', e => {
+    e.stopPropagation(); levelSelect.classList.toggle('open');
+  });
+  levelSelect.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      currentLevel = opt.dataset.level;
+      selectedText.textContent = currentLevel;
+      selectedDot.className    = 'level-dot option-dot dot-' + currentLevel.toLowerCase();
+      levelSelect.querySelectorAll('.option').forEach(o => o.classList.remove('selected-opt'));
+      opt.classList.add('selected-opt');
+      levelSelect.classList.remove('open');
+    });
+  });
+  document.addEventListener('click', () => levelSelect.classList.remove('open'));
+
+  /* ── Add skill ── */
+  document.getElementById('addSkillBtn').addEventListener('click', async () => {
+    const name  = document.getElementById('skillName').value.trim();
+    if (!name)         { showToast('Please enter a skill name.', true);  return; }
+    if (!currentLevel) { showToast('Please select a proficiency level.', true); return; }
+
+    // Duplicate check
+    if (allSkills.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+      showToast(`"${name}" is already in your skills.`, true); return;
+    }
+
+    const btn = document.getElementById('addSkillBtn');
+    btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding…';
+
+    try {
+      const ref = await addDoc(collection(db, 'users', currentUser.uid, 'skills'), {
+        name, level: currentLevel, createdAt: new Date()
+      });
+      allSkills.push({ id: ref.id, name, level: currentLevel });
+      renderSkills();
+
+      // Reset form
+      document.getElementById('skillName').value = '';
+      currentLevel = '';
+      selectedText.textContent = 'Select level';
+      selectedDot.className    = 'level-dot';
+      levelSelect.querySelectorAll('.option').forEach(o => o.classList.remove('selected-opt'));
+
+      showToast(`"${name}" added successfully! 🎉`);
+    } catch {
+      showToast('Failed to add skill. Try again.', true);
+    } finally {
+      btn.classList.remove('loading');
+      btn.innerHTML = '<i class="fas fa-plus"></i> Add Skill';
+    }
+  });
+
+  /* ── Enter key shortcut ── */
+  document.getElementById('skillName').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('addSkillBtn').click();
+  });
+
+  /* ── Delete modal ── */
+  document.getElementById('modalCancel').addEventListener('click', () => {
+    document.getElementById('deleteModal').classList.remove('open');
+  });
+  document.getElementById('modalConfirm').addEventListener('click', async () => {
+    document.getElementById('deleteModal').classList.remove('open');
+    if (!pendingDeleteId) return;
+    try {
+      await deleteDoc(doc(db, 'users', currentUser.uid, 'skills', pendingDeleteId));
+      allSkills = allSkills.filter(s => s.id !== pendingDeleteId);
+      renderSkills();
+      showToast(`"${pendingDeleteName}" removed.`);
+    } catch {
+      showToast('Failed to delete skill.', true);
+    }
+    pendingDeleteId = pendingDeleteName = null;
+  });
+
+  /* ── Search ── */
+  document.getElementById('searchInput').addEventListener('input', renderSkills);
+
+  /* ── Filter chips ── */
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter;
+      renderSkills();
+    });
+  });
+
+  /* ── Auth ── */
+  onAuthStateChanged(auth, async user => {
+    if (!user) { window.location.href = 'loginpage.html'; return; }
+    currentUser = user;
+    await loadSkills();
+    const ol = document.getElementById('loadingOverlay');
+    ol.style.opacity = '0';
+    setTimeout(() => ol.style.display = 'none', 400);
+  });
+
+  /* ── Logout ── */
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await signOut(auth); localStorage.clear();
+    window.location.href = 'loginpage.html';
+  });
+</script>
+</body>
+</html>

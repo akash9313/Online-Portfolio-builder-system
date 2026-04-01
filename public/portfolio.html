@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio | PortfolioX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --card: rgba(17, 24, 39, 0.95);
+      --border: rgba(56, 189, 248, 0.2);
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent2: #6366f1;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { min-height: 100vh; font-family: 'Inter', sans-serif; background: radial-gradient(circle at 10% 10%, rgba(56,189,248,0.18), transparent 40%), radial-gradient(circle at 90% 10%, rgba(99,102,241,0.12), transparent 44%), var(--bg); color: var(--text); }
+    a, button { font-family: inherit; }
+    .page { max-width: 1100px; margin: 0 auto; padding: 1.2rem 1rem 2rem; }
+    .header { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; padding: 1rem 1.2rem; margin-bottom: 1rem; background: rgba(15, 20, 34,0.95); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); }
+    .title { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; }
+    .share-btn { border: 1px solid var(--border); background: rgba(39,39,40,.75); color: #fff; padding: 0.55rem 0.9rem; border-radius: 10px; cursor: pointer; transition: all 0.25s ease; }
+    .share-btn:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .content { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 1.2rem; }
+    .profile-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.2rem; box-shadow: var(--shadow); position: sticky; top: 90px; align-self: start; }
+    .profile-photo { width: 100%; aspect-ratio: 1/1; border-radius: 16px; object-fit: cover; border: 1px solid var(--border); margin-bottom: 1rem; }
+    .profile-name { font-size: 1.65rem; font-weight: 800; color: #fff; margin-bottom: 0.25rem; }
+    .profile-role { color: var(--accent); font-weight: 600; margin-bottom: 0.9rem; }
+    .info-list { list-style: none; display: grid; gap: 0.6rem; }
+    .info-list li { display: flex; gap: 0.55rem; align-items: center; color: var(--text-muted); font-size: 0.92rem; }
+    .info-list li strong { color: #fff; width: 70px; font-weight: 600; }
+    .main-panel { display: grid; grid-template-columns: 1fr; gap: 1.1rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.2rem; box-shadow: var(--shadow); }
+    .section-title { margin-bottom: 0.85rem; font-weight: 700; font-size: 1.05rem; color: #fff; border-left: 4px solid var(--accent); padding-left: 0.8rem; }
+    .bio { color: var(--text-muted); line-height: 1.6; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 0.5rem; }
+    .tag { background: rgba(56,189,248,0.2); color: #dbeafe; border: 1px solid rgba(56,189,248,0.35); border-radius: 999px; padding: 0.39rem 0.8rem; font-size: 0.82rem; }
+    .project-grid, .edu-list, .exp-list { display: grid; gap: 0.75rem; }
+    .item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 0.84rem; }
+    .item h4 { font-size: 1rem; margin-bottom: 0.2rem; font-weight: 700; color: #fff; }
+    .item p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.4; }
+    .item .meta { display: flex; gap: 0.6rem; font-size: 0.82rem; color: #94a3b8; }
+    .empty-state { min-height: 55vh; display: grid; place-content: center; text-align: center; color: #94a3b8; font-size: 1.1rem; }
+    .alert { margin: 2rem auto; text-align: center; color: #fee2e2; background: rgba(220,38,38,0.12); border: 1px solid rgba(248,113,113,0.3); padding: 0.95rem 1rem; border-radius: 11px; }
+    @media (max-width: 980px) { .content { grid-template-columns: 1fr; } .profile-card { position: static; top: auto; } }
+    @media (max-width: 640px) { .page { padding: 0.8rem; } .header { flex-direction: column; align-items: flex-start; } .section-title { font-size: 1rem; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div>
+        <div class="title">Public Portfolio</div>
+        <div class="subtitle">View-only “live portfolio”—always up to date from Firestore</div>
+      </div>
+      <button id="shareBtn" class="share-btn">Copy share URL</button>
+    </header>
+
+    <main id="mainArea" class="content">
+      <aside class="profile-card" id="profileCard">
+        <img id="photo" class="profile-photo" src="https://via.placeholder.com/320x320.png?text=No+Photo" alt="Profile photo" />
+        <div id="name" class="profile-name">Name</div>
+        <div id="role" class="profile-role">Role</div>
+        <ul class="info-list">
+          <li><strong>Email</strong><span id="email">-</span></li>
+          <li><strong>Phone</strong><span id="phone">-</span></li>
+          <li><strong>Location</strong><span id="location">-</span></li>
+          <li><strong>Languages</strong><span id="languages">-</span></li>
+        </ul>
+      </aside>
+
+      <section class="main-panel" id="contentPanel">
+        <div class="card">
+          <div class="section-title">About</div>
+          <p id="about" class="bio">Loading…</p>
+        </div>
+
+        <div id="skillsCard" class="card">
+          <div class="section-title">Skills</div>
+          <div id="skills" class="tags"></div>
+        </div>
+
+        <div id="projectsCard" class="card">
+          <div class="section-title">Projects</div>
+          <div id="projects" class="project-grid"></div>
+        </div>
+
+        <div id="educationCard" class="card">
+          <div class="section-title">Education</div>
+          <div id="education" class="edu-list"></div>
+        </div>
+
+        <div id="experienceCard" class="card">
+          <div class="section-title">Experience</div>
+          <div id="experience" class="exp-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="message" class="alert" style="display:none"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+      authDomain: "portfoliox-2e787.firebaseapp.com",
+      projectId: "portfoliox-2e787",
+      storageBucket: "portfoliox-2e787.firebasestorage.app",
+      messagingSenderId: "562709786891",
+      appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const pathUsername = window.location.pathname.replace(/^\//, '').trim().toLowerCase();
+    const queryUsername = new URLSearchParams(window.location.search).get('uid')?.trim().toLowerCase();
+    const username = pathUsername || queryUsername;
+
+    const msgEl = document.getElementById('message');
+    const showError = (text) => { msgEl.textContent = text; msgEl.style.display = 'block'; };
+
+    if (!username) {
+      showError('Portfolio not found: missing username parameter.');
+      ['contentPanel', 'profileCard', 'skillsCard', 'projectsCard', 'educationCard', 'experienceCard'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.style.display = 'none';
+      });
+      throw new Error('Missing username');
+    }
+
+    const safeText = (value, fallback = '-') => { if (!value && value !== 0) return fallback; return String(value); };
+    const clearItems = (selector) => { const el = document.getElementById(selector); if (el) el.innerHTML = ''; };
+
+    const setText = (id, value, fallback = '-') => {
+      const el = document.getElementById(id); if (el) el.textContent = value ? value : fallback;
+    };
+
+    const renderList = (parentId, items, renderer) => {
+      const parent = document.getElementById(parentId);
+      if (!parent) return;
+      parent.innerHTML = '';
+      if (!items || items.length === 0) {
+        parent.innerHTML = '<p style="color:var(--text-muted);">No data available.</p>';
+        return;
+      }
+      items.forEach(item => parent.appendChild(renderer(item)));
+    };
+
+    const renderCard = (title, link, description, meta) => {
+      const card = document.createElement('div'); card.className = 'item';
+      card.innerHTML = `<h4>${title}</h4><p>${description || ''}</p>${meta ? `<div class='meta'>${meta}</div>` : ''}`;
+      if (link) {
+        const linkEl = document.createElement('a');
+        linkEl.href = link; linkEl.textContent = 'View'; linkEl.target = '_blank'; linkEl.rel = 'noopener';
+        linkEl.style.color = 'var(--accent)'; linkEl.style.fontSize = '0.85rem';
+        card.appendChild(linkEl);
+      }
+      return card;
+    };
+
+    const load = async () => {
+      try {
+        const q = query(collection(db, 'users'), where('username', '==', username));
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          showError('Portfolio not found for username: ' + username);
+          ['contentPanel', 'profileCard', 'skillsCard', 'projectsCard', 'educationCard', 'experienceCard'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.style.display = 'none';
+          });
+          return;
+        }
+
+        const userDoc = snap.docs[0];
+        const data = userDoc.data();
+        const uid = userDoc.id;
+
+        setText('name', data.fullName || data.name || 'Your Name');
+        setText('role', data.role || data.title || 'Portfolio Creator');
+        setText('about', data.about || data.bio || 'No about section provided.');
+        setText('email', data.email || 'Not available');
+        setText('phone', data.phone || data.mobile || 'Not available');
+        setText('location', data.location || 'Not available');
+        setText('languages', Array.isArray(data.languages) ? data.languages.join(', ') : (data.languages || 'Not available'));
+
+        const photo = document.getElementById('photo');
+        if (data.photo || data.avatarUrl) {
+          photo.src = data.photo || data.avatarUrl;
+          photo.alt = `${setText('name')}'s photo`;
+        }
+
+        const loadCollection = async (collectionName, transformFn) => {
+          const colSnap = await getDocs(collection(db, 'users', uid, collectionName));
+          const result = [];
+          colSnap.forEach(d => { if (d.exists()) { result.push(transformFn(d.id, d.data())); } });
+          return result;
+        };
+
+        // Skills
+        const skills = await loadCollection('skills', (_id, s) => ({ name: s.name || s.skill || '', level: s.level || '' }));
+        const skillsEl = document.getElementById('skills');
+        skillsEl.innerHTML = '';
+        if (skills.length > 0) {
+          skills.forEach((s) => { const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = `${s.name}${s.level ? ' • ' + s.level : ''}`; skillsEl.appendChild(tag); });
+        } else { skillsEl.innerHTML = '<p style="color:var(--text-muted);">No skills listed.</p>'; }
+
+        const projects = await loadCollection('projects', (_id, p) => ({ title: p.title || p.name || 'Untitled', description: p.description || p.summary || '', tech: p.tech || p.technologies || '', link: p.link || p.url || '' }));
+        renderList('projects', projects, (project) => {
+          const meta = project.tech ? `<strong>Tech:</strong> ${project.tech}` : '';
+          return renderCard(project.title, project.link, project.description, meta);
+        });
+
+        const education = await loadCollection('education', (_id, e) => {
+          const type = e.type || (e.university && e.school ? 'full' : 'entry');
+          if (type === 'university') return { title: e.degree || 'University', description: e.institute || e.name || '', year: e.year || '', grade: e.grade || '' };
+          if (type === 'school') return { title: e.degree || 'School', description: e.institute || e.name || '', year: e.year || '', grade: e.grade || '' };
+          if (type === 'full') return [{ title: e.university?.degree || 'University', description: e.university?.name || '', year: e.university?.year || '', grade: e.university?.grade || '' }, { title: e.school?.name || 'School', description: e.school?.board || '', year: e.school?.year || '', grade: e.school?.grade || '' }];
+          return { title: e.degree || e.name || 'Education', description: e.institute || e.board || '', year: e.year || '', grade: e.grade || '' };
+        });
+
+        // Flatten nested returned arrays for education
+        const flattenedEducation = [];
+        education.forEach(value => { if (Array.isArray(value)) flattenedEducation.push(...value); else if (value) flattenedEducation.push(value); });
+
+        renderList('education', flattenedEducation, edu => {
+          const meta = [edu.year, edu.grade].filter(Boolean).join(' • ');
+          return renderCard(edu.title, '', edu.description, meta);
+        });
+
+        const experience = await loadCollection('experience', (_id, e) => ({
+          title: e.position || e.role || 'Position',
+          description: e.company ? `${e.company} • ${e.description || ''}` : e.description || '',
+          year: e.period || `${e.start || ''}${e.start && e.end ? ' – ' : ''}${e.end || ''}`,
+          grade: e.location || ''
+        }));
+        renderList('experience', experience, exp => {
+          const meta = [exp.year, exp.grade].filter(Boolean).join(' • ');
+          return renderCard(exp.title, '', exp.description, meta);
+        });
+
+        // If no sections had data, show not found
+        const hasData = (skills.length || projects.length || flattenedEducation.length || experience.length || data.about || data.fullName);
+        if (!hasData) {
+          showError('Portfolio found, but no sections are populated.');
+        } else {
+          msgEl.style.display = 'none';
+        }
+
+      } catch (error) {
+        showError('Unable to load portfolio. Please confirm the uid is correct and try again.');
+        console.error(error);
+        document.getElementById('contentPanel').style.display = 'none';
+        document.getElementById('profileCard').style.display = 'none';
+      }
+    };
+
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        msgEl.textContent = 'Link copied to clipboard!';
+        msgEl.style.display = 'block';
+        msgEl.style.background = 'rgba(34,197,94,0.18)';
+        msgEl.style.color = '#d9f99d';
+        setTimeout(() => { msgEl.style.display = 'none'; msgEl.style.background = ''; msgEl.style.color = ''; }, 2600);
+      } catch (err) {
+        showError('Unable to copy URL; please copy manually.');
+      }
+    });
+
+    load();
+  </script>
+</body>
+</html>

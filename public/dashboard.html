@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard | PortfolioX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>Loading Dashboard...</span>
+    </div>
+  </div>
+
+  <!-- Premium Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-rocket"></i>
+        <span>Portfolio<span class="x">X</span></span>
+      </div>
+      <div class="nav-actions">
+        <button class="preview-btn" onclick="window.open('preview.html', '_blank')">
+          <i class="fas fa-eye"></i> Preview
+        </button>
+        <button class="publish-btn" onclick="location.href='publish.html'">
+          <i class="fas fa-rocket"></i> Publish
+        </button>
+        <button class="logout-btn" id="logoutBtn">
+          <i class="fas fa-power-off"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Enhanced Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>Portfolio Builder</h3>
+        <div class="progress-mini">
+          <div class="progress-mini-fill" id="sidebarProgress"></div>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active" data-page="dashboard">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="profile.html" class="nav-item" data-page="profile">
+          <i class="fas fa-user"></i>
+          <span>Profile</span>
+        </a>
+        <a href="skills.html" class="nav-item" data-page="skills">
+          <i class="fas fa-brain"></i>
+          <span>Skills</span>
+        </a>
+        <a href="education.html" class="nav-item" data-page="education">
+          <i class="fas fa-graduation-cap"></i>
+          <span>Education</span>
+        </a>
+        <a href="projects.html" class="nav-item" data-page="projects">
+          <i class="fas fa-project-diagram"></i>
+          <span>Projects</span>
+        </a>
+        <a href="templates.html" class="nav-item" data-page="templates">
+          <i class="fas fa-palette"></i>
+          <span>Templates</span>
+        </a>
+        <a href="preview.html" class="nav-item" data-page="preview" target="_blank">
+          <i class="fas fa-eye"></i>
+          <span>Preview</span>
+        </a>
+        <a href="publish.html" class="nav-item" data-page="publish">
+          <i class="fas fa-globe"></i>
+          <span>Publish</span>
+        </a>
+        <a href="settings.html" class="nav-item" data-page="settings">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Enhanced Dashboard Content -->
+    <main class="dashboard">
+      <!-- Welcome Section -->
+      <section class="welcome-section">
+        <div class="welcome-content">
+          <div class="welcome-greeting">
+            <h1 id="welcomeText">Welcome Back 👋</h1>
+            <p>Your portfolio progress is shown below. Complete all sections to get 100% ready!</p>
+          </div>
+          <div class="welcome-actions">
+            <button class="btn btn-primary" onclick="location.href='profile.html'">
+              <i class="fas fa-edit"></i> Edit Profile
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Progress -->
+      <section class="progress-section">
+        <div class="progress-card">
+          <div class="progress-header">
+            <h3><i class="fas fa-chart-line"></i> Portfolio Completion</h3>
+            <span class="progress-badge" id="progressPercent">0%</span>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+          <div class="progress-details">
+            <span>4 sections remaining</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions Grid -->
+      <section class="quick-actions-section">
+        <h3>Quick Actions</h3>
+        <div class="quick-actions-grid">
+          <button class="action-card primary" onclick="location.href='profile.html'">
+            <i class="fas fa-user-plus"></i>
+            <span>Setup Profile</span>
+          </button>
+          <button class="action-card" onclick="location.href='skills.html'">
+            <i class="fas fa-plus"></i>
+            <span>Add Skills</span>
+          </button>
+          <button class="action-card" onclick="location.href='projects.html'">
+            <i class="fas fa-project-diagram"></i>
+            <span>Add Projects</span>
+          </button>
+          <button class="action-card" onclick="location.href='templates.html'">
+            <i class="fas fa-palette"></i>
+            <span>Choose Template</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Stats Grid -->
+      <section class="stats-section">
+        <h3>Portfolio Status</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <h4>Profile</h4>
+            <p id="profileStatus">Checking...</p>
+            <span class="stat-progress">
+              <i class="fas fa-circle-notch fa-spin" id="profileSpinner"></i>
+              <span id="profileProgress">0%</span>
+            </span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <h4>Skills</h4>
+            <p id="skillsCount">0 Skills Added</p>
+            <span class="stat-count"><i class="fas fa-arrow-up"></i> +3</span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h4>Education</h4>
+            <p id="educationCount">0 Records Added</p>
+            <span class="stat-count"><i class="fas fa-arrow-up"></i> +1</span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-project-diagram"></i>
+            </div>
+            <h4>Projects</h4>
+            <p id="projectsCount">0 Projects Added</p>
+            <span class="stat-count"><i class="fas fa-arrow-up"></i> +2</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Activity -->
+      <section class="activity-section">
+        <h3>Recent Activity</h3>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-icon success">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="activity-content">
+              <span>Profile updated successfully</span>
+              <span class="activity-time">2 minutes ago</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon warning">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="activity-content">
+              <span>Add skills to improve completion</span>
+              <span class="activity-time">5 minutes ago</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Your Firebase script remains exactly the same -->
+  <script type="module">
+    // ... (Keep your exact Firebase code here - it's perfect!)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+      authDomain: "portfoliox-2e787.firebaseapp.com",
+      projectId: "portfoliox-2e787",
+      storageBucket: "portfoliox-2e787.firebasestorage.app",
+      messagingSenderId: "562709786891",
+      appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loadingOverlay = document.getElementById("loadingOverlay");
+
+    const skillsCountEl = document.getElementById("skillsCount");
+    const educationCountEl = document.getElementById("educationCount");
+    const projectsCountEl = document.getElementById("projectsCount");
+    const profileStatusEl = document.getElementById("profileStatus");
+
+    const progressFill = document.getElementById("progressFill");
+    const progressPercent = document.getElementById("progressPercent");
+    const sidebarProgress = document.getElementById("sidebarProgress");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      // Hide loading
+      loadingOverlay.style.opacity = "0";
+      setTimeout(() => {
+        loadingOverlay.style.display = "none";
+      }, 300);
+
+      await loadDashboard(user.uid);
+      document.getElementById("welcomeText").textContent = `Welcome back, ${user.email.split('@')[0]}! 👋`;
+    });
+
+    async function loadDashboard(uid) {
+      const skillsSnap = await getDocs(collection(db, "users", uid, "skills"));
+      const eduSnap = await getDocs(collection(db, "users", uid, "education"));
+      const projSnap = await getDocs(collection(db, "users", uid, "projects"));
+
+      const skillsCount = skillsSnap.size;
+      const eduCount = eduSnap.size;
+      const projCount = projSnap.size;
+
+      skillsCountEl.textContent = `${skillsCount} Skills Added`;
+      educationCountEl.textContent = `${eduCount} Records Added`;
+      projectsCountEl.textContent = `${projCount} Projects Added`;
+
+      const profileDoc = await getDoc(doc(db, "users", uid));
+      const profileCompleted = profileDoc.exists();
+      profileStatusEl.textContent = profileCompleted ? "✅ Completed" : "⚠️ Incomplete";
+
+      let completed = 0;
+      if (profileCompleted) completed += 25;
+      if (skillsCount > 0) completed += 25;
+      if (eduCount > 0) completed += 25;
+      if (projCount > 0) completed += 25;
+
+      progressFill.style.width = completed + "%";
+      progressPercent.textContent = completed + "%";
+      sidebarProgress.style.width = completed + "%";
+    }
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      localStorage.clear();
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

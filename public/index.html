@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PortfolioX - Build Professional Portfolios Instantly</title>
+  <link rel="stylesheet" href="homepage.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-blob blob1"></div>
+  <div class="bg-blob blob2"></div>
+  <div class="bg-blob blob3"></div>
+
+  <!-- Premium Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <span>Portfolio<span class="x">X</span></span>
+      </div>
+
+      <div class="nav-actions">
+        <a href="loginpage.html" class="nav-link login-btn" id="loginBtn">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+
+        <div class="profile-box" id="profileBox">
+          <div class="avatar" id="avatar"></div>
+          <i class="fas fa-chevron-down dropdown-icon"></i>
+          <i class="fas fa-power-off logout-icon" id="logoutIcon" title="Logout"></i>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <!-- <div class="hero-badge">
+          <i class="fas fa-crown"></i>
+          Used by 50K+ Professionals
+        </div> -->
+        <h1 class="hero-title">
+          Build Your <span class="gradient-text">Professional</span> Portfolio
+        </h1>
+        <p class="hero-subtitle">
+          Create, customize and publish job-ready portfolios in minutes. No coding required.
+        </p>
+        
+        <!-- <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-number">50K+</div>
+            <span>Portfolios Created</span>
+          </div>
+          <div class="stat">
+            <div class="stat-number">99%</div>
+            <span>Success Rate</span>
+          </div>
+        </div> -->
+
+        <div class="hero-buttons">
+          <button id="getStartedBtn" class="btn btn-primary btn-large glow">
+            <i class="fas fa-rocket"></i>
+            Get Started Free
+          </button>
+          <a href="#features" class="btn btn-secondary">
+            <i class="fas fa-play"></i>
+            Watch Demo
+          </a>
+        </div>
+
+        <!-- <div class="hero-clients">
+          <span>Trusted by:</span>
+          <div class="clients-logos">
+            <div class="client-logo">Google</div>
+            <div class="client-logo">Microsoft</div>
+            <div class="client-logo">Amazon</div>
+            <div class="client-logo">Netflix</div>
+          </div>
+        </div> -->
+      </div>
+
+      <div class="hero-image">
+        <img src="assets/hero-image.jpeg" alt="Portfolio Preview" class="hero-img">
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Everything You Need to Build Amazing Portfolios</h2>
+        <p>Professional tools designed for maximum impact and minimum effort</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-palette"></i>
+          </div>
+          <h3>50+ Ready-made Templates</h3>
+          <p>Professional designs for every industry and style preference</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3>AI Skill Suggestions</h3>
+          <p>Job-based recommendations that highlight your best qualifications</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <h3>Admin Dashboard</h3>
+          <p>Complete control over templates, themes and user management</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h3>Public Portfolio Links</h3>
+          <p>Shareable links with custom domains and analytics</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Build Your Portfolio?</h2>
+        <!-- <p>Join 50K+ professionals who trust PortfolioX</p> -->
+        <button class="btn btn-primary btn-large" id="ctaBtn">
+          Start Building Now
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Auth state management
+    const email = localStorage.getItem("email");
+    const loginBtn = document.getElementById("loginBtn");
+    const profileBox = document.getElementById("profileBox");
+    const avatar = document.getElementById("avatar");
+    const logoutIcon = document.getElementById("logoutIcon");
+    const getStartedBtn = document.getElementById("getStartedBtn");
+    const ctaBtn = document.getElementById("ctaBtn");
+
+    // Update navbar based on auth state
+    function updateAuthState() {
+      if (email) {
+        loginBtn.style.display = "none";
+        profileBox.style.display = "flex";
+        avatar.textContent = email.charAt(0).toUpperCase();
+      } else {
+        loginBtn.style.display = "flex";
+        profileBox.style.display = "none";
+      }
+    }
+
+    // Initial state
+    updateAuthState();
+
+    // Logout handler
+    logoutIcon.addEventListener("click", () => {
+      localStorage.removeItem("email");
+      localStorage.removeItem("redirectAfterLogin");
+      
+      // Smooth transition
+      profileBox.style.opacity = "0";
+      setTimeout(() => {
+        updateAuthState();
+        profileBox.style.opacity = "1";
+      }, 300);
+    });
+
+    // Get Started / CTA handlers
+    [getStartedBtn, ctaBtn].forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!email) {
+          localStorage.setItem("redirectAfterLogin", "dashboard.html");
+          window.location.href = "loginpage.html";
+        } else {
+          window.location.href = "dashboard.html";
+        }
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>
