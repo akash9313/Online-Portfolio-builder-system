@@ -1,4 +1,6 @@
-/* ── Toast ── */
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* ── Toast ── */
   function showToast(msg) {
     const t = document.getElementById('toast');
     document.getElementById('toastMsg').textContent = msg;
@@ -6,30 +8,9 @@
     setTimeout(() => t.classList.remove('show'), 3000);
   }
 
-  /* ── Restore saved selection ── */
-  const saved = localStorage.getItem('finalTemplate');
-  if (saved) applySelection(saved, false);
-
-  /* ── Select buttons ── */
-  document.querySelectorAll('.btn-select').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const name = btn.dataset.template;
-      applySelection(name, true);
-    });
-  });
-
-  /* ── Card click also selects ── */
-  document.querySelectorAll('.template-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const name = card.dataset.template;
-      applySelection(name, true);
-    });
-  });
-
+  /* ── Apply selection logic ── */
   function applySelection(name, toast) {
     localStorage.setItem('finalTemplate', name);
-
     document.querySelectorAll('.template-card').forEach(c => {
       const isThis = c.dataset.template === name;
       c.classList.toggle('selected', isThis);
@@ -42,12 +23,29 @@
         btn.classList.remove('selected-btn');
       }
     });
-
     document.getElementById('bannerTemplateName').textContent = name;
     document.getElementById('selectedBanner').classList.remove('hidden');
-
     if (toast) showToast(`"${name}" template selected ✅`);
   }
+
+  /* ── Restore saved selection ── */
+  const saved = localStorage.getItem('finalTemplate');
+  if (saved) applySelection(saved, false);
+
+  /* ── Select buttons ── */
+  document.querySelectorAll('.btn-select').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      applySelection(btn.dataset.template, true);
+    });
+  });
+
+  /* ── Card click also selects ── */
+  document.querySelectorAll('.template-card').forEach(card => {
+    card.addEventListener('click', () => {
+      applySelection(card.dataset.template, true);
+    });
+  });
 
   /* ── Filter chips ── */
   document.querySelectorAll('.filter-chip').forEach(chip => {
@@ -63,7 +61,7 @@
     });
   });
 
-  /* ── Preview button (no-op placeholder) ── */
+  /* ── Preview button ── */
   document.querySelectorAll('.btn-preview-card').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
@@ -76,3 +74,5 @@
     localStorage.clear();
     window.location.href = 'loginpage.html';
   });
+
+}); // end DOMContentLoaded

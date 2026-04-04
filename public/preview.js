@@ -1,10 +1,16 @@
 const selectedTemplate = localStorage.getItem('finalTemplate');
 
   const templateMap = {
-    'Classic Developer':   'templates/classic.html',
-    'Modern Professional': 'templates/modern.html',
-    'Creative Designer':   'templates/creative.html',
-    'Minimal Resume':      'templates/minimal.html'
+  'Classic Developer':   'templates/classic.html',
+  'Modern Professional': 'templates/modern.html',
+  'Creative Designer':   'templates/creative.html',
+  'Minimal Resume':      'templates/minimal.html',
+  'Neon Dark':           'templates/neon-dark.html',
+  'Glass Morph':         'templates/glass-morph.html',
+  'Terminal Hacker':     'templates/terminal-hacker.html',
+  'Gradient Splash':     'templates/gradient-splash.html',
+  'Executive Pro':       'templates/executive-pro.html',
+  'Bento Grid':          'templates/bento-grid.html'
   };
 
   const iframe        = document.getElementById('previewIframe');

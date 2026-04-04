@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terminal Hacker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0d0221;
+  color: #00ff00;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -1;
+  background-image: repeating-linear-gradient(0deg, rgba(0,255,0,.03), rgba(0,255,0,.03) 1px, transparent 1px, transparent 2px);
+  pointer-events: none;
+}
+
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  padding: 15px 30px;
+  background: rgba(13,2,33,.95);
+  border-bottom: 2px solid #00ff00;
+  border-right: 2px solid #00ff00;
+  border-bottom-right-radius: 20px;
+}
+
+.nav-logo {
+  font-size: 1.2rem;
+  color: #00ff00;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px #00ff00;
+}
+
+.nav-links { display: flex; gap: 20px; margin-top: 10px; }
+.nav-links a {
+  color: #00ff00;
+  text-decoration: none;
+  font-size: 0.8rem;
+  text-shadow: 0 0 5px #00ff00;
+  transition: all 0.3s;
+}
+.nav-links a:hover { text-shadow: 0 0 15px #00ff00; }
+
+@media(max-width:768px) { .nav-links { display: none; } }
+
+.hero {
+  min-height: 100vh;
+  padding: 120px 40px 60px;
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+  align-items: center;
+}
+@media(max-width:900px) { .hero { grid-template-columns: 1fr; padding: 100px 24px; } }
+
+.hero-name {
+  font-size: 3rem;
+  color: #00ff00;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px #00ff00;
+  white-space: pre;
+}
+
+.hero-desc {
+  color: #00ff00;
+  margin-bottom: 30px;
+  border-left: 3px solid #00ff00;
+  padding-left: 15px;
+}
+
+.hero-actions {
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  background: transparent;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  text-shadow: 0 0 5px #00ff00;
+}
+
+.btn:hover {
+  background: #00ff00;
+  color: #0d0221;
+  box-shadow: 0 0 20px #00ff00;
+}
+
+.terminal {
+  background: rgba(0,0,0,.7);
+  border: 2px solid #00ff00;
+  border-radius: 8px;
+  padding: 15px;
+  font-size: 0.75rem;
+  text-shadow: 0 0 5px #00ff00;
+  box-shadow: 0 0 30px rgba(0,255,0,.2), inset 0 0 20px rgba(0,255,0,.05);
+}
+
+.header-bar {
+  border-bottom: 1px solid #00ff00;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.line { margin-bottom: 8px; }
+.prompt { color: #00ff00; }
+.value { color: #ffff00; }
+
+.section {
+  padding: 80px 40px;
+  border-bottom: 1px dashed #00ff00;
+}
+
+@media(max-width:768px) { .section { padding: 60px 24px; } }
+
+.sec-title {
+  font-size: 2rem;
+  color: #00ff00;
+  margin-bottom: 40px;
+  text-shadow: 0 0 10px #00ff00;
+}
+
+.sec-title::before {
+  content: '> ';
+  color: #ffff00;
+}
+
+.about-text {
+  color: #00ff00;
+  line-height: 1.8;
+  max-width: 800px;
+}
+
+.skills-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.skill {
+  border: 1px solid #00ff00;
+  padding: 12px;
+  text-align: center;
+  background: rgba(0,255,0,.05);
+  cursor: default;
+  transition: all 0.3s;
+  text-shadow: 0 0 5px #00ff00;
+}
+
+.skill:hover {
+  background: rgba(0,255,0,.15);
+  box-shadow: 0 0 15px #00ff00;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.project {
+  border: 1px solid #00ff00;
+  padding: 20px;
+  background: rgba(0,255,0,.05);
+  cursor: default;
+}
+
+.project:hover { background: rgba(0,255,0,.1); }
+
+.proj-title {
+  color: #ffff00;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.proj-desc {
+  color: #00ff00;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.proj-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.tag {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border: 1px solid #00ff00;
+  color: #00ff00;
+}
+
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.edu {
+  border: 1px solid #00ff00;
+  padding: 16px;
+  background: rgba(0,255,0,.05);
+}
+
+.edu-year {
+  color: #ffff00;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.edu-degree {
+  color: #00ff00;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+footer {
+  padding: 30px 40px;
+  border-top: 2px solid #00ff00;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(13,2,33,.95);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.social-btn {
+  width: 35px;
+  height: 35px;
+  border: 2px solid #00ff00;
+  background: transparent;
+  color: #00ff00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.social-btn:hover {
+  background: #00ff00;
+  color: #0d0221;
+}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="nav-logo">hacker@terminal:~$</div>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#skills">skills</a>
+    <a href="#projects">projects</a>
+    <a href="#education">education</a>
+  </div>
+</div>
+
+<section class="hero" id="hero">
+  <div>
+    <h1 class="hero-name">
+> <span id="heroFirstName">HACKER</span><br>
+> <span id="heroLastName">MODE</span>
+    </h1>
+    <p class="hero-desc" id="heroBio">Loading…</p>
+    <div class="hero-actions">
+      <a class="btn" id="heroGithub" href="#" target="_blank">[ github ]</a>
+      <a class="btn" id="heroLinkedin" href="#" target="_blank">[ linkedin ]</a>
+    </div>
+  </div>
+
+  <div class="terminal">
+    <div class="header-bar">USER_PROFILE.JSON</div>
+    <div class="line"><span class="prompt">::</span> <span class="prompt">name</span> <span class="value" id="panelName">—</span></div>
+    <div class="line"><span class="prompt">::</span> <span class="prompt">role</span> <span class="value" id="panelRole">—</span></div>
+    <div class="line"><span class="prompt">::</span> <span class="prompt">loc</span> <span class="value" id="panelLocation" contenteditable="true" data-collection="users" data-field="location">—</span></div>
+    <div class="line"><span class="prompt">::</span> <span class="prompt">email</span> <span class="value"><a id="panelEmail" href="mailto:" style="color:#ffff00; text-decoration:none;">—</a></span></div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <h2 class="sec-title">ABOUT_ME.txt</h2>
+  <div class="about-text" id="aboutText">Loading…</div>
+</section>
+
+<section class="section" id="skills">
+  <h2 class="sec-title">SKILLS.ARRAY</h2>
+  <div class="skills-list" id="skillsGrid"></div>
+</section>
+
+<section class="section" id="projects">
+  <h2 class="sec-title">PROJECTS[]</h2>
+  <div class="projects-grid" id="projectsGrid"></div>
+</section>
+
+<section class="section" id="education">
+  <h2 class="sec-title">EDUCATION.LOG</h2>
+  <div class="edu-grid" id="educationList"></div>
+</section>
+
+<footer>
+  <div>HACKATHON © 2024</div>
+  <div style="display:flex; gap:10px;">
+    <a class="social-btn" id="footerGithub" href="#" target="_blank"><i class="fab fa-github"></i></a>
+    <a class="social-btn" id="footerLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+  </div>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc,
+  collection, getDocs, updateDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+function setText(id, val, fb="—") {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val || fb;
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if(!user) return;
+  currentUser = user;
+
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const d = snap.exists() ? snap.data() : {};
+
+  const fullName = d.fullName || "Developer";
+  const parts = fullName.trim().split(" ");
+  setText("heroFirstName", parts[0].toUpperCase());
+  setText("heroLastName", parts.slice(1).join(" ").toUpperCase() || "MODE");
+  setText("heroBio", d.about || "");
+  setText("panelName", d.fullName || "—");
+  setText("panelRole", d.role || "Developer");
+  setText("panelLocation", d.location || "—");
+  setText("aboutText", d.about || "");
+
+  if(d.github) ["heroGithub","footerGithub"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.github;});
+  if(d.linkedin) ["heroLinkedin","footerLinkedin"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.linkedin;});
+  if(d.email) document.getElementById("panelEmail").href = "mailto:" + d.email;
+
+  const skillsSnap = await getDocs(collection(db,"users",user.uid,"skills"));
+  const grid = document.getElementById("skillsGrid");
+  grid.innerHTML = "";
+  skillsSnap.forEach(ds => {
+    const s = ds.data();
+    grid.innerHTML += `<div class="skill" contenteditable="true" data-collection="skills" data-docid="${ds.id}" data-field="name">${s.name || "Skill"}</div>`;
+  });
+
+  const projSnap = await getDocs(collection(db,"users",user.uid,"projects"));
+  const projGrid = document.getElementById("projectsGrid");
+  projGrid.innerHTML = "";
+  projSnap.forEach(ds => {
+    const p = ds.data();
+    const tags = (p.tech || "").split(",").map(t => t.trim()).filter(Boolean).map(t => `<span class="tag">${t}</span>`).join("");
+    projGrid.innerHTML += `<div class="project">
+      <div class="proj-title" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="title">${p.title || ""}</div>
+      <div class="proj-desc" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="description">${p.description || ""}</div>
+      <div class="proj-tags">${tags}</div>
+    </div>`;
+  });
+
+  const eduSnap = await getDocs(collection(db,"users",user.uid,"education"));
+  const eduList = document.getElementById("educationList");
+  eduList.innerHTML = "";
+  console.log("Education records found:", eduSnap.size);
+  let eduCount = 0;
+  eduSnap.forEach(ds => {
+    const e = ds.data();
+    eduCount++;
+    console.log("Education entry:", e);
+    eduList.innerHTML += `<div class="edu-card">
+      <div class="edu-year">${e.year || ""}</div>
+      <div class="edu-degree" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="degree">${e.degree || ""}</div>
+      <div style="font-size:0.85rem;" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="institute">${e.institute || ""}</div>
+    </div>`;
+  });
+  if(eduCount === 0) {
+    console.warn("No education records found in Firestore");
+    eduList.innerHTML = `<p style="color:#999;font-size:0.9rem;padding:20px;text-align:center;">No education records added yet. Add education details in dashboard to see them here.</p>`;
+  }
+
+  if(new URLSearchParams(window.location.search).get("mode") === "readonly") {
+    document.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
+  }
+});
+
+document.addEventListener("blur", async (e) => {
+  const el = e.target;
+  if(!el.hasAttribute("contenteditable") || !currentUser) return;
+  const col = el.getAttribute("data-collection");
+  const docId = el.getAttribute("data-docid") || currentUser.uid;
+  const field = el.getAttribute("data-field");
+  const val = el.innerText.trim();
+  if(!col || !field) return;
+  try {
+    const ref = col === "users" ? doc(db, "users", docId) : doc(db, "users", currentUser.uid, col, docId);
+    await updateDoc(ref, { [field]: val });
+  } catch(err) { }
+}, true);
+</script>
+
+</body>
+</html>

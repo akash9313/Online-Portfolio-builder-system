@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Lato', sans-serif;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  line-height: 1.6;
+}
+
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  padding: 20px 50px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.nav-logo {
+  font-size: 1.4rem;
+  font-weight: 900;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 1px;
+  color: #1a5490;
+}
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+}
+
+.nav-links a {
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: color 0.3s;
+  text-transform: uppercase;
+}
+
+.nav-links a:hover {
+  color: #1a5490;
+}
+
+@media(max-width:768px) { .nav-links { display: none; } }
+
+.hero {
+  min-height: 100vh;
+  padding: 140px 50px 80px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8f4f8 100%);
+  display: grid;
+  grid-template-columns: 1.2fr 300px;
+  gap: 60px;
+  align-items: center;
+}
+
+@media(max-width:900px) { .hero { grid-template-columns: 1fr; padding: 120px 24px; } }
+
+.hero-content { }
+
+.hero-tag {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  color: #1a5490;
+}
+
+.hero-name {
+  font-size: 3.8rem;
+  font-weight: 900;
+  margin-bottom: 24px;
+  line-height: 1.1;
+  font-family: 'Cormorant Garamond', serif;
+  color: #1a1a1a;
+}
+
+.hero-desc {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 32px;
+  color: #555;
+  max-width: 600px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 13px 32px;
+  border-radius: 4px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  border: none;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.btn-solid {
+  background: #1a5490;
+  color: #fff;
+}
+
+.btn-solid:hover {
+  background: #0d3a62;
+  box-shadow: 0 8px 20px rgba(26,84,144,.2);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #1a5490;
+  border: 2px solid #1a5490;
+}
+
+.btn-outline:hover {
+  background: #1a5490;
+  color: #fff;
+}
+
+.hero-card {
+  background: #fff;
+  border-left: 4px solid #1a5490;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  border-radius: 2px;
+}
+
+.card-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+}
+
+.card-label {
+  font-weight: 700;
+  min-width: 70px;
+  color: #1a5490;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section {
+  padding: 100px 50px;
+  border-top: 1px solid #e0e0e0;
+}
+
+@media(max-width:768px) { .section { padding: 70px 24px; } }
+
+.sec-label {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  color: #1a5490;
+}
+
+.sec-title {
+  font-size: 2.5rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #1a1a1a;
+}
+
+.about-text {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #555;
+  max-width: 800px;
+  background: transparent;
+  padding: 0;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.skill-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+  font-weight: 700;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #333;
+  cursor: default;
+  transition: all 0.3s;
+}
+
+.skill-card:hover {
+  border-color: #1a5490;
+  box-shadow: 0 4px 12px rgba(26,84,144,.1);
+  color: #1a5490;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 28px;
+  cursor: default;
+  transition: all 0.3s;
+}
+
+.project-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  border-color: #1a5490;
+}
+
+.proj-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.proj-desc {
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  line-height: 1.6;
+  color: #666;
+}
+
+.proj-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.proj-tag {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  background: #f0f0f0;
+  border-radius: 2px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.edu-card {
+  background: #fff;
+  border-left: 3px solid #1a5490;
+  border-radius: 2px;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.05);
+}
+
+.edu-year {
+  font-size: 0.75rem;
+  color: #1a5490;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.edu-degree {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #1a1a1a;
+}
+
+.edu-school {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+footer {
+  padding: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1a1a1a;
+  color: #fff;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-logo {
+  font-size: 1.2rem;
+  font-weight: 900;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 1px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 16px;
+}
+
+.social-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 2px;
+  background: rgba(255,255,255,.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s;
+  border: 1px solid rgba(255,255,255,.2);
+}
+
+.social-btn:hover {
+  background: #1a5490;
+  border-color: #1a5490;
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-logo">EXECUTIVE</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+  </div>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Professional Executive</div>
+    <h1 class="hero-name">
+      <span id="heroFirstName">Executive</span><br>
+      <span id="heroLastName">Professional</span>
+    </h1>
+    <p class="hero-desc" id="heroBio">Loading…</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" id="heroGithub" href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+      <a class="btn btn-outline" id="heroLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </div>
+  </div>
+
+  <div class="hero-card">
+    <div class="card-row">
+      <span class="card-label">Name</span>
+      <span id="panelName">—</span>
+    </div>
+    <div class="card-row">
+      <span class="card-label">Role</span>
+      <span id="panelRole">—</span>
+    </div>
+    <div class="card-row">
+      <span class="card-label">Location</span>
+      <span id="panelLocation" contenteditable="true" data-collection="users" data-field="location">—</span>
+    </div>
+    <div class="card-row">
+      <span class="card-label">Email</span>
+      <span><a id="panelEmail" href="mailto:" style="color:#1a5490; text-decoration:none;">—</a></span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="sec-label">Professional Background</div>
+  <h2 class="sec-title">About Me</h2>
+  <div class="about-text" id="aboutText">Loading…</div>
+</section>
+
+<section class="section" id="skills">
+  <div class="sec-label">Expertise</div>
+  <h2 class="sec-title">Core Skills</h2>
+  <div class="skills-grid" id="skillsGrid"></div>
+</section>
+
+<section class="section" id="projects">
+  <div class="sec-label">Career Highlights</div>
+  <h2 class="sec-title">Key Projects</h2>
+  <div class="projects-grid" id="projectsGrid"></div>
+</section>
+
+<section class="section" id="education">
+  <div class="sec-label">Qualifications</div>
+  <h2 class="sec-title">Educational Background</h2>
+  <div class="edu-grid" id="educationList"></div>
+</section>
+
+<footer>
+  <div class="footer-logo">© 2024 EXECUTIVE PROFILE</div>
+  <div class="footer-socials">
+    <a class="social-btn" id="footerGithub" href="#" target="_blank"><i class="fab fa-github"></i></a>
+    <a class="social-btn" id="footerLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+  </div>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc,
+  collection, getDocs, updateDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+function setText(id, val, fb="—") {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val || fb;
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if(!user) return;
+  currentUser = user;
+
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const d = snap.exists() ? snap.data() : {};
+
+  const fullName = d.fullName || "Professional";
+  const parts = fullName.trim().split(" ");
+  setText("heroFirstName", parts[0]);
+  setText("heroLastName", parts.slice(1).join(" ") || "Professional");
+  setText("heroBio", d.about || "");
+  setText("panelName", d.fullName || "—");
+  setText("panelRole", d.role || "Professional");
+  setText("panelLocation", d.location || "—");
+  setText("aboutText", d.about || "");
+
+  if(d.github) ["heroGithub","footerGithub"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.github;});
+  if(d.linkedin) ["heroLinkedin","footerLinkedin"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.linkedin;});
+  if(d.email) document.getElementById("panelEmail").href = "mailto:" + d.email;
+
+  const skillsSnap = await getDocs(collection(db,"users",user.uid,"skills"));
+  const grid = document.getElementById("skillsGrid");
+  grid.innerHTML = "";
+  skillsSnap.forEach(ds => {
+    const s = ds.data();
+    grid.innerHTML += `<div class="skill-card" contenteditable="true" data-collection="skills" data-docid="${ds.id}" data-field="name">${s.name || ""}</div>`;
+  });
+
+  const projSnap = await getDocs(collection(db,"users",user.uid,"projects"));
+  const projGrid = document.getElementById("projectsGrid");
+  projGrid.innerHTML = "";
+  projSnap.forEach(ds => {
+    const p = ds.data();
+    const tags = (p.tech || "").split(",").map(t => t.trim()).filter(Boolean).map(t => `<span class="proj-tag">${t}</span>`).join("");
+    projGrid.innerHTML += `<div class="project-card">
+      <div class="proj-title" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="title">${p.title || ""}</div>
+      <div class="proj-desc" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="description">${p.description || ""}</div>
+      <div class="proj-tags">${tags}</div>
+    </div>`;
+  });
+
+  const eduSnap = await getDocs(collection(db,"users",user.uid,"education"));
+  const eduList = document.getElementById("educationList");
+  eduList.innerHTML = "";
+  console.log("Education records found:", eduSnap.size);
+  let eduCount = 0;
+  eduSnap.forEach(ds => {
+    const e = ds.data();
+    eduCount++;
+    console.log("Education entry:", e);
+    eduList.innerHTML += `<div class="edu-card">
+      <div class="edu-year">${e.year || ""}</div>
+      <div class="edu-degree" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="degree">${e.degree || ""}</div>
+      <div class="edu-school" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="institute">${e.institute || ""}</div>
+    </div>`;
+  });
+  if(eduCount === 0) {
+    console.warn("No education records found in Firestore");
+    eduList.innerHTML = `<p style="color:#999;font-size:0.9rem;padding:20px;text-align:center;">No education records added yet. Add education details in dashboard to see them here.</p>`;
+  }
+
+  if(new URLSearchParams(window.location.search).get("mode") === "readonly") {
+    document.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
+  }
+});
+
+document.addEventListener("blur", async (e) => {
+  const el = e.target;
+  if(!el.hasAttribute("contenteditable") || !currentUser) return;
+  const col = el.getAttribute("data-collection");
+  const docId = el.getAttribute("data-docid") || currentUser.uid;
+  const field = el.getAttribute("data-field");
+  const val = el.innerText.trim();
+  if(!col || !field) return;
+  try {
+    const ref = col === "users" ? doc(db, "users", docId) : doc(db, "users", currentUser.uid, col, docId);
+    await updateDoc(ref, { [field]: val });
+  } catch(err) { }
+}, true);
+</script>
+
+</body>
+</html>

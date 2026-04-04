@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bento Grid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+  background: #fafafa;
+  line-height: 1.5;
+}
+
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  padding: 18px 40px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
+.nav-logo {
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-family: 'Syne', sans-serif;
+  letter-spacing: -0.5px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+}
+
+.nav-links a {
+  color: #333;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #ff6b6b;
+}
+
+@media(max-width:768px) { .nav-links { display: none; } }
+
+.hero-bento {
+  padding-top: 100px;
+  padding: 100px 40px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  auto-rows: 200px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media(max-width:768px) { 
+  .hero-bento { 
+    grid-template-columns: 1fr;
+    padding: 80px 24px;
+    gap: 16px;
+  } 
+}
+
+.hero-bento > :nth-child(1) { grid-column: 1; grid-row: 1 / 3; }
+.hero-bento > :nth-child(2) { grid-column: 2; grid-row: 1; }
+.hero-bento > :nth-child(3) { grid-column: 2; grid-row: 2; }
+
+@media(max-width:768px) {
+  .hero-bento > :nth-child(1) { grid-column: 1; grid-row: 1; }
+  .hero-bento > :nth-child(2) { grid-column: 1; grid-row: 2; }
+  .hero-bento > :nth-child(3) { grid-column: 1; grid-row: 3; }
+}
+
+.bento-item {
+  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-item::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,107,107,.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.bento-item:hover {
+  border-color: #ff6b6b;
+  box-shadow: 0 8px 24px rgba(255,107,107,.12);
+  transform: translateY(-4px);
+}
+
+.bento-main {
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 100%);
+  color: #fff;
+}
+
+.bento-main:hover {
+  border-color: #ff6b6b;
+  box-shadow: 0 12px 30px rgba(255,107,107,.25);
+}
+
+.hero-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-family: 'Syne', sans-serif;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+
+.hero-tag {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.bento-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  opacity: 0.75;
+}
+
+.bento-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.section {
+  padding: 80px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media(max-width:768px) { .section { padding: 60px 24px; } }
+
+.sec-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: #ff6b6b;
+}
+
+.sec-title {
+  font-size: 2rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  margin-bottom: 40px;
+  color: #1a1a1a;
+}
+
+.about-text {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #555;
+  max-width: 700px;
+}
+
+.skills-bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.skill-bento {
+  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: default;
+  transition: all 0.3s;
+  color: #1a1a1a;
+}
+
+.skill-bento:hover {
+  border-color: #ff6b6b;
+  background: #fff5f4;
+  color: #ff6b6b;
+  transform: scale(1.05);
+}
+
+.projects-bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  auto-rows: 280px;
+}
+
+.project-bento {
+  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: default;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-bento::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff9a56, #ff6b6b, #a29bfe);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.project-bento:hover {
+  border-color: #ff6b6b;
+  box-shadow: 0 8px 24px rgba(255,107,107,.15);
+  transform: translateY(-4px);
+}
+
+.project-bento:hover::before {
+  transform: scaleX(1);
+}
+
+.proj-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+.proj-desc {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #666;
+  margin-bottom: 12px;
+  flex-grow: 1;
+}
+
+.proj-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.proj-tag {
+  font-size: 0.65rem;
+  padding: 4px 8px;
+  background: #ff6b6b;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.edu-bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.edu-bento-card {
+  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s;
+  cursor: default;
+  border-left: 4px solid #ff6b6b;
+}
+
+.edu-bento-card:hover {
+  border-color: #ff6b6b;
+  background: #fff5f4;
+  box-shadow: 0 8px 20px rgba(255,107,107,.12);
+  transform: translateY(-4px);
+}
+
+.edu-year {
+  font-size: 0.7rem;
+  color: #ff6b6b;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.edu-degree {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #1a1a1a;
+}
+
+.edu-school {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+footer {
+  padding: 40px;
+  text-align: center;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.footer-logo {
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-family: 'Syne', sans-serif;
+  margin-bottom: 12px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.social-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.social-btn:hover {
+  background: #ff6b6b;
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-logo">bento</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+  </div>
+</nav>
+
+<section class="hero-bento" id="hero">
+  <div class="bento-item bento-main">
+    <div>
+      <div class="hero-tag">Creator & Designer</div>
+      <h1 class="hero-name">
+        <span id="heroFirstName">Bento</span> <span id="heroLastName">Grid</span>
+      </h1>
+    </div>
+  </div>
+
+  <div class="bento-item">
+    <div class="bento-label">Role</div>
+    <div class="bento-value" id="panelRole">—</div>
+  </div>
+
+  <div class="bento-item">
+    <div class="bento-label">Location</div>
+    <div class="bento-value" id="panelLocation" contenteditable="true" data-collection="users" data-field="location">—</div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="sec-label">About</div>
+  <h2 class="sec-title">My Story</h2>
+  <div class="about-text" id="aboutText">Loading…</div>
+</section>
+
+<section class="section" id="skills">
+  <div class="sec-label">Expertise</div>
+  <h2 class="sec-title">Skills & Abilities</h2>
+  <div class="skills-bento" id="skillsGrid"></div>
+</section>
+
+<section class="section" id="projects">
+  <div class="sec-label">Portfolio</div>
+  <h2 class="sec-title">Projects & Works</h2>
+  <div class="projects-bento" id="projectsGrid"></div>
+</section>
+
+<section class="section" id="education">
+  <div class="sec-label">Learning</div>
+  <h2 class="sec-title">Educational Background</h2>
+  <div class="edu-bento" id="educationList"></div>
+</section>
+
+<footer>
+  <div class="footer-logo">bento © 2024</div>
+  <div class="footer-socials">
+    <a class="social-btn" id="footerGithub" href="#" target="_blank"><i class="fab fa-github"></i></a>
+    <a class="social-btn" id="footerLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+  </div>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc,
+  collection, getDocs, updateDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+function setText(id, val, fb="—") {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val || fb;
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if(!user) return;
+  currentUser = user;
+
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const d = snap.exists() ? snap.data() : {};
+
+  const fullName = d.fullName || "Creator";
+  const parts = fullName.trim().split(" ");
+  setText("heroFirstName", parts[0]);
+  setText("heroLastName", parts.slice(1).join(" ") || "Creator");
+  setText("heroBio", d.about || "");
+  setText("panelRole", d.role || "Designer");
+  setText("panelLocation", d.location || "—");
+  setText("aboutText", d.about || "");
+
+  if(d.github) ["footerGithub"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.github;});
+  if(d.linkedin) ["footerLinkedin"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.linkedin;});
+
+  const skillsSnap = await getDocs(collection(db,"users",user.uid,"skills"));
+  const grid = document.getElementById("skillsGrid");
+  grid.innerHTML = "";
+  skillsSnap.forEach(ds => {
+    const s = ds.data();
+    grid.innerHTML += `<div class="skill-bento" contenteditable="true" data-collection="skills" data-docid="${ds.id}" data-field="name">${s.name || ""}</div>`;
+  });
+
+  const projSnap = await getDocs(collection(db,"users",user.uid,"projects"));
+  const projGrid = document.getElementById("projectsGrid");
+  projGrid.innerHTML = "";
+  projSnap.forEach(ds => {
+    const p = ds.data();
+    const tags = (p.tech || "").split(",").map(t => t.trim()).filter(Boolean).map(t => `<span class="proj-tag">${t}</span>`).join("");
+    projGrid.innerHTML += `<div class="project-bento">
+      <div>
+        <div class="proj-title" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="title">${p.title || ""}</div>
+        <div class="proj-desc" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="description">${p.description || ""}</div>
+      </div>
+      <div class="proj-tags">${tags}</div>
+    </div>`;
+  });
+
+  const eduSnap = await getDocs(collection(db,"users",user.uid,"education"));
+  const eduList = document.getElementById("educationList");
+  eduList.innerHTML = "";
+  console.log("Education records found:", eduSnap.size);
+  let eduCount = 0;
+  eduSnap.forEach(ds => {
+    const e = ds.data();
+    eduCount++;
+    console.log("Education entry:", e);
+    eduList.innerHTML += `<div class="edu-bento-card">
+      <div class="edu-year">${e.year || ""}</div>
+      <div class="edu-degree" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="degree">${e.degree || ""}</div>
+      <div class="edu-school" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="institute">${e.institute || ""}</div>
+    </div>`;
+  });
+  if(eduCount === 0) {
+    console.warn("No education records found in Firestore");
+    eduList.innerHTML = `<p style="color:#999;font-size:0.9rem;padding:20px;text-align:center;">No education records added yet. Add education details in dashboard to see them here.</p>`;
+  }
+
+  if(new URLSearchParams(window.location.search).get("mode") === "readonly") {
+    document.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
+  }
+});
+
+document.addEventListener("blur", async (e) => {
+  const el = e.target;
+  if(!el.hasAttribute("contenteditable") || !currentUser) return;
+  const col = el.getAttribute("data-collection");
+  const docId = el.getAttribute("data-docid") || currentUser.uid;
+  const field = el.getAttribute("data-field");
+  const val = el.innerText.trim();
+  if(!col || !field) return;
+  try {
+    const ref = col === "users" ? doc(db, "users", docId) : doc(db, "users", currentUser.uid, col, docId);
+    await updateDoc(ref, { [field]: val });
+  } catch(err) { }
+}, true);
+</script>
+
+</body>
+</html>
