@@ -1,319 +1,978 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
-<title>Professional Resume</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+<title>Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,300&family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root{
-  --dark:#3e3e42;
-  --light:#f4f4f4;
-  --accent:#c9a227;
-  --font:'Segoe UI', sans-serif;
+
+/* ════════════════════════════════════════
+   DESIGN TOKENS
+════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:      #08090c;
+  --ink2:     #0d0f14;
+  --ink3:     #111318;
+  --line:     #1c1f28;
+  --line2:    #252a38;
+  --lime:     #c8f135;   /* neon chartreuse — the signature accent */
+  --lime-dim: #8aaa1f;
+  --white:    #f2f3f5;
+  --grey:     #8a9bb5;
+  --grey2:    #4a5568;
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-serif:   'DM Serif Display', serif;
+  --font-mono:    'IBM Plex Mono', monospace;
+  --font-body:    'Outfit', sans-serif;
 }
 
-body{
-  margin:0;
-  font-family:var(--font);
-  background:#ddd;
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--font-body);
+  overflow-x: hidden;
 }
 
-.resume{
-  max-width:1100px;
-  margin:30px auto;
-  display:flex;
-  background:white;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+/* Grain overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: .6;
 }
 
-.left{
-  width:32%;
-  background:var(--dark);
-  color:white;
-  padding:40px 30px;
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--lime); border-radius: 2px; }
+
+/* ── Contenteditable states ── */
+[contenteditable="true"]:hover {
+  outline: 1px dashed rgba(200,241,53,.4);
+  border-radius: 3px; cursor: text;
+}
+[contenteditable="true"]:focus {
+  outline: 1px solid var(--lime);
+  background: rgba(200,241,53,.04);
+  border-radius: 3px;
 }
 
-.left img{
-  width:140px;
-  height:140px;
-  border-radius:50%;
-  display:block;
-  margin-bottom:20px;
-  object-fit:cover;
-  cursor:pointer;
-  border:3px solid white;
+/* ════════════════════════════════════════
+   TOP NAV
+════════════════════════════════════════ */
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 60px;
+  background: rgba(8,9,12,.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  animation: navIn .5s ease both;
+}
+@keyframes navIn {
+  from { opacity:0; transform:translateY(-100%); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
-.left h3{
-  border-bottom:1px solid #666;
-  padding-bottom:5px;
-  margin-top:25px;
+.nav-logo {
+  font-family: var(--font-display); font-size: 1.5rem;
+  letter-spacing: .1em; color: var(--lime);
+  text-decoration: none;
 }
 
-.right{
-  width:68%;
-  padding:50px;
-  background:var(--light);
+.nav-links { display: flex; gap: 32px; }
+.nav-links a {
+  font-family: var(--font-mono); font-size: .7rem;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--grey); text-decoration: none;
+  transition: color .2s ease;
+}
+.nav-links a:hover { color: var(--lime); }
+
+.nav-cta {
+  font-family: var(--font-mono); font-size: .7rem;
+  padding: 8px 18px; border-radius: 4px;
+  background: var(--lime); color: var(--ink);
+  font-weight: 600; text-decoration: none;
+  letter-spacing: .08em; transition: all .2s;
+}
+.nav-cta:hover { background: #d9ff3a; box-shadow: 0 0 20px rgba(200,241,53,.35); }
+
+@media(max-width:768px){
+  .topnav { padding: 14px 20px; }
+  .nav-links { display: none; }
 }
 
-.name{
-  font-size:32px;
-  font-weight:700;
-  letter-spacing:2px;
+/* ════════════════════════════════════════
+   HERO
+════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  padding: 160px 60px 100px;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 60px;
+  align-items: end;
+  border-bottom: 1px solid var(--line);
+  position: relative; overflow: hidden;
+}
+@media(max-width:900px){ .hero{ grid-template-columns:1fr; padding:140px 24px 80px; } }
+
+/* Big watermark */
+.hero-watermark {
+  position: absolute; bottom: -30px; right: -20px;
+  font-family: var(--font-display); font-size: 22vw;
+  color: rgba(255,255,255,.018); line-height: 1;
+  pointer-events: none; user-select: none;
+  letter-spacing: -.02em;
 }
 
-.title{
-  color:var(--accent);
-  margin-bottom:20px;
+.hero-left { position: relative; z-index: 1; }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: .68rem;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 20px;
+  animation: up .6s .1s ease both;
+}
+.hero-tag::before {
+  content: ''; width: 28px; height: 1px; background: var(--lime);
 }
 
-.section{
-  margin-top:30px;
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 10vw, 10rem);
+  line-height: .92; letter-spacing: .02em;
+  color: var(--white); margin-bottom: 32px;
+  animation: up .6s .2s ease both;
+}
+.hero-name .line-accent {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--lime);
 }
 
-.section h2{
-  border-bottom:2px solid #999;
-  padding-bottom:6px;
-  margin-bottom:15px;
+.hero-desc {
+  font-size: 1.05rem; color: var(--grey);
+  line-height: 1.85; max-width: 520px;
+  margin-bottom: 40px;
+  animation: up .6s .3s ease both;
 }
 
-.timeline{
-  border-left:2px solid #999;
-  padding-left:15px;
+.hero-actions {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  animation: up .6s .4s ease both;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; border-radius: 4px;
+  font-family: var(--font-mono); font-size: .78rem;
+  font-weight: 600; letter-spacing: .06em;
+  text-decoration: none; cursor: pointer;
+  border: 1px solid transparent; transition: all .22s ease;
+}
+.btn-lime {
+  background: var(--lime); color: var(--ink);
+  box-shadow: 0 0 30px rgba(200,241,53,.2);
+}
+.btn-lime:hover {
+  background: #d9ff3a;
+  box-shadow: 0 0 40px rgba(200,241,53,.4);
+  transform: translateY(-2px);
+}
+.btn-ghost {
+  background: transparent;
+  border-color: var(--line2); color: var(--grey);
+}
+.btn-ghost:hover { border-color: var(--lime); color: var(--lime); }
+
+/* Hero right — info panel */
+.hero-panel {
+  background: var(--ink2);
+  border: 1px solid var(--line);
+  border-radius: 8px; overflow: hidden;
+  position: relative; z-index: 1;
+  animation: up .6s .5s ease both;
+  align-self: end;
+}
+.panel-bar {
+  background: var(--ink3);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: .64rem; color: var(--grey2);
+}
+.panel-dot { width:8px; height:8px; border-radius:50%; }
+.pd-r{background:#ff5f57} .pd-y{background:#febc2e} .pd-g{background:#28c840}
+.panel-title-bar { margin-left:8px; }
+
+.panel-body { padding: 22px; }
+.panel-row {
+  display: flex; gap: 12px;
+  padding: 9px 0; border-bottom: 1px solid var(--line);
+  font-size: .82rem;
+}
+.panel-row:last-child { border-bottom: none; }
+.panel-key {
+  font-family: var(--font-mono); font-size: .65rem;
+  color: var(--lime); min-width: 76px;
+  padding-top: 2px; flex-shrink: 0;
+}
+.panel-val { color: var(--grey); line-height: 1.5; }
+.panel-val a { color: var(--grey); text-decoration: none; }
+.panel-val a:hover { color: var(--lime); }
+
+.hero-nums {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border-top: 1px solid var(--line);
+}
+.h-num {
+  padding: 18px 14px; text-align: center;
+  border-right: 1px solid var(--line);
+}
+.h-num:last-child { border-right: none; }
+.h-num-val {
+  font-family: var(--font-display); font-size: 2.2rem;
+  color: var(--lime); line-height: 1;
+}
+.h-num-label {
+  font-family: var(--font-mono); font-size: .58rem;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--grey2); margin-top: 4px;
 }
 
-.skill-bar{
-  background:#ccc;
-  height:6px;
-  border-radius:4px;
-  margin-top:4px;
+@keyframes up {
+  from { opacity:0; transform:translateY(22px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
-.skill-bar div{
-  height:6px;
-  background:var(--accent);
-  border-radius:4px;
+/* ════════════════════════════════════════
+   SECTION WRAPPER
+════════════════════════════════════════ */
+.section {
+  padding: 100px 60px;
+  border-bottom: 1px solid var(--line);
+  position: relative; overflow: hidden;
+}
+@media(max-width:768px){ .section{ padding:70px 24px; } }
+
+/* Decorative section number */
+.sec-watermark {
+  position: absolute; right: 40px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-display); font-size: 16vw;
+  color: rgba(255,255,255,.015); pointer-events: none;
+  user-select: none; line-height: 1;
 }
 
-[contenteditable="true"]:hover{
-  background:#fff3c4;
-  cursor:text;
+.sec-eyebrow {
+  font-family: var(--font-mono); font-size: .65rem;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sec-eyebrow::before { content:''; width:24px; height:1px; background:var(--lime); }
+
+.sec-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  letter-spacing: .03em; line-height: .95;
+  color: var(--white); margin-bottom: 60px;
+}
+.sec-title em {
+  font-family: var(--font-serif); font-style: italic;
+  color: transparent; -webkit-text-stroke: 1.5px var(--white);
 }
 
-.download{
-  position:fixed;
-  bottom:25px;
-  right:25px;
-  background:var(--dark);
-  color:white;
-  border:none;
-  padding:12px 18px;
-  cursor:pointer;
-  border-radius:5px;
+/* ════════════════════════════════════════
+   ABOUT
+════════════════════════════════════════ */
+.about-layout {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start;
+}
+@media(max-width:860px){ .about-layout{ grid-template-columns:1fr; gap:40px; } }
+
+.about-text {
+  font-size: 1.12rem; color: var(--grey);
+  line-height: 2; border-left: 2px solid var(--lime);
+  padding-left: 28px;
+}
+
+.about-aside { display: flex; flex-direction: column; gap: 20px; }
+.aside-block {
+  background: var(--ink2); border: 1px solid var(--line);
+  border-radius: 6px; padding: 20px;
+}
+.aside-label {
+  font-family: var(--font-mono); font-size: .6rem;
+  text-transform: uppercase; letter-spacing: .16em;
+  color: var(--grey2); margin-bottom: 8px;
+}
+.aside-val {
+  font-size: .9rem; color: var(--grey); line-height: 1.6;
+}
+.aside-val a { color: var(--lime); text-decoration: none; }
+.aside-val a:hover { text-decoration: underline; }
+
+/* ════════════════════════════════════════
+   SKILLS — Horizontal ticker + grid
+════════════════════════════════════════ */
+.skills-ticker-wrap {
+  overflow: hidden; margin: 0 -60px 52px; padding: 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  background: var(--ink2);
+}
+.skills-ticker {
+  display: flex; gap: 0;
+  animation: tickerScroll 22s linear infinite;
+  width: max-content;
+}
+.skills-ticker:hover { animation-play-state: paused; }
+.ticker-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 32px;
+  font-family: var(--font-mono); font-size: .78rem;
+  letter-spacing: .08em; color: var(--grey);
+  border-right: 1px solid var(--line);
+  white-space: nowrap; cursor: default;
+  transition: color .2s, background .2s;
+}
+.ticker-item:hover { color: var(--lime); background: rgba(200,241,53,.04); }
+.ticker-item .t-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--lime); box-shadow: 0 0 6px var(--lime);
+  flex-shrink: 0;
+}
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.skill-card {
+  background: var(--ink2);
+  border: 1px solid var(--line);
+  border-radius: 6px; padding: 16px 18px;
+  font-family: var(--font-mono); font-size: .82rem;
+  color: var(--grey); cursor: default;
+  transition: all .22s ease;
+  position: relative; overflow: hidden;
+}
+.skill-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--lime);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .25s ease;
+}
+.skill-card:hover {
+  border-color: rgba(200,241,53,.35);
+  color: var(--white);
+  background: rgba(200,241,53,.05);
+}
+.skill-card:hover::after { transform: scaleX(1); }
+
+/* ════════════════════════════════════════
+   PROJECTS
+════════════════════════════════════════ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px,1fr));
+  gap: 2px;
+  margin: 0 -60px;
+  border-top: 1px solid var(--line);
+}
+@media(max-width:768px){ .projects-grid{ margin: 0 -24px; } }
+
+.project-card {
+  background: var(--ink);
+  border: 1px solid var(--line);
+  padding: 36px; cursor: default;
+  transition: all .22s ease;
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.project-card:hover {
+  background: var(--ink2);
+  z-index: 2;
+}
+
+/* Hover: left lime bar */
+.project-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--lime);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform .3s ease;
+}
+.project-card:hover::before { transform: scaleY(1); }
+
+.proj-num {
+  font-family: var(--font-display); font-size: 3.5rem;
+  color: rgba(255,255,255,.06); line-height: 1;
+  margin-bottom: 16px; letter-spacing: .02em;
+}
+.proj-title {
+  font-family: var(--font-display); font-size: 1.6rem;
+  letter-spacing: .04em; color: var(--white);
+  margin-bottom: 12px; line-height: 1;
+}
+.proj-desc {
+  font-size: .88rem; color: var(--grey); line-height: 1.75;
+  margin-bottom: 20px; flex: 1;
+}
+.proj-tags {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
+}
+.proj-tag {
+  font-family: var(--font-mono); font-size: .62rem;
+  padding: 3px 10px; border-radius: 3px;
+  background: rgba(200,241,53,.08);
+  border: 1px solid rgba(200,241,53,.18);
+  color: var(--lime); letter-spacing: .05em;
+}
+.proj-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: .7rem;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--lime); text-decoration: none;
+  transition: gap .2s;
+}
+.proj-link:hover { gap: 10px; }
+
+/* ════════════════════════════════════════
+   EDUCATION
+════════════════════════════════════════ */
+.edu-list { display: flex; flex-direction: column; gap: 0; }
+.edu-item {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 40px; align-items: start;
+  padding: 36px 0;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  transition: background .2s;
+}
+.edu-item:last-child { border-bottom: none; }
+.edu-item:hover { background: rgba(200,241,53,.02); }
+
+.edu-idx {
+  font-family: var(--font-display); font-size: 3.5rem;
+  color: var(--lime); line-height: 1;
+  opacity: .6;
+}
+
+.edu-content {}
+.edu-year {
+  font-family: var(--font-mono); font-size: .65rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 6px;
+}
+.edu-degree {
+  font-family: var(--font-display); font-size: 1.7rem;
+  letter-spacing: .03em; color: var(--white); margin-bottom: 4px;
+}
+.edu-institute {
+  font-family: var(--font-mono); font-size: .8rem;
+  color: var(--grey2); margin-bottom: 8px; letter-spacing: .04em;
+}
+.edu-grade {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: .68rem;
+  padding: 3px 10px; border-radius: 3px;
+  background: rgba(200,241,53,.08);
+  border: 1px solid rgba(200,241,53,.18);
+  color: var(--lime);
+}
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+footer {
+  padding: 40px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+  background: var(--ink2); border-top: 1px solid var(--line);
+}
+@media(max-width:768px){ footer{ padding: 32px 24px; } }
+
+.footer-logo {
+  font-family: var(--font-display); font-size: 1.4rem;
+  letter-spacing: .1em; color: var(--lime);
+}
+.footer-note {
+  font-family: var(--font-mono); font-size: .65rem;
+  letter-spacing: .1em; color: var(--grey2);
+}
+.footer-socials { display: flex; gap: 10px; }
+.footer-social {
+  width: 34px; height: 34px; border-radius: 5px;
+  border: 1px solid var(--line2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--grey); font-size: .8rem; text-decoration: none;
+  transition: all .2s ease;
+}
+.footer-social:hover {
+  border-color: var(--lime); color: var(--lime);
+  background: rgba(200,241,53,.08);
+  box-shadow: 0 0 12px rgba(200,241,53,.15);
 }
 </style>
 </head>
-
 <body>
 
-<div class="resume" id="resume">
+<!-- ══════════════════════════════
+     TOP NAV
+══════════════════════════════ -->
+<nav class="topnav">
+  <a class="nav-logo" href="#hero">PORTFOLIO</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+  </div>
+  <a class="nav-cta" id="navGithub" href="#" target="_blank">
+    <i class="fab fa-github" style="margin-right:5px"></i> GitHub
+  </a>
+</nav>
 
-<div class="left">
-  <img id="photo" src="https://via.placeholder.com/150">
-  <input type="file" id="photoInput" hidden>
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-watermark" aria-hidden="true">DEV</div>
 
-  <h3>ABOUT ME</h3>
-  <p id="about" contenteditable="true"></p>
-
-  <h3>LANGUAGES</h3>
-  <div id="languages"></div>
-</div>
-
-<div class="right">
-
-  <div class="name" id="name" contenteditable="true"></div>
-  <div class="title" id="title" contenteditable="true"></div>
-
-  <div style="margin-bottom:20px;">
-    <span id="location" contenteditable="true"></span> |
-    <span id="phone" contenteditable="true"></span> |
-    <span id="email" contenteditable="true"></span>
+  <div class="hero-left">
+    <div class="hero-tag">Available for work</div>
+    <h1 class="hero-name">
+      <span id="heroFirstName">FIRST</span><br>
+      <span class="line-accent" id="heroLastName">LAST</span>
+    </h1>
+    <p class="hero-desc" id="heroBio">Loading…</p>
+    <div class="hero-actions">
+      <a class="btn btn-lime" id="heroGithub" href="#" target="_blank">
+        <i class="fab fa-github"></i> GitHub
+      </a>
+      <a class="btn btn-ghost" id="heroLinkedin" href="#" target="_blank">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      <a class="btn btn-ghost" href="#projects">
+        <i class="fas fa-arrow-down"></i> See My Work
+      </a>
+    </div>
   </div>
 
-  <div class="section">
-    <h2>WORK EXPERIENCE</h2>
-    <div id="experience" class="timeline"></div>
+  <div class="hero-panel">
+    <div class="panel-bar">
+      <div class="panel-dot pd-r"></div>
+      <div class="panel-dot pd-y"></div>
+      <div class="panel-dot pd-g"></div>
+      <span class="panel-title-bar">profile.json</span>
+    </div>
+    <div class="panel-body">
+      <div class="panel-row">
+        <span class="panel-key">name:</span>
+        <span class="panel-val" id="panelName">—</span>
+      </div>
+      <div class="panel-row">
+        <span class="panel-key">role:</span>
+        <span class="panel-val" id="panelRole">—</span>
+      </div>
+      <div class="panel-row">
+        <span class="panel-key">location:</span>
+        <span class="panel-val" id="panelLocation" contenteditable="true" data-collection="users" data-field="location">—</span>
+      </div>
+      <div class="panel-row">
+        <span class="panel-key">github:</span>
+        <span class="panel-val"><a id="panelGithub" href="#" target="_blank">—</a></span>
+      </div>
+      <div class="panel-row">
+        <span class="panel-key">linkedin:</span>
+        <span class="panel-val"><a id="panelLinkedin" href="#" target="_blank">—</a></span>
+      </div>
+      <div class="panel-row">
+        <span class="panel-key">status:</span>
+        <span class="panel-val" style="color:var(--lime)">● Open to opportunities</span>
+      </div>
+    </div>
+    <div class="hero-nums">
+      <div class="h-num">
+        <div class="h-num-val" id="statSkills">—</div>
+        <div class="h-num-label">Skills</div>
+      </div>
+      <div class="h-num">
+        <div class="h-num-val" id="statProjects">—</div>
+        <div class="h-num-label">Projects</div>
+      </div>
+      <div class="h-num">
+        <div class="h-num-val" id="statEdu">—</div>
+        <div class="h-num-label">Degrees</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     ABOUT
+══════════════════════════════ -->
+<section class="section" id="about">
+  <div class="sec-watermark" aria-hidden="true">01</div>
+  <div class="sec-eyebrow">Who I am</div>
+  <div class="sec-title">ABOUT<br><em>Me</em></div>
+
+  <div class="about-layout">
+    <p class="about-text" id="aboutText" contenteditable="true" data-collection="users" data-field="about">
+      Loading…
+    </p>
+    <div class="about-aside">
+      <div class="aside-block">
+        <div class="aside-label">Full Name</div>
+        <div class="aside-val" id="asideName">—</div>
+      </div>
+      <div class="aside-block">
+        <div class="aside-label">Role / Title</div>
+        <div class="aside-val" id="asideRole" contenteditable="true" data-collection="users" data-field="role">—</div>
+      </div>
+      <div class="aside-block">
+        <div class="aside-label">Location</div>
+        <div class="aside-val" id="asideLocation" contenteditable="true" data-collection="users" data-field="location">—</div>
+      </div>
+      <div class="aside-block">
+        <div class="aside-label">Connect</div>
+        <div class="aside-val">
+          <a id="asideGithub" href="#" target="_blank">GitHub ↗</a>
+          &nbsp;&nbsp;
+          <a id="asideLinkedin" href="#" target="_blank">LinkedIn ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SKILLS
+══════════════════════════════ -->
+<section class="section" id="skills">
+  <div class="sec-watermark" aria-hidden="true">02</div>
+  <div class="sec-eyebrow">What I build with</div>
+  <div class="sec-title">MY<br><em>Toolkit</em></div>
+
+  <!-- Animated ticker (filled by JS, duplicated for infinite loop) -->
+  <div class="skills-ticker-wrap">
+    <div class="skills-ticker" id="skillsTicker"><!-- JS fills --></div>
   </div>
 
-  <div class="section">
-    <h2>EDUCATION</h2>
-    <div id="education" class="timeline"></div>
+  <!-- Static grid -->
+  <div class="skills-grid" id="skillsGrid"><!-- JS fills --></div>
+</section>
+
+<!-- ══════════════════════════════
+     PROJECTS
+══════════════════════════════ -->
+<section class="section" id="projects">
+  <div class="sec-watermark" aria-hidden="true">03</div>
+  <div class="sec-eyebrow">Things I've built</div>
+  <div class="sec-title">FEATURED<br><em>Work</em></div>
+
+  <div class="projects-grid" id="projectsGrid"><!-- JS fills --></div>
+</section>
+
+<!-- ══════════════════════════════
+     EDUCATION
+══════════════════════════════ -->
+<section class="section" id="education">
+  <div class="sec-watermark" aria-hidden="true">04</div>
+  <div class="sec-eyebrow">Academic journey</div>
+  <div class="sec-title">EDUCATION<br><em>Path</em></div>
+
+  <div class="edu-list" id="educationList"><!-- JS fills --></div>
+</section>
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer>
+  <div class="footer-logo">PORTFOLIO</div>
+  <div class="footer-note">© <span id="fyear"></span> — Crafted with precision</div>
+  <div class="footer-socials">
+    <a class="footer-social" id="footerGithub" href="#" target="_blank"><i class="fab fa-github"></i></a>
+    <a class="footer-social" id="footerLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
   </div>
+</footer>
 
-  <div class="section">
-    <h2>SKILLS</h2>
-    <div id="skills"></div>
-  </div>
+<!-- ══════════════════════════════
+     UTILS
+══════════════════════════════ -->
+<script>
+document.getElementById("fyear").textContent = new Date().getFullYear();
 
-</div>
-</div>
+/* Active nav on scroll */
+const sections  = ["hero","about","skills","projects","education"];
+const navLinks  = document.querySelectorAll(".nav-links a");
+let ticking = false;
+window.addEventListener("scroll", () => {
+  if(ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    const y = window.scrollY + 140;
+    let active = 0;
+    sections.forEach((id,i) => {
+      const el = document.getElementById(id);
+      if(el && el.offsetTop <= y) active = i;
+    });
+    navLinks.forEach((lk,i) => {
+      lk.style.color = i === active ? "var(--lime)" : "";
+    });
+    ticking = false;
+  });
+});
+</script>
 
-<button class="download" onclick="downloadPDF()">Download PDF</button>
-
+<!-- ══════════════════════════════
+     FIREBASE DATA FETCH & SYNC
+══════════════════════════════ -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc,
+  collection, getDocs, updateDoc
+} from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+/* ── Replace with your own Firebase config ── */
 const firebaseConfig = {
-  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
-  authDomain: "portfoliox-2e787.firebaseapp.com",
-  projectId: "portfoliox-2e787",
-  storageBucket: "portfoliox-2e787.firebasestorage.app",
-  messagingSenderId: "562709786891",
-  appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+  apiKey:    "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain:"portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787"
 };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
 
-let currentUser;
+let currentUser = null;
 
-/* AUTH */
-onAuthStateChanged(auth, async (user)=>{
-  if(!user){
-    window.location.href="loginpage.html";
-    return;
+function setText(id, val, fb="—") {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val || fb;
+}
+function setLink(id, href, label) {
+  const el = document.getElementById(id);
+  if(el && href) { el.href = href; if(label) el.textContent = label; }
+}
+
+/* ════════════════════════════════════════
+   LOAD DATA
+════════════════════════════════════════ */
+onAuthStateChanged(auth, async (user) => {
+  if(!user) return;
+  currentUser = user;
+
+  /* — Profile — */
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const d    = snap.exists() ? snap.data() : {};
+
+  const fullName = d.fullName || "Your Name";
+  const nameParts = fullName.trim().split(" ");
+  const first = nameParts.slice(0, -1).join(" ") || nameParts[0] || "YOUR";
+  const last  = nameParts.slice(-1)[0] || "NAME";
+
+  setText("heroFirstName", first.toUpperCase());
+  setText("heroLastName",  last.toUpperCase());
+  setText("heroBio",       d.about || "");
+  setText("panelName",     fullName);
+  setText("panelRole",     d.role || "Developer");
+  setText("panelLocation", d.location || "—");
+  setText("asideName",     fullName);
+  setText("asideRole",     d.role || "Developer");
+  setText("asideLocation", d.location || "—");
+  setText("aboutText",     d.about || "Tell your story here.");
+
+  if(d.github) {
+    ["heroGithub","navGithub","panelGithub","asideGithub","footerGithub","sidebarGithub"].forEach(id => {
+      const el = document.getElementById(id);
+      if(el){ el.href = d.github; if(id.includes("panel") || id.includes("aside")) el.textContent = d.github; }
+    });
+  }
+  if(d.linkedin) {
+    ["heroLinkedin","panelLinkedin","asideLinkedin","footerLinkedin"].forEach(id => {
+      const el = document.getElementById(id);
+      if(el){ el.href = d.linkedin; if(id.includes("panel") || id.includes("aside")) el.textContent = d.linkedin; }
+    });
   }
 
-  currentUser = user;
-  await loadAllData();
+  /* — Skills — */
+  const skillsSnap = await getDocs(collection(db,"users",user.uid,"skills"));
+  const skillNames = [];
+  skillsSnap.forEach(ds => {
+    const s = ds.data();
+    skillNames.push(s.name || "Skill");
+  });
+
+  // Ticker (duplicated for seamless loop)
+  const ticker   = document.getElementById("skillsTicker");
+  const tickerHTML = skillNames.map(n =>
+    `<div class="ticker-item"><span class="t-dot"></span>${n}</div>`
+  ).join("");
+  ticker.innerHTML = tickerHTML + tickerHTML; // duplicate
+
+  // Grid (with edit support)
+  const grid = document.getElementById("skillsGrid");
+  grid.innerHTML = "";
+  skillsSnap.forEach(ds => {
+    const s = ds.data();
+    grid.innerHTML +=
+      `<div class="skill-card" contenteditable="true"
+            data-collection="skills" data-docid="${ds.id}" data-field="name">
+         ${s.name || "Skill"}
+       </div>`;
+  });
+
+  setText("statSkills", String(skillNames.length));
+
+  /* — Projects — */
+  const projSnap = await getDocs(collection(db,"users",user.uid,"projects"));
+  const projGrid = document.getElementById("projectsGrid");
+  projGrid.innerHTML = "";
+  let pIdx = 0;
+
+  projSnap.forEach(ds => {
+    const p = ds.data();
+    pIdx++;
+    const techTags = (p.tech || "")
+      .split(",").map(t => t.trim()).filter(Boolean)
+      .map(t => `<span class="proj-tag">${t}</span>`).join("");
+
+    projGrid.innerHTML +=
+      `<div class="project-card">
+         <div class="proj-num">${String(pIdx).padStart(2,"0")}</div>
+         <div class="proj-title" contenteditable="true"
+              data-collection="projects" data-docid="${ds.id}" data-field="title">
+           ${p.title || "Project Title"}
+         </div>
+         <p class="proj-desc" contenteditable="true"
+            data-collection="projects" data-docid="${ds.id}" data-field="description">
+           ${p.description || "Description here."}
+         </p>
+         <div class="proj-tags">${techTags}</div>
+         ${p.link
+           ? `<a href="${p.link}" target="_blank" class="proj-link">
+                View Project <i class="fas fa-arrow-up-right-from-square" style="font-size:.6rem"></i>
+              </a>`
+           : ""}
+       </div>`;
+  });
+
+  if(pIdx === 0) projGrid.innerHTML =
+    `<p style="color:var(--grey2);font-family:var(--font-mono);font-size:.82rem;padding:36px;">
+       No projects added yet.
+     </p>`;
+  setText("statProjects", String(pIdx));
+
+  /* — Education — */
+  const eduSnap = await getDocs(collection(db,"users",user.uid,"education"));
+  const eduList = document.getElementById("educationList");
+  eduList.innerHTML = "";
+  let eIdx = 0;
+
+  eduSnap.forEach(ds => {
+    const e = ds.data();
+    eIdx++;
+    const degree    = e.degree    || e.name             || "Degree";
+    const institute = e.institute || e.university?.name || e.school?.board || "Institution";
+    const year      = e.year      || e.university?.year || e.school?.year  || "";
+    const grade     = e.grade     || e.university?.grade|| e.school?.grade || "";
+
+    eduList.innerHTML +=
+      `<div class="edu-item">
+         <div class="edu-idx">${String(eIdx).padStart(2,"0")}</div>
+         <div class="edu-content">
+           ${year ? `<div class="edu-year">${year}</div>` : ""}
+           <div class="edu-degree" contenteditable="true"
+                data-collection="education" data-docid="${ds.id}" data-field="degree">
+             ${degree}
+           </div>
+           <div class="edu-institute" contenteditable="true"
+                data-collection="education" data-docid="${ds.id}" data-field="institute">
+             ${institute}
+           </div>
+           ${grade
+             ? `<div class="edu-grade"><i class="fas fa-star" style="font-size:.6rem"></i> ${grade}</div>`
+             : ""}
+         </div>
+       </div>`;
+  });
+
+  if(eIdx === 0) eduList.innerHTML =
+    `<p style="color:var(--grey2);font-family:var(--font-mono);font-size:.82rem;">
+       No education records added yet.
+     </p>`;
+  setText("statEdu", String(eIdx));
+
+  /* — Read-only mode — */
+  const isReadOnly = new URLSearchParams(window.location.search).get("mode") === "readonly";
+  if(isReadOnly) {
+    document.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
+  } else {
+    document.querySelectorAll("a[contenteditable]").forEach(el => {
+      el.addEventListener("click", e => e.preventDefault());
+    });
+  }
 });
 
-/* LOAD ALL DATA */
-async function loadAllData(){
-  await loadProfile();
-  await loadExperience();
-  await loadEducation();
-  await loadSkills();
-  await loadLanguages();
-}
+/* ════════════════════════════════════════
+   IN-PLACE EDITING — SAVE ON BLUR
+════════════════════════════════════════ */
+document.addEventListener("blur", async (e) => {
+  const el = e.target;
+  if(!el.hasAttribute("contenteditable") || !currentUser) return;
 
-/* PROFILE */
-async function loadProfile(){
-  const snap = await getDoc(doc(db,"users",currentUser.uid));
-  if(!snap.exists()) return;
+  const col   = el.getAttribute("data-collection");
+  const docId = el.getAttribute("data-docid") || currentUser.uid;
+  const field = el.getAttribute("data-field");
+  const val   = el.innerText.trim();
+  if(!col || !field) return;
 
-  const d = snap.data();
-
-  name.innerText = d.name || "";
-  title.innerText = d.title || "";
-  about.innerText = d.about || "";
-  location.innerText = d.location || "";
-  phone.innerText = d.phone || "";
-  email.innerText = d.email || "";
-
-  if(d.photoURL){
-    photo.src = d.photoURL;
+  /* Mirror about field across all instances */
+  if(field === "about") {
+    document.querySelectorAll("[data-field='about']").forEach(m => {
+      if(m !== el) m.textContent = val;
+    });
   }
-}
-
-/* EXPERIENCE */
-async function loadExperience(){
-  const container = document.getElementById("experience");
-  container.innerHTML="";
-
-  const snap = await getDocs(collection(db,"users",currentUser.uid,"experience"));
-  snap.forEach(docSnap=>{
-    const d = docSnap.data();
-    container.innerHTML += `
-      <div style="margin-bottom:15px;">
-        <strong>${d.position || ""}</strong><br>
-        <small>${d.company || ""} | ${d.duration || ""}</small>
-        <p>${d.description || ""}</p>
-      </div>`;
-  });
-}
-
-/* EDUCATION (new structure) */
-async function loadEducation(){
-  const container = document.getElementById("education");
-  container.innerHTML="";
-
-  const snap = await getDoc(doc(db,"users",currentUser.uid));
-  if(!snap.exists()) return;
-
-  const edu = snap.data().education;
-  if(!edu) return;
-
-  if(edu.university){
-    container.innerHTML += `
-      <div style="margin-bottom:15px;">
-        <strong>${edu.university.degree || ""}</strong><br>
-        <small>${edu.university.name || ""} | ${edu.university.year || ""}</small>
-      </div>`;
+  /* Mirror role and location */
+  if(field === "role" || field === "location") {
+    document.querySelectorAll(`[data-field='${field}']`).forEach(m => {
+      if(m !== el) m.textContent = val;
+    });
   }
 
-  if(edu.school){
-    container.innerHTML += `
-      <div style="margin-bottom:15px;">
-        <strong>School Education</strong><br>
-        <small>${edu.school.name || ""} | ${edu.school.location || ""} | ${edu.school.year || ""}</small>
-      </div>`;
+  try {
+    const ref = col === "users"
+      ? doc(db, "users", docId)
+      : doc(db, "users", currentUser.uid, col, docId);
+    await updateDoc(ref, { [field]: val });
+    console.log(`✓ ${field} saved`);
+  } catch(err) {
+    console.error("Save failed:", err);
   }
-}
-
-/* SKILLS */
-async function loadSkills(){
-  const container = document.getElementById("skills");
-  container.innerHTML="";
-
-  const snap = await getDocs(collection(db,"users",currentUser.uid,"skills"));
-  snap.forEach(docSnap=>{
-    const d = docSnap.data();
-    container.innerHTML += `
-      <div style="margin-bottom:10px;">
-        ${d.name || ""}
-        <div class="skill-bar">
-          <div style="width:${d.level || 80}%"></div>
-        </div>
-      </div>`;
-  });
-}
-
-/* LANGUAGES */
-async function loadLanguages(){
-  const container = document.getElementById("languages");
-  container.innerHTML="";
-
-  const snap = await getDocs(collection(db,"users",currentUser.uid,"languages"));
-  snap.forEach(docSnap=>{
-    const d = docSnap.data();
-    container.innerHTML += `<div>${d.name || ""}</div>`;
-  });
-}
-
-/* PHOTO UPLOAD */
-photo.onclick = () => photoInput.click();
-
-photoInput.onchange = (e)=>{
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    photo.src = reader.result;
-  };
-  reader.readAsDataURL(e.target.files[0]);
-};
-
-/* PDF */
-window.downloadPDF = function(){
-  html2pdf().from(document.getElementById("resume")).save("resume.pdf");
-};
+}, true);
 </script>
 
 </body>
-
 </html>
