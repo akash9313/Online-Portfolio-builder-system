@@ -3,148 +3,560 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PortfolioX - Build Professional Portfolios Instantly</title>
-  <link rel="stylesheet" href="homepage.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>PortfolioX — Build Your Professional Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="homepage.css">
 </head>
 <body>
-  <!-- Animated Background -->
-  <div class="bg-blob blob1"></div>
-  <div class="bg-blob blob2"></div>
-  <div class="bg-blob blob3"></div>
 
-  <!-- Premium Navbar -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="logo">
-        <div class="logo-icon">
-          <i class="fas fa-rocket"></i>
-        </div>
-        <span>Portfolio<span class="x">X</span></span>
+<!-- Custom cursor -->
+<div class="cursor"  id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Ambient orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- ════════════════ NAVBAR ════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="homepage.html" class="logo">
+      <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+      <span class="logo-text">Portfolio<span class="x">X</span></span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#templates">Templates</a>
+      <a href="#how">How it works</a>
+      <a href="#testimonials">Reviews</a>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Guest state -->
+      <a href="loginpage.html" class="nav-btn btn-ghost" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+      <a href="usersignup.html" class="nav-btn btn-cta"  id="signupBtn"><i class="fas fa-rocket"></i> Get Started Free</a>
+      <!-- Logged-in state -->
+      <div class="profile-pill" id="profilePill">
+        <div class="profile-avatar" id="profileAvatar"></div>
+        <span class="profile-email" id="profileEmail"></span>
+        <div class="logout-btn-nav" id="logoutBtn" title="Logout"><i class="fas fa-power-off"></i></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════ HERO ════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-dots"></div>
+  <div class="hero-inner">
+
+    <!-- Left: Copy -->
+    <div class="hero-copy">
+      <!-- <div class="eyebrow"><span class="eyebrow-dot"></span>Trusted by 10,000+ Professionals</div> -->
+      <h1 class="hero-title">
+        Build your
+        <span class="line-2"><span class="shine">dream portfolio</span></span>
+        in minutes.
+      </h1>
+      <p class="hero-sub">Create a stunning, job-ready portfolio without writing a single line of code. Choose a template, fill in your details, and go live instantly.</p>
+
+      <div class="hero-actions">
+        <button class="h-btn h-btn-primary" id="getStartedBtn"><i class="fas fa-rocket"></i> Start for Free</button>
+        <a href="#templates" class="h-btn h-btn-outline"><i class="fas fa-eye"></i> Browse Templates</a>
       </div>
 
-      <div class="nav-actions">
-        <a href="loginpage.html" class="nav-link login-btn" id="loginBtn">
-          <i class="fas fa-sign-in-alt"></i> Login
-        </a>
+      <!-- <div class="trust-row">
+        <div class="trust-avatars">
+          <div class="trust-av ta1">A</div>
+          <div class="trust-av ta2">S</div>
+          <div class="trust-av ta3">R</div>
+          <div class="trust-av ta4">M</div>
+        </div>
+         <div class="trust-text"><strong>10,000+ portfolios</strong> published and live</div> 
+      </div> -->
+    </div>
 
-        <div class="profile-box" id="profileBox">
-          <div class="avatar" id="avatar"></div>
-          <i class="fas fa-chevron-down dropdown-icon"></i>
-          <i class="fas fa-power-off logout-icon" id="logoutIcon" title="Logout"></i>
+    <!-- Right: Visual -->
+    <div class="hero-visual">
+      <div class="browser-mock">
+        <div class="browser-bar">
+          <div class="b-dots">
+            <div class="b-dot bd-r"></div>
+            <div class="b-dot bd-y"></div>
+            <div class="b-dot bd-g"></div>
+          </div>
+          <div class="b-url">
+            <i class="fas fa-lock"></i>
+            <span>portfoliox.web.app/u/<strong style="color:#86efac">alex-dev</strong></span>
+          </div>
+        </div>
+        <div class="portfolio-mock">
+          <div class="pm-header">
+            <div class="pm-avatar">A</div>
+            <div>
+              <div class="pm-name">Alex Johnson</div>
+              <div class="pm-role">Full Stack Developer</div>
+            </div>
+          </div>
+          <div class="pm-bar w100"><div class="pm-bar-fill" style="width:100%"></div></div>
+          <div class="pm-bar w85"><div class="pm-bar-fill" style="width:85%"></div></div>
+          <div class="pm-bar w70"><div class="pm-bar-fill" style="width:70%"></div></div>
+          <div class="pm-chips">
+            <span class="pm-chip pc1">React</span>
+            <span class="pm-chip pc2">Node.js</span>
+            <span class="pm-chip pc3">Python</span>
+            <span class="pm-chip pc4">Figma</span>
+          </div>
+          <div class="pm-proj-row">
+            <div class="pm-proj">
+              <div class="pm-proj-title">E-Commerce App</div>
+              <div class="pm-proj-line accent"></div>
+              <div class="pm-proj-line"></div>
+            </div>
+            <div class="pm-proj">
+              <div class="pm-proj-title">AI Dashboard</div>
+              <div class="pm-proj-line accent"></div>
+              <div class="pm-proj-line"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Floating badges -->
+      <div class="float-badge badge-live"><span class="badge-dot"></span> Portfolio Live</div>
+      <div class="float-badge badge-views"><i class="fas fa-eye"></i> 1,243 views</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════ MARQUEE ════════════════ -->
+<div class="marquee-section">
+  <div class="marquee-label">Beautiful templates for every career</div>
+  <div style="overflow:hidden;">
+    <div class="marquee-track" id="marqueeTrack">
+      <!-- Item 1 -->
+      <div class="template-thumb tt-1">
+        <div class="tt-inner">
+          <div class="tt-circle"></div>
+          <div class="tt-bar a"></div>
+          <div class="tt-bar"></div>
+          <div class="tt-chips"><div class="tt-chip tc1"></div><div class="tt-chip tc2"></div><div class="tt-chip tc3"></div></div>
+        </div>
+        <div class="tt-name">Classic Developer</div>
+      </div>
+      <!-- Item 2 -->
+      <div class="template-thumb tt-2">
+        <div class="tt-inner" style="display:flex;gap:8px;padding:10px;">
+          <div style="width:30%;background:rgba(56,189,248,0.1);border-radius:6px;padding:6px;display:flex;flex-direction:column;gap:5px;">
+            <div style="width:20px;height:20px;border-radius:50%;background:var(--gradient);margin-bottom:4px;"></div>
+            <div style="height:3px;background:rgba(56,189,248,0.4);border-radius:1px;"></div>
+            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div>
+            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:5px;padding-top:4px;">
+            <div style="height:5px;background:var(--gradient);border-radius:2px;width:70%;"></div>
+            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div>
+            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;width:60%;"></div>
+          </div>
+        </div>
+        <div class="tt-name">Modern Professional</div>
+      </div>
+      <!-- Item 3 -->
+      <div class="template-thumb tt-3">
+        <div class="tt-inner" style="position:relative;overflow:hidden;">
+          <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.4),transparent 70%);"></div>
+          <div style="height:8px;border-radius:3px;background:linear-gradient(90deg,#a78bfa,#818cf8);width:55%;margin-bottom:5px;"></div>
+          <div style="height:4px;border-radius:2px;background:rgba(167,139,250,0.3);width:35%;margin-bottom:10px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+            <div style="height:28px;border-radius:6px;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.3);"></div>
+            <div style="height:28px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"></div>
+          </div>
+        </div>
+        <div class="tt-name">Creative Designer</div>
+      </div>
+      <!-- Item 4 -->
+      <div class="template-thumb tt-4">
+        <div class="tt-inner" style="background:inherit">
+          <div class="tt-topline"></div>
+          <div class="tt-name-m"></div>
+          <div class="tt-role-m"></div>
+          <div class="tt-div"></div>
+          <div class="tt-lm"></div>
+          <div class="tt-lm" style="width:70%"></div>
+          <div class="tt-lm" style="width:85%"></div>
+        </div>
+        <div class="tt-name" style="color:#1e293b;background:linear-gradient(to top,rgba(248,250,252,0.9),transparent);">Minimal Resume</div>
+      </div>
+      <!-- Items 5 & 6 (variants) -->
+      <div class="template-thumb tt-5">
+        <div class="tt-inner">
+          <div style="display:flex;gap:6px;margin-bottom:8px;">
+            <div style="width:16px;height:16px;border-radius:3px;background:rgba(56,189,248,0.3);"></div>
+            <div style="flex:1;height:4px;background:rgba(56,189,248,0.2);border-radius:2px;margin-top:6px;"></div>
+          </div>
+          <div class="tt-line w80"></div>
+          <div class="tt-line w60"></div>
+          <div class="tt-line w40"></div>
+          <div class="tt-chips" style="margin-top:8px;"><div class="tt-chip tc1"></div><div class="tt-chip tc2"></div></div>
+        </div>
+        <div class="tt-name">Tech Portfolio</div>
+      </div>
+      <div class="template-thumb tt-6">
+        <div class="tt-inner">
+          <div style="height:6px;border-radius:3px;background:linear-gradient(90deg,#ec4899,#f59e0b);width:40%;margin-bottom:8px;"></div>
+          <div class="tt-line w80" style="background:rgba(255,255,255,0.12)"></div>
+          <div class="tt-line w60" style="background:rgba(255,255,255,0.08)"></div>
+          <div class="tt-line w70" style="background:rgba(255,255,255,0.08)"></div>
+          <div style="margin-top:8px;display:flex;gap:4px;">
+            <div style="height:14px;width:30px;border-radius:3px;background:rgba(236,72,153,0.25);"></div>
+            <div style="height:14px;width:24px;border-radius:3px;background:rgba(245,158,11,0.25);"></div>
+          </div>
+        </div>
+        <div class="tt-name">Creative Pro</div>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="template-thumb tt-1"><div class="tt-inner"><div class="tt-circle"></div><div class="tt-bar a"></div><div class="tt-bar"></div><div class="tt-chips"><div class="tt-chip tc1"></div><div class="tt-chip tc2"></div><div class="tt-chip tc3"></div></div></div><div class="tt-name">Classic Developer</div></div>
+      <div class="template-thumb tt-2"><div class="tt-inner" style="display:flex;gap:8px;padding:10px;"><div style="width:30%;background:rgba(56,189,248,0.1);border-radius:6px;padding:6px;display:flex;flex-direction:column;gap:5px;"><div style="width:20px;height:20px;border-radius:50%;background:var(--gradient);margin-bottom:4px;"></div><div style="height:3px;background:rgba(56,189,248,0.4);border-radius:1px;"></div><div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div></div><div style="flex:1;display:flex;flex-direction:column;gap:5px;padding-top:4px;"><div style="height:5px;background:var(--gradient);border-radius:2px;width:70%;"></div><div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div></div></div><div class="tt-name">Modern Professional</div></div>
+      <div class="template-thumb tt-3"><div class="tt-inner" style="position:relative;overflow:hidden;"><div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.4),transparent 70%);"></div><div style="height:8px;border-radius:3px;background:linear-gradient(90deg,#a78bfa,#818cf8);width:55%;margin-bottom:5px;"></div><div style="height:4px;border-radius:2px;background:rgba(167,139,250,0.3);width:35%;margin-bottom:10px;"></div></div><div class="tt-name">Creative Designer</div></div>
+      <div class="template-thumb tt-4"><div class="tt-inner" style="background:inherit"><div class="tt-topline"></div><div class="tt-name-m"></div><div class="tt-role-m"></div><div class="tt-div"></div><div class="tt-lm"></div><div class="tt-lm" style="width:70%"></div></div><div class="tt-name" style="color:#1e293b;background:linear-gradient(to top,rgba(248,250,252,0.9),transparent);">Minimal Resume</div></div>
+      <div class="template-thumb tt-5"><div class="tt-inner"><div class="tt-line w80"></div><div class="tt-line w60"></div><div class="tt-line w40"></div></div><div class="tt-name">Tech Portfolio</div></div>
+      <div class="template-thumb tt-6"><div class="tt-inner"><div style="height:6px;border-radius:3px;background:linear-gradient(90deg,#ec4899,#f59e0b);width:40%;margin-bottom:8px;"></div><div class="tt-line w80" style="background:rgba(255,255,255,0.12)"></div></div><div class="tt-name">Creative Pro</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ FEATURES ════════════════ -->
+<section class="features-section" id="features">
+  <div class="section-wrap">
+    <div class="reveal">
+      <span class="section-eyebrow">Features</span>
+      <h2 class="section-heading">Everything you need<br>to stand out</h2>
+      <p class="section-sub">From templates to live publishing — PortfolioX handles the heavy lifting so you can focus on what matters.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Card 1: Templates -->
+      <div class="feat-card large reveal reveal-delay-1">
+        <div class="feat-icon fi-blue"><i class="fas fa-palette"></i></div>
+        <div class="feat-title">10 Professional Templates</div>
+        <p class="feat-desc">Hand-crafted designs for developers, designers, and creatives. Each template is built to impress recruiters at first glance.</p>
+        <div class="feat-visual">
+          <div class="mini-template-row">
+            <div class="mini-tpl mt1" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:rgba(56,189,248,0.6);font-weight:700;">CLASSIC</div>
+            <div class="mini-tpl mt2" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:rgba(99,102,241,0.6);font-weight:700;">MODERN</div>
+            <div class="mini-tpl mt3" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:rgba(167,139,250,0.6);font-weight:700;">CREATIVE</div>
+            <div class="mini-tpl mt4" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:rgba(100,116,139,0.8);font-weight:700;">MINIMAL</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Skills -->
+      <div class="feat-card reveal reveal-delay-2">
+        <div class="feat-icon fi-green"><i class="fas fa-brain"></i></div>
+        <div class="feat-title">Smart Skill Tracking</div>
+        <p class="feat-desc">Showcase your expertise with visual skill levels that recruiters can scan in seconds.</p>
+        <div class="feat-visual">
+          <div class="progress-bars">
+            <div class="prog-item">
+              <div class="prog-label"><span>React</span><span>92%</span></div>
+              <div class="prog-track"><div class="prog-fill" style="width:92%"></div></div>
+            </div>
+            <div class="prog-item">
+              <div class="prog-label"><span>Python</span><span>85%</span></div>
+              <div class="prog-track"><div class="prog-fill" style="width:85%"></div></div>
+            </div>
+            <div class="prog-item">
+              <div class="prog-label"><span>Node.js</span><span>78%</span></div>
+              <div class="prog-track"><div class="prog-fill" style="width:78%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Live publish -->
+      <div class="feat-card reveal reveal-delay-1">
+        <div class="feat-icon fi-purple"><i class="fas fa-globe"></i></div>
+        <div class="feat-title">Instant Live URL</div>
+        <p class="feat-desc">Publish your portfolio with one click and share a beautiful, permanent URL with anyone.</p>
+        <div class="feat-visual">
+          <div class="share-preview">
+            <div class="share-link-box"><i class="fas fa-lock"></i> portfoliox.web.app/u/<span>your-name</span></div>
+            <div class="share-btns">
+              <div class="share-b"><i class="fab fa-twitter"></i> Tweet</div>
+              <div class="share-b"><i class="fab fa-linkedin"></i> Share</div>
+              <div class="share-b"><i class="fab fa-whatsapp"></i> Send</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Dashboard -->
+      <div class="feat-card reveal reveal-delay-2">
+        <div class="feat-icon fi-pink"><i class="fas fa-tachometer-alt"></i></div>
+        <div class="feat-title">Powerful Dashboard</div>
+        <p class="feat-desc">Manage everything from one clean interface — profile, skills, projects, education, and publishing.</p>
+      </div>
+
+      <!-- Card 5: Firebase -->
+      <div class="feat-card reveal reveal-delay-3">
+        <div class="feat-icon fi-yellow"><i class="fas fa-shield-alt"></i></div>
+        <div class="feat-title">Secure & Real-Time</div>
+        <p class="feat-desc">Powered by Firebase — your data is safe, synced in real-time, and always backed up.</p>
+      </div>
+
+      <!-- Card 6: Mobile -->
+      <div class="feat-card reveal reveal-delay-1">
+        <div class="feat-icon fi-blue"><i class="fas fa-mobile-alt"></i></div>
+        <div class="feat-title">Fully Responsive</div>
+        <p class="feat-desc">Your portfolio looks stunning on every device — desktop, tablet, and mobile.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ HOW IT WORKS ════════════════ -->
+<section class="how-section" id="how">
+  <div class="section-wrap">
+    <div class="reveal" style="text-align:center">
+      <span class="section-eyebrow">Process</span>
+      <h2 class="section-heading">Go live in 4 steps</h2>
+      <p class="section-sub" style="margin:0 auto">No coding, no complexity — just your story told beautifully.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-num">1</div>
+        <div class="step-title">Create Account</div>
+        <p class="step-desc">Sign up free with email or Google in under 30 seconds.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-num">2</div>
+        <div class="step-title">Fill Your Profile</div>
+        <p class="step-desc">Add your bio, skills, projects and education using our guided forms.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-num">3</div>
+        <div class="step-title">Pick a Template</div>
+        <p class="step-desc">Choose from 4 stunning portfolio designs built by professionals.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-3" style="transition-delay:0.4s">
+        <div class="step-num">4</div>
+        <div class="step-title">Publish & Share</div>
+        <p class="step-desc">Hit publish and share your live portfolio URL with the world.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ TEMPLATES SHOWCASE ════════════════ -->
+<section class="templates-section" id="templates">
+  <div class="section-wrap">
+    <div class="templates-header reveal">
+      <div>
+        <span class="section-eyebrow">Templates</span>
+        <h2 class="section-heading">Pick your perfect look</h2>
+      </div>
+      <a href="templates.html" class="see-all">See all templates <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="templates-grid">
+      <!-- Classic -->
+      <div class="tpl-card reveal reveal-delay-1">
+        <div class="tpl-preview tt-1" style="padding:16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#58a6ff,#3fb950);"></div>
+            <div><div style="height:5px;background:rgba(255,255,255,0.15);border-radius:2px;width:90px;margin-bottom:4px;"></div><div style="height:3px;background:rgba(88,166,255,0.4);border-radius:1px;width:60px;"></div></div>
+          </div>
+          <div style="height:3px;background:linear-gradient(90deg,#58a6ff,#3fb950);border-radius:1px;margin-bottom:8px;"></div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            <div style="height:14px;width:38px;border-radius:3px;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);"></div>
+            <div style="height:14px;width:30px;border-radius:3px;background:rgba(63,185,80,0.15);border:1px solid rgba(63,185,80,0.3);"></div>
+            <div style="height:14px;width:34px;border-radius:3px;background:rgba(210,168,255,0.15);border:1px solid rgba(210,168,255,0.3);"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+            <div style="height:50px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);"></div>
+            <div style="height:50px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);"></div>
+          </div>
+          <div class="hover-overlay"><button class="preview-btn" onclick="window.location.href='templates/classic.html'">Preview</button></div>
+        </div>
+        <div class="tpl-info">
+          <div class="tpl-info-row">
+            <span class="tpl-name">Classic Developer</span>
+            <span class="tpl-badge tb-popular">🔥 Popular</span>
+          </div>
+          <div class="tpl-tags"><span class="tpl-tag">Developer</span><span class="tpl-tag">Dark</span><span class="tpl-tag">ATS-Safe</span></div>
+        </div>
+      </div>
+
+      <!-- Modern -->
+      <div class="tpl-card reveal reveal-delay-2">
+        <div class="tpl-preview tt-2" style="display:flex;overflow:hidden;">
+          <div style="width:55px;background:rgba(56,189,248,0.07);border-right:1px solid rgba(56,189,248,0.1);padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--gradient);"></div>
+            <div style="height:3px;background:rgba(56,189,248,0.5);border-radius:1px;width:80%;"></div>
+            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;width:80%;"></div>
+            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;width:80%;"></div>
+          </div>
+          <div style="flex:1;padding:14px;">
+            <div style="height:60px;border-radius:8px;background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(99,102,241,0.12));border:1px solid rgba(56,189,248,0.15);margin-bottom:10px;"></div>
+            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;margin-bottom:5px;"></div>
+            <div style="height:3px;background:rgba(255,255,255,0.07);border-radius:1px;width:70%;"></div>
+          </div>
+          <div class="hover-overlay"><button class="preview-btn">Preview</button></div>
+        </div>
+        <div class="tpl-info">
+          <div class="tpl-info-row">
+            <span class="tpl-name">Modern Professional</span>
+            <span class="tpl-badge tb-new">✨ New</span>
+          </div>
+          <div class="tpl-tags"><span class="tpl-tag">Corporate</span><span class="tpl-tag">Sidebar</span><span class="tpl-tag">Tech</span></div>
+        </div>
+      </div>
+
+      <!-- Minimal -->
+      <div class="tpl-card reveal reveal-delay-3">
+        <div class="tpl-preview tt-4" style="padding:18px;">
+          <div style="width:28px;height:2px;background:#111;border-radius:1px;margin-bottom:12px;"></div>
+          <div style="height:8px;border-radius:3px;background:#1e293b;width:55%;margin-bottom:5px;"></div>
+          <div style="height:5px;border-radius:2px;background:#94a3b8;width:32%;margin-bottom:14px;"></div>
+          <div style="height:1px;background:#e2e8f0;margin-bottom:10px;"></div>
+          <div style="height:4px;border-radius:1px;background:#e2e8f0;margin-bottom:4px;"></div>
+          <div style="height:4px;border-radius:1px;background:#e2e8f0;width:75%;margin-bottom:4px;"></div>
+          <div style="height:4px;border-radius:1px;background:#e2e8f0;width:85%;"></div>
+          <div class="hover-overlay" style="border-radius:0;"><button class="preview-btn" style="background:linear-gradient(135deg,#1e293b,#334155);color:white;">Preview</button></div>
+        </div>
+        <div class="tpl-info">
+          <div class="tpl-info-row">
+            <span class="tpl-name">Minimal Resume</span>
+            <span class="tpl-badge tb-clean">Clean</span>
+          </div>
+          <div class="tpl-tags"><span class="tpl-tag">Minimal</span><span class="tpl-tag">ATS-Safe</span><span class="tpl-tag">Light</span></div>
         </div>
       </div>
     </div>
-  </nav>
+  </div>
+</section>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-container">
-      <div class="hero-content">
-        <!-- <div class="hero-badge">
-          <i class="fas fa-crown"></i>
-          Used by 50K+ Professionals
-        </div> -->
-        <h1 class="hero-title">
-          Build Your <span class="gradient-text">Professional</span> Portfolio
-        </h1>
-        <p class="hero-subtitle">
-          Create, customize and publish job-ready portfolios in minutes. No coding required.
-        </p>
-        
-        <!-- <div class="hero-stats">
-          <div class="stat">
-            <div class="stat-number">50K+</div>
-            <span>Portfolios Created</span>
-          </div>
-          <div class="stat">
-            <div class="stat-number">99%</div>
-            <span>Success Rate</span>
-          </div>
-        </div> -->
-
-        <div class="hero-buttons">
-          <button id="getStartedBtn" class="btn btn-primary btn-large glow">
-            <i class="fas fa-rocket"></i>
-            Get Started Free
-          </button>
-          <a href="#features" class="btn btn-secondary">
-            <i class="fas fa-play"></i>
-            Watch Demo
-          </a>
-        </div>
-
-        <!-- <div class="hero-clients">
-          <span>Trusted by:</span>
-          <div class="clients-logos">
-            <div class="client-logo">Google</div>
-            <div class="client-logo">Microsoft</div>
-            <div class="client-logo">Amazon</div>
-            <div class="client-logo">Netflix</div>
-          </div>
-        </div> -->
+<!-- ════════════════ STATS ════════════════ -->
+<!-- <div class="stats-section">
+  <div class="section-wrap">
+    <div class="stats-grid">
+      <div class="stat-card reveal">
+        <div class="stat-num" id="c1">0</div>
+        <div class="stat-label">Portfolios Created</div>
       </div>
-
-      <div class="hero-image">
-        <img src="assets/hero-image.jpeg" alt="Portfolio Preview" class="hero-img">
+      <div class="stat-card reveal reveal-delay-1">
+        <div class="stat-num" id="c2">0</div>
+        <div class="stat-label">Templates Available</div>
+      </div>
+      <div class="stat-card reveal reveal-delay-2">
+        <div class="stat-num" id="c3">0</div>
+        <div class="stat-label">Countries Reached</div>
+      </div>
+      <div class="stat-card reveal reveal-delay-3">
+        <div class="stat-num" id="c4">0</div>
+        <div class="stat-label">5-Star Reviews</div>
       </div>
     </div>
-  </section>
+  </div>
+</div> -->
 
-  <!-- Features Section -->
-  <section class="features" id="features">
-    <div class="container">
-      <div class="section-header">
-        <h2>Everything You Need to Build Amazing Portfolios</h2>
-        <p>Professional tools designed for maximum impact and minimum effort</p>
+<!-- ════════════════ TESTIMONIALS ════════════════ -->
+<section class="testimonials-section" id="testimonials">
+  <div class="section-wrap">
+    <div class="reveal" style="text-align:center">
+      <span class="section-eyebrow">Reviews</span>
+      <h2 class="section-heading">Loved by professionals</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal reveal-delay-1">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"I landed my first dev job within 2 weeks of publishing my PortfolioX portfolio. The templates are absolutely stunning."</p>
+        <div class="t-author">
+          <div class="t-avatar" style="background:linear-gradient(135deg,#38bdf8,#6366f1)">K</div>
+          <div><div class="t-name">Keval Bamarotiya</div><div class="t-role">Full Stack Developer, Gujarat</div></div>
+        </div>
       </div>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-palette"></i>
-          </div>
-          <h3>50+ Ready-made Templates</h3>
-          <p>Professional designs for every industry and style preference</p>
+      <div class="testimonial-card reveal reveal-delay-2">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"The Classic Developer template is exactly what I needed. Clean, professional, and shows off my GitHub projects perfectly."</p>
+        <div class="t-author">
+          <div class="t-avatar" style="background:linear-gradient(135deg,#22c55e,#38bdf8)">M</div>
+          <div><div class="t-name">Mori Umang</div><div class="t-role">Backend Engineer, Gujarat</div></div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-brain"></i>
-          </div>
-          <h3>AI Skill Suggestions</h3>
-          <p>Job-based recommendations that highlight your best qualifications</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-cogs"></i>
-          </div>
-          <h3>Admin Dashboard</h3>
-          <p>Complete control over templates, themes and user management</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-globe"></i>
-          </div>
-          <h3>Public Portfolio Links</h3>
-          <p>Shareable links with custom domains and analytics</p>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-3">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">"Setting up was genuinely 10 minutes. I now have a live URL I can put on my resume. This is incredible for students."</p>
+        <div class="t-author">
+          <div class="t-avatar" style="background:linear-gradient(135deg,#ec4899,#f59e0b)">A</div>
+          <div><div class="t-name">Armaan</div><div class="t-role">CS Student, Rajsthan</div></div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CTA Section -->
-  <section class="cta">
-    <div class="container">
-      <div class="cta-content">
-        <h2>Ready to Build Your Portfolio?</h2>
-        <!-- <p>Join 50K+ professionals who trust PortfolioX</p> -->
-        <button class="btn btn-primary btn-large" id="ctaBtn">
-          Start Building Now
-        </button>
+<!-- ════════════════ CTA ════════════════ -->
+<section class="cta-section">
+  <div class="section-wrap">
+    <div class="cta-inner reveal">
+      <h2 class="cta-title">Your portfolio is<br><span style="background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">waiting to be built.</span></h2>
+      <p class="cta-sub">Join thousands of professionals who publish and share their work with PortfolioX — completely free.</p>
+      <div class="cta-actions">
+        <button class="h-btn h-btn-primary" id="ctaBtn"><i class="fas fa-rocket"></i> Build My Portfolio Free</button>
+        <a href="#templates" class="h-btn h-btn-outline"><i class="fas fa-eye"></i> See Templates</a>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="logo" style="margin-bottom:0.8rem;display:inline-flex;">
+        <div class="logo-icon" style="width:34px;height:34px;border-radius:9px;font-size:0.85rem;"><i class="fas fa-rocket"></i></div>
+        <span class="logo-text" style="font-size:1.15rem;">Portfolio<span class="x">X</span></span>
+      </a>
+      <p class="footer-desc">Build stunning, job-ready portfolios in minutes. No coding required. Completely free.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#features">Features</a>
+      <a href="#templates">Templates</a>
+      <a href="#how">How It Works</a>
+      <a href="dashboard.html">Dashboard</a>
+    </div>
+    <div class="footer-col">
+      <h4>Account</h4>
+      <a href="loginpage.html">Login</a>
+      <a href="usersignup.html">Sign Up Free</a>
+      <a href="settings.html">Settings</a>
+      <a href="publish.html">Publish</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Policy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2025 <span>PortfolioX</span>. All rights reserved.</div>
+    <div class="social-links">
+      <a href="#" class="soc-btn"><i class="fab fa-github"></i></a>
+      <a href="#" class="soc-btn"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="soc-btn"><i class="fab fa-linkedin"></i></a>
+      <a href="https://www.instagram.com/portfoliox_official/" class="soc-btn"><i class="fab fa-instagram"></i></a>
+    </div>
+  </div>
+</footer>
 <script type="module" src="homepage.js"></script>
+
 </body>
 </html>

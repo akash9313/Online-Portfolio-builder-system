@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Dark Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a1a;
+  --text: #00ff88;
+  --cyan: #00d9ff;
+  --pink: #ff006e;
+  --white: #f0f0f0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Orbitron', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -2;
+  background-image:linear-gradient(0deg, rgba(0,255,136,.08) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: -1;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,255,136,.02),
+    rgba(0,255,136,.02) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  animation: scan 8s linear infinite;
+}
+
+@keyframes scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(10px); }
+}
+
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 40px;
+  background: rgba(10,10,26,.95);
+  border-bottom: 2px solid var(--text);
+  box-shadow: 0 0 30px rgba(0,255,136,.4);
+}
+
+.nav-logo {
+  font-size: 1.5rem; font-weight: 900; color: var(--text);
+  letter-spacing: 4px;
+  text-shadow: 0 0 15px var(--text), 0 0 30px var(--text);
+}
+
+.nav-links { display: flex; gap: 30px; }
+.nav-links a {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  transition: all 0.3s;
+}
+.nav-links a:hover { color: var(--text); text-shadow: 0 0 10px var(--text); }
+
+@media(max-width:768px) { .nav-links { display: none; } .topnav { padding: 15px 20px; } }
+
+.hero {
+  min-height: 100vh;
+  padding: 140px 40px 80px;
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 50px;
+  align-items: center;
+}
+@media(max-width:900px) { .hero { grid-template-columns: 1fr; padding: 120px 24px 60px; } }
+
+.hero-tag {
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px var(--cyan);
+}
+
+.hero-name {
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: var(--text);
+  margin-bottom: 20px;
+  line-height: 1.1;
+  text-shadow: 0 0 20px var(--text), 0 0 40px rgba(0,255,136,.5);
+}
+
+.hero-desc {
+  font-size: 0.9rem;
+  color: var(--white);
+  line-height: 1.7;
+  margin-bottom: 30px;
+  max-width: 500px;
+  font-family: 'Space Mono', monospace;
+}
+
+.hero-actions {
+  display: flex; gap: 15px; flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: 2px solid;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  text-transform: uppercase;
+}
+
+.btn-neon {
+  border-color: var(--text);
+  color: var(--text);
+  background: transparent;
+  box-shadow: 0 0 15px var(--text);
+}
+
+.btn-neon:hover {
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: 0 0 30px var(--text), 0 0 60px var(--text);
+}
+
+.btn-outline {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: transparent;
+}
+
+.btn-outline:hover {
+  background: rgba(0,217,255,.1);
+  box-shadow: 0 0 15px var(--cyan);
+}
+
+.hero-panel {
+  background: rgba(10,10,26,.8);
+  border: 2px solid var(--text);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0,255,136,.4), inset 0 0 20px rgba(0,255,136,.1);
+}
+
+.panel-header {
+  background: rgba(0,255,136,.15);
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--text);
+  font-size: 0.7rem;
+  color: var(--text);
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px var(--text);
+}
+
+.panel-body {
+  padding: 16px;
+  font-size: 0.75rem;
+}
+
+.panel-row {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0,255,136,.2);
+}
+
+.panel-row:last-child { border-bottom: none; }
+
+.panel-label {
+  color: var(--cyan);
+  min-width: 55px;
+  text-shadow: 0 0 8px var(--cyan);
+}
+
+.panel-value {
+  color: var(--text);
+  flex: 1;
+  text-shadow: 0 0 8px var(--text);
+}
+
+.panel-value a {
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.section {
+  padding: 80px 40px;
+  border-bottom: 1px solid rgba(0,255,136,.2);
+}
+
+@media(max-width:768px) { .section { padding: 60px 24px; } }
+
+.sec-label {
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px var(--cyan);
+}
+
+.sec-title {
+  font-size: 3rem;
+  letter-spacing: 3px;
+  color: var(--text);
+  margin-bottom: 50px;
+  text-shadow: 0 0 20px var(--text), 0 0 40px rgba(0,255,136,.5);
+}
+
+.about-text {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: var(--white);
+  border-left: 3px solid var(--text);
+  padding-left: 20px;
+  font-family: 'Space Mono', monospace;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 15px;
+}
+
+.skill-tag {
+  padding: 12px 16px;
+  background: rgba(0,255,136,.08);
+  border: 2px solid var(--text);
+  color: var(--text);
+  font-size: 0.75rem;
+  text-align: center;
+  cursor: default;
+  box-shadow: 0 0 10px rgba(0,255,136,.2);
+  transition: all 0.3s;
+  letter-spacing: 1px;
+}
+
+.skill-tag:hover {
+  background: rgba(0,255,136,.15);
+  box-shadow: 0 0 20px var(--text);
+  text-shadow: 0 0 10px var(--text);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.project-card {
+  background: rgba(10,10,26,.6);
+  border: 2px solid var(--text);
+  padding: 24px;
+  box-shadow: 0 0 10px rgba(0,255,136,.2);
+  transition: all 0.3s;
+}
+
+.project-card:hover {
+  background: rgba(10,10,26,.9);
+  box-shadow: 0 0 30px var(--text);
+  border-color: var(--pink);
+}
+
+.proj-title {
+  font-size: 1.2rem;
+  color: var(--text);
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px var(--text);
+}
+
+.proj-desc {
+  font-size: 0.85rem;
+  color: var(--white);
+  margin-bottom: 12px;
+  line-height: 1.5;
+  font-family: 'Space Mono', monospace;
+}
+
+.proj-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.proj-tag {
+  font-size: 0.65rem;
+  padding: 4px 8px;
+  background: rgba(0,217,255,.1);
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  border-radius: 2px;
+}
+
+.edu-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.edu-item {
+  background: rgba(10,10,26,.6);
+  border-left: 3px solid var(--text);
+  padding: 20px;
+  border: 2px solid transparent;
+  border-left-color: var(--text);
+  box-shadow: 0 0 10px rgba(0,255,136,.1);
+}
+
+.edu-item:hover { border-color: var(--pink); box-shadow: 0 0 15px var(--text); }
+
+.edu-year {
+  font-size: 0.7rem;
+  color: var(--cyan);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px var(--cyan);
+}
+
+.edu-degree {
+  font-size: 1.1rem;
+  color: var(--text);
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-shadow: 0 0 10px var(--text);
+}
+
+.edu-institute {
+  font-size: 0.85rem;
+  color: var(--white);
+  font-family: 'Space Mono', monospace;
+}
+
+footer {
+  padding: 30px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid var(--text);
+  background: rgba(10,10,26,.9);
+  box-shadow: inset 0 0 20px rgba(0,255,136,.15), 0 0 30px rgba(0,255,136,.3);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-logo {
+  font-size: 1.2rem;
+  color: var(--text);
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px var(--text);
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+}
+
+.social-btn {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 0 10px rgba(0,255,136,.2);
+}
+
+.social-btn:hover {
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: 0 0 20px var(--text);
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-logo">>> NEON</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+  </div>
+</nav>
+
+<section class="hero" id="hero">
+  <div>
+    <div class="hero-tag">> Ready to collaborate</div>
+    <h1 class="hero-name">
+      <span id="heroFirstName">NAME</span><br>
+      <span id="heroLastName">DISPLAY</span>
+    </h1>
+    <p class="hero-desc" id="heroBio">Loading…</p>
+    <div class="hero-actions">
+      <a class="btn btn-neon" id="heroGithub" href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+      <a class="btn btn-outline" id="heroLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </div>
+  </div>
+
+  <div class="hero-panel">
+    <div class="panel-header">>> SYS.PROFILE</div>
+    <div class="panel-body">
+      <div class="panel-row">
+        <span class="panel-label">user:</span>
+        <span class="panel-value" id="panelName">—</span>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">role:</span>
+        <span class="panel-value" id="panelRole">—</span>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">location:</span>
+        <span class="panel-value" id="panelLocation" contenteditable="true" data-collection="users" data-field="location">—</span>
+      </div>
+      <div class="panel-row">
+        <span class="panel-label">email:</span>
+        <span class="panel-value"><a id="panelEmail" href="mailto:">—</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="sec-label">>> ABOUT_ME</div>
+  <h2 class="sec-title">SYSTEM.INFO</h2>
+  <div class="about-text" id="aboutText">Loading…</div>
+</section>
+
+<section class="section" id="skills">
+  <div class="sec-label">>> SKILLS.LOAD</div>
+  <h2 class="sec-title">ARSENAL[]</h2>
+  <div class="skills-grid" id="skillsGrid"></div>
+</section>
+
+<section class="section" id="projects">
+  <div class="sec-label">>> PROJECTS.MAP</div>
+  <h2 class="sec-title">PORTFOLIO{}</h2>
+  <div class="projects-grid" id="projectsGrid"></div>
+</section>
+
+<section class="section" id="education">
+  <div class="sec-label">>> EDU.RECORDS</div>
+  <h2 class="sec-title">BACKGROUND[]</h2>
+  <div class="edu-list" id="educationList"></div>
+</section>
+
+<footer>
+  <div class="footer-logo">END_TRANSMISSION</div>
+  <div class="footer-socials">
+    <a class="social-btn" id="footerGithub" href="#" target="_blank"><i class="fab fa-github"></i></a>
+    <a class="social-btn" id="footerLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+  </div>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc,
+  collection, getDocs, updateDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+function setText(id, val, fb="—") {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val || fb;
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if(!user) return;
+  currentUser = user;
+
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const d = snap.exists() ? snap.data() : {};
+
+  const fullName = d.fullName || "Developer";
+  const parts = fullName.trim().split(" ");
+  const first = parts[0] || "YOUR";
+  const last = parts.slice(1).join(" ") || "NAME";
+
+  setText("heroFirstName", first.toUpperCase());
+  setText("heroLastName", last.toUpperCase());
+  setText("heroBio", d.about || "");
+  setText("panelName", d.fullName || "—");
+  setText("panelRole", d.role || "Developer");
+  setText("panelLocation", d.location || "—");
+  setText("aboutText", d.about || "");
+
+  if(d.github) ["heroGithub","footerGithub"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.github;});
+  if(d.linkedin) ["heroLinkedin","footerLinkedin"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.linkedin;});
+  if(d.email) document.getElementById("panelEmail").href = "mailto:" + d.email;
+
+  const skillsSnap = await getDocs(collection(db,"users",user.uid,"skills"));
+  const grid = document.getElementById("skillsGrid");
+  grid.innerHTML = "";
+  skillsSnap.forEach(ds => {
+    const s = ds.data();
+    grid.innerHTML += `<div class="skill-tag" contenteditable="true" data-collection="skills" data-docid="${ds.id}" data-field="name">${s.name || "Skill"}</div>`;
+  });
+
+  const projSnap = await getDocs(collection(db,"users",user.uid,"projects"));
+  const projGrid = document.getElementById("projectsGrid");
+  projGrid.innerHTML = "";
+  projSnap.forEach(ds => {
+    const p = ds.data();
+    const tags = (p.tech || "").split(",").map(t => t.trim()).filter(Boolean).map(t => `<span class="proj-tag">${t}</span>`).join("");
+    projGrid.innerHTML += `<div class="project-card">
+      <div class="proj-title" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="title">${p.title || ""}</div>
+      <p class="proj-desc" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="description">${p.description || ""}</p>
+      <div class="proj-tags">${tags}</div>
+      ${p.link ? `<a href="${p.link}" target="_blank" style="color:var(--cyan);text-decoration:none;">View →</a>` : ""}
+    </div>`;
+  });
+
+  const eduSnap = await getDocs(collection(db,"users",user.uid,"education"));
+  const eduList = document.getElementById("educationList");
+  eduList.innerHTML = "";
+  console.log("Education records found:", eduSnap.size);
+  let eduCount = 0;
+  eduSnap.forEach(ds => {
+    const e = ds.data();
+    eduCount++;
+    console.log("Education entry:", e);
+    eduList.innerHTML += `<div class="edu-card">
+      <div class="edu-year">${e.year || ""}</div>
+      <div class="edu-degree" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="degree">${e.degree || ""}</div>
+      <div style="font-size:0.85rem;" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="institute">${e.institute || ""}</div>
+    </div>`;
+  });
+  if(eduCount === 0) {
+    console.warn("No education records found in Firestore");
+    eduList.innerHTML = `<p style="color:#999;font-size:0.9rem;padding:20px;text-align:center;">No education records added yet. Add education details in dashboard to see them here.</p>`;
+  }
+
+  if(new URLSearchParams(window.location.search).get("mode") === "readonly") {
+    document.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
+  }
+});
+
+document.addEventListener("blur", async (e) => {
+  const el = e.target;
+  if(!el.hasAttribute("contenteditable") || !currentUser) return;
+  const col = el.getAttribute("data-collection");
+  const docId = el.getAttribute("data-docid") || currentUser.uid;
+  const field = el.getAttribute("data-field");
+  const val = el.innerText.trim();
+  if(!col || !field) return;
+  try {
+    const ref = col === "users" ? doc(db, "users", docId) : doc(db, "users", currentUser.uid, col, docId);
+    await updateDoc(ref, { [field]: val });
+  } catch(err) { console.error(err); }
+}, true);
+</script>
+
+</body>
+</html>

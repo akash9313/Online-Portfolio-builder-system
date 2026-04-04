@@ -72,6 +72,8 @@
       <button class="filter-chip" data-filter="developer">Developer</button>
       <button class="filter-chip" data-filter="designer">Designer</button>
       <button class="filter-chip" data-filter="minimal">Minimal</button>
+      <button class="filter-chip" data-filter="dark">Dark</button>
+      <button class="filter-chip" data-filter="colorful">Colorful</button>
     </div>
 
     <!-- Selected banner (shown after selection) -->
@@ -86,7 +88,7 @@
     <!-- Template Grid -->
     <div class="template-grid" id="templateGrid">
 
-      <!-- CLASSIC -->
+      <!-- 1. CLASSIC DEVELOPER -->
       <div class="template-card" data-template="Classic Developer" data-tags="developer minimal">
         <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
         <div class="template-preview classic">
@@ -124,8 +126,8 @@
         </div>
       </div>
 
-      <!-- MODERN -->
-      <div class="template-card" data-template="Modern Professional" data-tags="developer designer">
+      <!-- 2. MODERN PROFESSIONAL -->
+      <div class="template-card" data-template="Modern Professional" data-tags="developer designer dark">
         <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
         <div class="popular-badge"><i class="fas fa-fire"></i> Popular</div>
         <div class="template-preview modern">
@@ -172,8 +174,8 @@
         </div>
       </div>
 
-      <!-- CREATIVE -->
-      <div class="template-card" data-template="Creative Designer" data-tags="designer">
+      <!-- 3. CREATIVE DESIGNER -->
+      <div class="template-card" data-template="Creative Designer" data-tags="designer colorful">
         <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
         <div class="template-preview creative">
           <div class="preview-inner">
@@ -210,7 +212,7 @@
         </div>
       </div>
 
-      <!-- MINIMAL -->
+      <!-- 4. MINIMAL RESUME -->
       <div class="template-card" data-template="Minimal Resume" data-tags="minimal developer designer">
         <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
         <div class="template-preview minimal">
@@ -250,10 +252,283 @@
         </div>
       </div>
 
+      <!-- 5. NEON DARK -->
+      <div class="template-card" data-template="Neon Dark" data-tags="developer dark colorful">
+        <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
+        <div class="new-badge"><i class="fas fa-sparkles"></i> New</div>
+        <div class="template-preview neon">
+          <div class="preview-inner">
+            <div class="neon-scan"></div>
+            <div class="neon-title"></div>
+            <div class="neon-sub"></div>
+            <div class="neon-bar-group">
+              <div class="neon-bar-label"></div>
+              <div class="neon-bar"><div class="neon-fill" style="width:80%"></div></div>
+              <div class="neon-bar-label short"></div>
+              <div class="neon-bar"><div class="neon-fill green" style="width:60%"></div></div>
+              <div class="neon-bar-label"></div>
+              <div class="neon-bar"><div class="neon-fill pink" style="width:90%"></div></div>
+            </div>
+            <div class="neon-chips">
+              <div class="neon-chip"></div>
+              <div class="neon-chip"></div>
+              <div class="neon-chip"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <div class="card-title">Neon Dark</div>
+            <div class="card-rating"><i class="fas fa-star"></i> 4.8</div>
+          </div>
+          <p class="card-desc">Cyberpunk-inspired dark theme with glowing accents. Perfect for developers who love bold aesthetics.</p>
+          <div class="card-tags">
+            <span class="tag blue">Developer</span>
+            <span class="tag green">Dark Mode</span>
+            <span class="tag pink">Cyberpunk</span>
+          </div>
+          <div class="card-footer">
+            <button class="btn-select" data-template="Neon Dark">
+              <i class="fas fa-check"></i> Select Template
+            </button>
+            <button class="btn-preview-card" title="Preview"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. GLASSMORPHISM -->
+      <div class="template-card" data-template="Glass Morph" data-tags="designer dark colorful">
+        <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
+        <div class="template-preview glass">
+          <div class="preview-inner">
+            <div class="gl-bg"></div>
+            <div class="gl-blob gl-blob-1"></div>
+            <div class="gl-blob gl-blob-2"></div>
+            <div class="gl-card gl-main">
+              <div class="gl-avatar"></div>
+              <div class="gl-line accent"></div>
+              <div class="gl-line short"></div>
+            </div>
+            <div class="gl-card gl-sm gl-sm-1">
+              <div class="gl-dot"></div>
+              <div class="gl-micro"></div>
+            </div>
+            <div class="gl-card gl-sm gl-sm-2">
+              <div class="gl-dot green"></div>
+              <div class="gl-micro"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <div class="card-title">Glass Morph</div>
+            <div class="card-rating"><i class="fas fa-star"></i> 4.7</div>
+          </div>
+          <p class="card-desc">Frosted glass aesthetic with vibrant gradient backgrounds. Stunning for creatives and UI designers.</p>
+          <div class="card-tags">
+            <span class="tag indigo">Designer</span>
+            <span class="tag purple">Glass UI</span>
+            <span class="tag blue">Modern</span>
+          </div>
+          <div class="card-footer">
+            <button class="btn-select" data-template="Glass Morph">
+              <i class="fas fa-check"></i> Select Template
+            </button>
+            <button class="btn-preview-card" title="Preview"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. TERMINAL / CODE -->
+      <div class="template-card" data-template="Terminal Hacker" data-tags="developer dark">
+        <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
+        <div class="template-preview terminal">
+          <div class="preview-inner">
+            <div class="term-topbar">
+              <div class="term-dot red"></div>
+              <div class="term-dot yellow"></div>
+              <div class="term-dot green"></div>
+            </div>
+            <div class="term-line prompt"><span class="term-prompt">$</span><div class="term-cmd"></div></div>
+            <div class="term-line output green-text"></div>
+            <div class="term-line output green-text short"></div>
+            <div class="term-line blank"></div>
+            <div class="term-line prompt"><span class="term-prompt">$</span><div class="term-cmd short"></div></div>
+            <div class="term-line output green-text"></div>
+            <div class="term-line output dim short"></div>
+            <div class="term-line output dim"></div>
+            <div class="term-cursor"></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <div class="card-title">Terminal Hacker</div>
+            <div class="card-rating"><i class="fas fa-star"></i> 4.5</div>
+          </div>
+          <p class="card-desc">Full terminal/CLI aesthetic for developers who live in the command line. Unique and memorable.</p>
+          <div class="card-tags">
+            <span class="tag green">Developer</span>
+            <span class="tag slate">Dark Mode</span>
+            <span class="tag green">CLI Style</span>
+          </div>
+          <div class="card-footer">
+            <button class="btn-select" data-template="Terminal Hacker">
+              <i class="fas fa-check"></i> Select Template
+            </button>
+            <button class="btn-preview-card" title="Preview"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. GRADIENT SPLASH -->
+      <div class="template-card" data-template="Gradient Splash" data-tags="designer colorful">
+        <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
+        <div class="template-preview gradient-splash">
+          <div class="preview-inner">
+            <div class="gs-hero">
+              <div class="gs-circle"></div>
+              <div class="gs-name"></div>
+              <div class="gs-role"></div>
+              <div class="gs-btns">
+                <div class="gs-btn filled"></div>
+                <div class="gs-btn outline"></div>
+              </div>
+            </div>
+            <div class="gs-cards">
+              <div class="gs-card"></div>
+              <div class="gs-card"></div>
+              <div class="gs-card"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <div class="card-title">Gradient Splash</div>
+            <div class="card-rating"><i class="fas fa-star"></i> 4.6</div>
+          </div>
+          <p class="card-desc">Full-color hero with a vibrant gradient splash. Ideal for freelancers and creative agencies.</p>
+          <div class="card-tags">
+            <span class="tag purple">Designer</span>
+            <span class="tag pink">Colorful</span>
+            <span class="tag indigo">Freelancer</span>
+          </div>
+          <div class="card-footer">
+            <button class="btn-select" data-template="Gradient Splash">
+              <i class="fas fa-check"></i> Select Template
+            </button>
+            <button class="btn-preview-card" title="Preview"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. EXECUTIVE PRO -->
+      <div class="template-card" data-template="Executive Pro" data-tags="minimal developer">
+        <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
+        <div class="template-preview executive">
+          <div class="preview-inner">
+            <div class="ex-header">
+              <div class="ex-logo"></div>
+              <div class="ex-nav">
+                <div class="ex-nav-dot"></div>
+                <div class="ex-nav-dot"></div>
+                <div class="ex-nav-dot"></div>
+              </div>
+            </div>
+            <div class="ex-hero">
+              <div class="ex-tag"></div>
+              <div class="ex-title"></div>
+              <div class="ex-title short"></div>
+              <div class="ex-sub"></div>
+            </div>
+            <div class="ex-stats">
+              <div class="ex-stat"></div>
+              <div class="ex-stat"></div>
+              <div class="ex-stat"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <div class="card-title">Executive Pro</div>
+            <div class="card-rating"><i class="fas fa-star"></i> 4.9</div>
+          </div>
+          <p class="card-desc">Premium, understated elegance for senior engineers, managers, and executives seeking top roles.</p>
+          <div class="card-tags">
+            <span class="tag slate">Minimal</span>
+            <span class="tag blue">Executive</span>
+            <span class="tag indigo">Premium</span>
+          </div>
+          <div class="card-footer">
+            <button class="btn-select" data-template="Executive Pro">
+              <i class="fas fa-check"></i> Select Template
+            </button>
+            <button class="btn-preview-card" title="Preview"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. BENTO GRID -->
+      <div class="template-card" data-template="Bento Grid" data-tags="designer developer colorful">
+        <div class="selected-badge"><i class="fas fa-check"></i> Selected</div>
+        <div class="new-badge"><i class="fas fa-sparkles"></i> New</div>
+        <div class="template-preview bento">
+          <div class="preview-inner">
+            <div class="bento-grid">
+              <div class="bento-cell b-tall accent-cell">
+                <div class="b-avatar"></div>
+                <div class="b-line"></div>
+                <div class="b-line short"></div>
+              </div>
+              <div class="bento-cell b-wide skill-cell">
+                <div class="b-skill-label"></div>
+                <div class="b-skill-bar"><div class="b-fill" style="width:75%"></div></div>
+                <div class="b-skill-bar"><div class="b-fill green" style="width:55%"></div></div>
+              </div>
+              <div class="bento-cell b-small proj-cell">
+                <div class="b-icon"></div>
+                <div class="b-micro"></div>
+              </div>
+              <div class="bento-cell b-small stat-cell">
+                <div class="b-num"></div>
+                <div class="b-micro"></div>
+              </div>
+              <div class="bento-cell b-wide contact-cell">
+                <div class="b-contact-row">
+                  <div class="b-contact-icon"></div>
+                  <div class="b-contact-line"></div>
+                </div>
+                <div class="b-contact-row">
+                  <div class="b-contact-icon"></div>
+                  <div class="b-contact-line short"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <div class="card-title">Bento Grid</div>
+            <div class="card-rating"><i class="fas fa-star"></i> 4.8</div>
+          </div>
+          <p class="card-desc">Trendy bento-box grid layout. Every section gets its own card, creating a modern magazine feel.</p>
+          <div class="card-tags">
+            <span class="tag blue">Developer</span>
+            <span class="tag purple">Designer</span>
+            <span class="tag pink">Trendy</span>
+          </div>
+          <div class="card-footer">
+            <button class="btn-select" data-template="Bento Grid">
+              <i class="fas fa-check"></i> Select Template
+            </button>
+            <button class="btn-preview-card" title="Preview"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
 
-<script type="module" src="templates.js"></script>
+<script src="templates.js"></script>
 </body>
 </html>

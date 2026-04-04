@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gradient Splash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Fraunces:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: linear-gradient(120deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+  background-size: 400% 400%;
+  background-attachment: fixed;
+  animation: gradientShift 15s ease infinite;
+  font-family: 'Montserrat', sans-serif;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  padding: 20px 40px;
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: 'Fraunces', serif;
+}
+
+.nav-links { display: flex; gap: 30px; }
+.nav-links a { color: #fff; text-decoration: none; font-weight: 600; transition: all 0.3s; opacity: 0.9; }
+.nav-links a:hover { opacity: 1; text-shadow: 0 0 10px rgba(255,255,255,.5); }
+
+@media(max-width:768px) { .nav-links { display: none; } }
+
+.hero {
+  min-height: 100vh;
+  padding: 140px 40px 80px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 50px;
+  align-items: center;
+}
+@media(max-width:900px) { .hero { grid-template-columns: 1fr; padding: 120px 24px; } }
+
+.hero-content { color: #fff; }
+
+.hero-tag {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0,0,0,.2);
+}
+
+.hero-name {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  font-family: 'Fraunces', serif;
+  text-shadow: 0 4px 8px rgba(0,0,0,.2);
+}
+
+.hero-desc {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 30px;
+  opacity: 0.95;
+  text-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+.btn {
+  padding: 13px 28px;
+  border-radius: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-solid {
+  background: #fff;
+  color: #667eea;
+}
+
+.btn-solid:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+
+.btn-outline {
+  background: rgba(255,255,255,.2);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  border: 2px solid rgba(255,255,255,.3);
+}
+
+.btn-outline:hover { background: rgba(255,255,255,.3); border-color: rgba(255,255,255,.5); }
+
+.hero-card {
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 20px;
+  padding: 24px;
+  color: #fff;
+}
+
+.card-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+}
+
+.card-label {
+  font-weight: 700;
+  min-width: 70px;
+  opacity: 0.8;
+}
+
+.section {
+  padding: 100px 40px;
+  position: relative;
+}
+
+@media(max-width:768px) { .section { padding: 70px 24px; } }
+
+.sec-label {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.sec-title {
+  font-size: 3.5rem;
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  margin-bottom: 50px;
+  text-shadow: 0 4px 8px rgba(0,0,0,.15);
+}
+
+.about-text {
+  font-size: 1rem;
+  line-height: 1.8;
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(20px);
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 700px;
+  border-left: 4px solid #fff;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.skill-card {
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 15px;
+  padding: 18px;
+  font-weight: 600;
+  text-align: center;
+  cursor: default;
+  transition: all 0.3s;
+}
+
+.skill-card:hover {
+  background: rgba(255,255,255,.2);
+  transform: translateY(-5px);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 20px;
+  padding: 28px;
+  cursor: default;
+  transition: all 0.3s;
+}
+
+.project-card:hover {
+  background: rgba(255,255,255,.15);
+  transform: translateY(-8px);
+}
+
+.proj-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.proj-desc {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.proj-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.proj-tag {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  background: rgba(255,255,255,.2);
+  border-radius: 15px;
+  font-weight: 600;
+}
+
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.edu-card {
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 15px;
+  padding: 24px;
+}
+
+.edu-year {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.edu-degree {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+footer {
+  padding: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,.15);
+  backdrop-filter: blur(20px);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-logo {
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-family: 'Fraunces', serif;
+}
+
+.footer-socials { display: flex; gap: 12px; }
+
+.social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.social-btn:hover {
+  background: rgba(255,255,255,.25);
+  transform: scale(1.1);
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-logo">Splash</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+  </div>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-tag">✨ Artist Developer</div>
+    <h1 class="hero-name">
+      <span id="heroFirstName">Gradient</span><br>
+      <span id="heroLastName">Splash</span>
+    </h1>
+    <p class="hero-desc" id="heroBio">Loading…</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" id="heroGithub" href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+      <a class="btn btn-outline" id="heroLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </div>
+  </div>
+
+  <div class="hero-card">
+    <div class="card-row">
+      <span class="card-label">Name</span>
+      <span id="panelName">—</span>
+    </div>
+    <div class="card-row">
+      <span class="card-label">Role</span>
+      <span id="panelRole">—</span>
+    </div>
+    <div class="card-row">
+      <span class="card-label">Location</span>
+      <span id="panelLocation" contenteditable="true" data-collection="users" data-field="location">—</span>
+    </div>
+    <div class="card-row">
+      <span class="card-label">Email</span>
+      <span><a id="panelEmail" href="mailto:" style="color:#fff; text-decoration:none;">—</a></span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="sec-label">About</div>
+  <h2 class="sec-title">My Story</h2>
+  <div class="about-text" id="aboutText">Loading…</div>
+</section>
+
+<section class="section" id="skills">
+  <div class="sec-label">Skills</div>
+  <h2 class="sec-title">Expertise</h2>
+  <div class="skills-grid" id="skillsGrid"></div>
+</section>
+
+<section class="section" id="projects">
+  <div class="sec-label">Portfolio</div>
+  <h2 class="sec-title">Projects</h2>
+  <div class="projects-grid" id="projectsGrid"></div>
+</section>
+
+<section class="section" id="education">
+  <div class="sec-label">Education</div>
+  <h2 class="sec-title">Background</h2>
+  <div class="edu-grid" id="educationList"></div>
+</section>
+
+<footer>
+  <div class="footer-logo">GRADIENT © 2024</div>
+  <div class="footer-socials">
+    <a class="social-btn" id="footerGithub" href="#" target="_blank"><i class="fab fa-github"></i></a>
+    <a class="social-btn" id="footerLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+  </div>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc,
+  collection, getDocs, updateDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+function setText(id, val, fb="—") {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val || fb;
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if(!user) return;
+  currentUser = user;
+
+  const snap = await getDoc(doc(db, "users", user.uid));
+  const d = snap.exists() ? snap.data() : {};
+
+  const fullName = d.fullName || "Developer";
+  const parts = fullName.trim().split(" ");
+  setText("heroFirstName", parts[0]);
+  setText("heroLastName", parts.slice(1).join(" ") || "Developer");
+  setText("heroBio", d.about || "");
+  setText("panelName", d.fullName || "—");
+  setText("panelRole", d.role || "Developer");
+  setText("panelLocation", d.location || "—");
+  setText("aboutText", d.about || "");
+
+  if(d.github) ["heroGithub","footerGithub"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.github;});
+  if(d.linkedin) ["heroLinkedin","footerLinkedin"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.linkedin;});
+  if(d.email) document.getElementById("panelEmail").href = "mailto:" + d.email;
+
+  const skillsSnap = await getDocs(collection(db,"users",user.uid,"skills"));
+  const grid = document.getElementById("skillsGrid");
+  grid.innerHTML = "";
+  skillsSnap.forEach(ds => {
+    const s = ds.data();
+    grid.innerHTML += `<div class="skill-card" contenteditable="true" data-collection="skills" data-docid="${ds.id}" data-field="name">${s.name || ""}</div>`;
+  });
+
+  const projSnap = await getDocs(collection(db,"users",user.uid,"projects"));
+  const projGrid = document.getElementById("projectsGrid");
+  projGrid.innerHTML = "";
+  projSnap.forEach(ds => {
+    const p = ds.data();
+    const tags = (p.tech || "").split(",").map(t => t.trim()).filter(Boolean).map(t => `<span class="proj-tag">${t}</span>`).join("");
+    projGrid.innerHTML += `<div class="project-card">
+      <div class="proj-title" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="title">${p.title || ""}</div>
+      <div class="proj-desc" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="description">${p.description || ""}</div>
+      <div class="proj-tags">${tags}</div>
+    </div>`;
+  });
+
+  const eduSnap = await getDocs(collection(db,"users",user.uid,"education"));
+  const eduList = document.getElementById("educationList");
+  eduList.innerHTML = "";
+  console.log("Education records found:", eduSnap.size);
+  let eduCount = 0;
+  eduSnap.forEach(ds => {
+    const e = ds.data();
+    eduCount++;
+    console.log("Education entry:", e);
+    eduList.innerHTML += `<div class="edu-card">
+      <div class="edu-year">${e.year || ""}</div>
+      <div class="edu-degree" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="degree">${e.degree || ""}</div>
+      <div style="font-size:0.85rem;" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="institute">${e.institute || ""}</div>
+    </div>`;
+  });
+  if(eduCount === 0) {
+    console.warn("No education records found in Firestore");
+    eduList.innerHTML = `<p style="color:#999;font-size:0.9rem;padding:20px;text-align:center;">No education records added yet. Add education details in dashboard to see them here.</p>`;
+  }
+
+  if(new URLSearchParams(window.location.search).get("mode") === "readonly") {
+    document.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
+  }
+});
+
+document.addEventListener("blur", async (e) => {
+  const el = e.target;
+  if(!el.hasAttribute("contenteditable") || !currentUser) return;
+  const col = el.getAttribute("data-collection");
+  const docId = el.getAttribute("data-docid") || currentUser.uid;
+  const field = el.getAttribute("data-field");
+  const val = el.innerText.trim();
+  if(!col || !field) return;
+  try {
+    const ref = col === "users" ? doc(db, "users", docId) : doc(db, "users", currentUser.uid, col, docId);
+    await updateDoc(ref, { [field]: val });
+  } catch(err) { }
+}, true);
+</script>
+
+</body>
+</html>
