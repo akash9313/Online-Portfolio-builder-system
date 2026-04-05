@@ -1,546 +1,856 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bento Grid</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8"/>
+  <title>Bento Grid — Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-html { scroll-behavior: smooth; }
+  <!-- Syne (display) + Instrument Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
 
-body {
-  font-family: 'Inter', sans-serif;
-  color: #1a1a1a;
-  background: #fafafa;
-  line-height: 1.5;
+  <style>
+/* ─── TOKENS ──────────────────────────────────────── */
+:root {
+  --bg:        #080a0f;
+  --surface:   rgba(255,255,255,0.04);
+  --surface-h: rgba(255,255,255,0.07);
+  --border:    rgba(255,255,255,0.07);
+  --border-h:  rgba(255,255,255,0.16);
+
+  --cyan:   #00e5ff;
+  --lime:   #b8ff3a;
+  --violet: #9b7cff;
+  --rose:   #ff4f7b;
+  --amber:  #ffb340;
+
+  --text-1: #f0f2f7;
+  --text-2: #8a919e;
+  --text-3: #4d5360;
+
+  --radius-sm: 12px;
+  --radius:    20px;
+  --radius-lg: 28px;
+
+  --ease: cubic-bezier(.22,.68,0,1.2);
 }
 
-.topnav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
-  padding: 18px 40px;
-  background: #fff;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+::selection{background:var(--cyan);color:#000;}
+
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'Instrument Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text-1);
+  min-height:100vh;
+  overflow-x:hidden;
 }
 
-.nav-logo {
-  font-size: 1.3rem;
-  font-weight: 800;
-  font-family: 'Syne', sans-serif;
-  letter-spacing: -0.5px;
+/* noise grain overlay */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.032;
+  pointer-events:none;z-index:9999;
 }
 
-.nav-links {
-  display: flex;
-  gap: 32px;
+/* ─── LOADER ──────────────────────────────────────── */
+#loader{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:1000;transition:opacity .6s ease, visibility .6s ease;
+}
+#loader.gone{opacity:0;visibility:hidden;}
+.loader-ring{
+  width:48px;height:48px;border-radius:50%;
+  border:2px solid var(--border);
+  border-top-color:var(--cyan);
+  animation:spin .9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loader-label{
+  margin-top:16px;font-size:.7rem;letter-spacing:3px;
+  text-transform:uppercase;color:var(--text-3);
 }
 
-.nav-links a {
-  color: #333;
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: color 0.3s;
+/* ─── LAYOUT ──────────────────────────────────────── */
+.page{
+  max-width:1320px;
+  margin:0 auto;
+  padding:40px 28px 80px;
 }
 
-.nav-links a:hover {
-  color: #ff6b6b;
+/* ─── TOPBAR ──────────────────────────────────────── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:40px;
+}
+.topbar-brand{
+  font-family:'Syne',sans-serif;
+  font-size:.85rem;font-weight:800;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--text-3);
+}
+.topbar-links{
+  display:flex;gap:10px;
+}
+/* NOT contenteditable — pure display buttons */
+.topbar-links a{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:.75rem;font-weight:600;letter-spacing:.5px;
+  color:var(--text-2);
+  border:1px solid var(--border);
+  padding:8px 16px;border-radius:100px;
+  text-decoration:none;
+  transition:all .2s ease;
+  user-select:none;
+}
+.topbar-links a:hover{
+  color:var(--text-1);
+  border-color:var(--border-h);
+  background:var(--surface-h);
+}
+.topbar-links a svg{flex-shrink:0;opacity:.7;}
+
+/* ─── BENTO GRID ──────────────────────────────────── */
+.bento{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  grid-auto-rows:80px;
+  gap:14px;
 }
 
-@media(max-width:768px) { .nav-links { display: none; } }
+/* ─── BASE CARD ───────────────────────────────────── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  position:relative;
+  transition:border-color .3s ease, box-shadow .3s ease, transform .3s var(--ease);
+  animation:fadeUp .55s var(--ease) both;
+}
+.card:hover{
+  border-color:var(--border-h);
+  box-shadow:0 16px 48px rgba(0,0,0,.45);
+  transform:translateY(-3px);
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(22px);}
+  to{opacity:1;transform:translateY(0);}
+}
+/* stagger */
+.card:nth-child(1){animation-delay:.05s;}
+.card:nth-child(2){animation-delay:.10s;}
+.card:nth-child(3){animation-delay:.15s;}
+.card:nth-child(4){animation-delay:.20s;}
+.card:nth-child(5){animation-delay:.25s;}
+.card:nth-child(6){animation-delay:.30s;}
+.card:nth-child(7){animation-delay:.35s;}
+.card:nth-child(8){animation-delay:.40s;}
+.card:nth-child(9){animation-delay:.45s;}
 
-.hero-bento {
-  padding-top: 100px;
-  padding: 100px 40px 80px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  auto-rows: 200px;
-  max-width: 1200px;
-  margin: 0 auto;
+/* accent glow corner */
+.card::after{
+  content:'';
+  position:absolute;inset:0;
+  border-radius:inherit;
+  background:radial-gradient(80px circle at var(--mx,50%) var(--my,50%),
+    var(--glow, rgba(0,229,255,.08)) 0%,transparent 100%);
+  opacity:0;transition:opacity .4s ease;
+  pointer-events:none;
+}
+.card:hover::after{opacity:1;}
+
+/* card inner padding */
+.card-inner{
+  position:relative;z-index:1;
+  padding:24px 26px;
+  height:100%;display:flex;flex-direction:column;
 }
 
-@media(max-width:768px) { 
-  .hero-bento { 
-    grid-template-columns: 1fr;
-    padding: 80px 24px;
-    gap: 16px;
-  } 
+/* ─── CARD SIZES (12-col grid) ────────────────────── */
+/* Hero name card */
+.c-hero    {grid-column:span 7; grid-row:span 4;}
+/* Avatar / status card */
+.c-avatar  {grid-column:span 5; grid-row:span 4;}
+/* About */
+.c-about   {grid-column:span 5; grid-row:span 3;}
+/* Role pill card */
+.c-role    {grid-column:span 7; grid-row:span 2;}
+/* Location */
+.c-loc     {grid-column:span 4; grid-row:span 2;}
+/* Skills */
+.c-skills  {grid-column:span 8; grid-row:span 3;}
+/* Projects — wide */
+.c-proj1   {grid-column:span 12;grid-row:span 3;}
+.c-proj2   {grid-column:span 6; grid-row:span 3;}
+.c-proj3   {grid-column:span 6; grid-row:span 3;}
+/* Education */
+.c-edu     {grid-column:span 12;grid-row:span 3;}
+/* CTA / decoration */
+.c-stat    {grid-column:span 3; grid-row:span 2;}
+
+/* ─── CARD THEMES ─────────────────────────────────── */
+.card-cyan  {--glow:rgba(0,229,255,.12);}
+.card-lime  {--glow:rgba(184,255,58,.10);}
+.card-violet{--glow:rgba(155,124,255,.12);}
+.card-rose  {--glow:rgba(255,79,123,.10);}
+.card-amber {--glow:rgba(255,179,64,.10);}
+
+/* ─── EDITABLE FIELDS ─────────────────────────────── */
+[contenteditable="true"]{
+  outline:none;
+  border-radius:4px;
+  transition:background .2s ease, box-shadow .2s ease;
+  cursor:text;
+}
+[contenteditable="true"]:hover{
+  background:rgba(255,255,255,0.04);
+  box-shadow:0 0 0 1px rgba(255,255,255,.1);
+}
+[contenteditable="true"]:focus{
+  background:rgba(0,229,255,0.05);
+  box-shadow:0 0 0 1.5px var(--cyan);
 }
 
-.hero-bento > :nth-child(1) { grid-column: 1; grid-row: 1 / 3; }
-.hero-bento > :nth-child(2) { grid-column: 2; grid-row: 1; }
-.hero-bento > :nth-child(3) { grid-column: 2; grid-row: 2; }
-
-@media(max-width:768px) {
-  .hero-bento > :nth-child(1) { grid-column: 1; grid-row: 1; }
-  .hero-bento > :nth-child(2) { grid-column: 1; grid-row: 2; }
-  .hero-bento > :nth-child(3) { grid-column: 1; grid-row: 3; }
+/* ─── HERO CARD ───────────────────────────────────── */
+.hero-card{
+  background:linear-gradient(145deg,#0d1117 0%,#0f1822 100%);
+}
+.hero-card .card-inner{justify-content:flex-end;}
+.hero-eyebrow{
+  font-size:.68rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--cyan);font-weight:600;margin-bottom:14px;
+  font-family:'Instrument Sans',sans-serif;
+}
+.hero-name{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.4rem,4.5vw,4rem);
+  font-weight:800;line-height:1.0;
+  color:var(--text-1);
+  margin-bottom:16px;
+}
+.hero-name span{
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-bio{
+  font-size:.95rem;color:var(--text-2);
+  line-height:1.7;max-width:460px;
+}
+/* mesh bg */
+.hero-mesh{
+  position:absolute;top:-30%;right:-10%;
+  width:380px;height:380px;
+  background:radial-gradient(circle,rgba(0,229,255,.1) 0%,transparent 65%);
+  border-radius:50%;pointer-events:none;
 }
 
-.bento-item {
-  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
-  border: 2px solid #eee;
-  border-radius: 12px;
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
+/* ─── AVATAR CARD ─────────────────────────────────── */
+.avatar-card{
+  background:linear-gradient(135deg,#0c0f18,#111827);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:14px;
+}
+.avatar-blob{
+  width:90px;height:90px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;
+  color:#000;
+  box-shadow:0 0 40px rgba(0,229,255,.25);
+  position:relative;flex-shrink:0;
+}
+.avatar-blob::after{
+  content:'';position:absolute;inset:-4px;
+  border-radius:50%;
+  border:1.5px solid rgba(0,229,255,.3);
+  animation:pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1);opacity:.6;}
+  50%{transform:scale(1.08);opacity:1;}
+}
+.avatar-name{
+  font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;
+  text-align:center;color:var(--text-1);
+}
+.avatar-role{
+  font-size:.75rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--cyan);font-weight:600;text-align:center;
+}
+.status-dot{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:.72rem;color:var(--text-3);letter-spacing:.5px;
+}
+.status-dot::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:var(--lime);
+  box-shadow:0 0 8px var(--lime);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* ─── ROLE CARD ───────────────────────────────────── */
+.role-card{
+  background:linear-gradient(100deg,rgba(155,124,255,.08),rgba(0,229,255,.04));
+  display:flex;align-items:center;
+}
+.role-label{
+  font-size:.68rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--text-3);font-weight:600;margin-bottom:6px;
+}
+.role-value{
+  font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;
+  color:var(--text-1);
+}
+.role-accent{
+  position:absolute;right:24px;top:50%;transform:translateY(-50%);
+  font-size:4rem;opacity:.04;font-family:'Syne',sans-serif;font-weight:800;
+  pointer-events:none;user-select:none;color:var(--violet);
+  white-space:nowrap;
 }
 
-.bento-item::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,107,107,.1) 0%, transparent 70%);
-  pointer-events: none;
+/* ─── LOCATION CARD ───────────────────────────────── */
+.loc-card{
+  background:rgba(255,179,64,.03);
+  border-color:rgba(255,179,64,.1);
+  display:flex;align-items:center;
+}
+.loc-icon{font-size:1.6rem;margin-right:14px;}
+.loc-label{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--amber);font-weight:600;margin-bottom:4px;}
+.loc-value{font-size:1rem;font-weight:600;color:var(--text-1);}
+
+/* ─── ABOUT CARD ──────────────────────────────────── */
+.about-card{background:rgba(255,79,123,.03);border-color:rgba(255,79,123,.08);}
+.card-chip{
+  display:inline-block;font-size:.62rem;letter-spacing:3px;
+  text-transform:uppercase;font-weight:700;
+  padding:4px 12px;border-radius:100px;
+  margin-bottom:14px;
+}
+.chip-rose{background:rgba(255,79,123,.1);color:var(--rose);}
+.chip-cyan{background:rgba(0,229,255,.08);color:var(--cyan);}
+.chip-lime{background:rgba(184,255,58,.08);color:var(--lime);}
+.chip-violet{background:rgba(155,124,255,.1);color:var(--violet);}
+.chip-amber{background:rgba(255,179,64,.1);color:var(--amber);}
+
+.about-text{
+  font-size:.92rem;color:var(--text-2);line-height:1.75;
+  flex:1;
 }
 
-.bento-item:hover {
-  border-color: #ff6b6b;
-  box-shadow: 0 8px 24px rgba(255,107,107,.12);
-  transform: translateY(-4px);
+/* ─── SKILLS CARD ─────────────────────────────────── */
+.skills-card{}
+.skills-wrap{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-top:6px;
+}
+.skill-pill{
+  font-size:.78rem;font-weight:600;
+  padding:7px 16px;border-radius:100px;
+  border:1px solid var(--border);
+  color:var(--text-2);
+  background:rgba(255,255,255,.03);
+  transition:all .2s ease;
+  cursor:text;
+}
+.skill-pill:hover{
+  border-color:var(--cyan);color:var(--cyan);
+  background:rgba(0,229,255,.06);
+  transform:translateY(-2px);
+}
+.skill-pill[contenteditable="true"]:focus{
+  border-color:var(--cyan);
+  box-shadow:0 0 0 2px rgba(0,229,255,.2);
+  color:var(--cyan);
 }
 
-.bento-main {
-  background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 100%);
-  color: #fff;
+/* ─── PROJECT CARDS ───────────────────────────────── */
+.proj-index{
+  font-size:.62rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--text-3);font-weight:700;margin-bottom:10px;
+}
+.proj-title{
+  font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;
+  color:var(--text-1);margin-bottom:10px;line-height:1.2;
+}
+.proj-desc{
+  font-size:.88rem;color:var(--text-2);line-height:1.7;
+  flex:1;margin-bottom:14px;
+}
+.proj-tech{
+  font-size:.72rem;font-weight:600;letter-spacing:.5px;
+  color:var(--lime);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.proj-tech::before{content:'//';color:var(--text-3);}
+.proj-link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.72rem;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text-1);text-decoration:none;
+  border:1px solid var(--border);
+  padding:7px 16px;border-radius:100px;
+  transition:all .2s ease;
+  width:fit-content;
+}
+.proj-link:hover{
+  border-color:var(--lime);color:var(--lime);
+  background:rgba(184,255,58,.06);
+}
+.proj-link svg{transition:transform .2s ease;}
+.proj-link:hover svg{transform:translate(2px,-2px);}
+
+/* wide project (proj1) extra layout */
+.c-proj1 .card-inner{
+  flex-direction:row;gap:40px;align-items:center;
+}
+.c-proj1 .proj-body{flex:1;}
+.c-proj1 .proj-visual{
+  width:180px;height:120px;flex-shrink:0;
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(0,229,255,.07),rgba(155,124,255,.07));
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.5rem;
 }
 
-.bento-main:hover {
-  border-color: #ff6b6b;
-  box-shadow: 0 12px 30px rgba(255,107,107,.25);
+/* ─── EDUCATION CARD ──────────────────────────────── */
+.edu-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+  margin-top:6px;
+}
+.edu-item{
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:18px 20px;
+  transition:border-color .2s ease;
+}
+.edu-item:hover{border-color:var(--border-h);}
+.edu-year{
+  font-size:.65rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--violet);font-weight:700;margin-bottom:8px;
+}
+.edu-degree{
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  color:var(--text-1);margin-bottom:4px;line-height:1.25;
+}
+.edu-inst{
+  font-size:.82rem;color:var(--text-2);font-weight:500;margin-bottom:4px;
+}
+.edu-grade{
+  font-size:.75rem;color:var(--text-3);
 }
 
-.hero-name {
-  font-size: 2.5rem;
-  font-weight: 800;
-  font-family: 'Syne', sans-serif;
-  margin-bottom: 12px;
-  line-height: 1.1;
+/* ─── STAT CARDS ──────────────────────────────────── */
+.stat-card{
+  display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:flex-end;
+  background:rgba(255,255,255,.02);
+}
+.stat-num{
+  font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;
+  line-height:1;margin-bottom:4px;
+}
+.stat-lbl{
+  font-size:.7rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text-3);font-weight:600;
 }
 
-.hero-tag {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  opacity: 0.85;
-}
+/* ─── SCROLLBAR ───────────────────────────────────── */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px;}
 
-.bento-label {
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 4px;
-  opacity: 0.75;
+/* ─── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:900px){
+  .bento{grid-template-columns:repeat(6,1fr);}
+  .c-hero,.c-avatar,.c-about,.c-role,.c-loc,
+  .c-skills,.c-proj1,.c-proj2,.c-proj3,
+  .c-edu,.c-stat{grid-column:span 6;}
+  .c-proj1 .card-inner{flex-direction:column;}
+  .c-proj1 .proj-visual{width:100%;height:80px;}
 }
-
-.bento-value {
-  font-size: 0.95rem;
-  font-weight: 600;
+@media(max-width:560px){
+  .page{padding:20px 14px 60px;}
+  .bento{gap:10px;}
+  .hero-name{font-size:2rem;}
+  .topbar{flex-direction:column;gap:16px;align-items:flex-start;}
 }
-
-.section {
-  padding: 80px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-@media(max-width:768px) { .section { padding: 60px 24px; } }
-
-.sec-label {
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  color: #ff6b6b;
-}
-
-.sec-title {
-  font-size: 2rem;
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  margin-bottom: 40px;
-  color: #1a1a1a;
-}
-
-.about-text {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: #555;
-  max-width: 700px;
-}
-
-.skills-bento {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 16px;
-}
-
-.skill-bento {
-  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
-  border: 2px solid #eee;
-  border-radius: 12px;
-  padding: 18px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 0.85rem;
-  cursor: default;
-  transition: all 0.3s;
-  color: #1a1a1a;
-}
-
-.skill-bento:hover {
-  border-color: #ff6b6b;
-  background: #fff5f4;
-  color: #ff6b6b;
-  transform: scale(1.05);
-}
-
-.projects-bento {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  auto-rows: 280px;
-}
-
-.project-bento {
-  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
-  border: 2px solid #eee;
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: default;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-
-.project-bento::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #ff9a56, #ff6b6b, #a29bfe);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s;
-}
-
-.project-bento:hover {
-  border-color: #ff6b6b;
-  box-shadow: 0 8px 24px rgba(255,107,107,.15);
-  transform: translateY(-4px);
-}
-
-.project-bento:hover::before {
-  transform: scaleX(1);
-}
-
-.proj-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #1a1a1a;
-}
-
-.proj-desc {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: #666;
-  margin-bottom: 12px;
-  flex-grow: 1;
-}
-
-.proj-tags {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.proj-tag {
-  font-size: 0.65rem;
-  padding: 4px 8px;
-  background: #ff6b6b;
-  color: #fff;
-  border-radius: 6px;
-  font-weight: 600;
-}
-
-.edu-bento {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-.edu-bento-card {
-  background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
-  border: 2px solid #eee;
-  border-radius: 12px;
-  padding: 20px;
-  transition: all 0.3s;
-  cursor: default;
-  border-left: 4px solid #ff6b6b;
-}
-
-.edu-bento-card:hover {
-  border-color: #ff6b6b;
-  background: #fff5f4;
-  box-shadow: 0 8px 20px rgba(255,107,107,.12);
-  transform: translateY(-4px);
-}
-
-.edu-year {
-  font-size: 0.7rem;
-  color: #ff6b6b;
-  font-weight: 800;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  letter-spacing: 0.5px;
-}
-
-.edu-degree {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-  color: #1a1a1a;
-}
-
-.edu-school {
-  font-size: 0.8rem;
-  color: #666;
-}
-
-footer {
-  padding: 40px;
-  text-align: center;
-  background: #1a1a1a;
-  color: #fff;
-}
-
-.footer-logo {
-  font-size: 1.2rem;
-  font-weight: 800;
-  font-family: 'Syne', sans-serif;
-  margin-bottom: 12px;
-}
-
-.footer-socials {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-bottom: 12px;
-}
-
-.social-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  background: #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-
-.social-btn:hover {
-  background: #ff6b6b;
-}
-</style>
+  </style>
 </head>
 <body>
 
-<nav class="topnav">
-  <div class="nav-logo">bento</div>
-  <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
-    <a href="#education">Education</a>
-  </div>
-</nav>
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-ring"></div>
+  <div class="loader-label">Loading portfolio</div>
+</div>
 
-<section class="hero-bento" id="hero">
-  <div class="bento-item bento-main">
-    <div>
-      <div class="hero-tag">Creator & Designer</div>
-      <h1 class="hero-name">
-        <span id="heroFirstName">Bento</span> <span id="heroLastName">Grid</span>
-      </h1>
+<div class="page">
+
+  <!-- TOPBAR — links are NOT editable -->
+  <header class="topbar">
+    <div class="topbar-brand">Portfolio ✦ Bento</div>
+    <div class="topbar-links">
+      <a id="githubBtn" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+        </svg>
+        GitHub
+      </a>
+      <a id="linkedinBtn" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+          <rect x="2" y="9" width="4" height="12"/>
+          <circle cx="4" cy="4" r="2"/>
+        </svg>
+        LinkedIn
+      </a>
     </div>
-  </div>
+  </header>
 
-  <div class="bento-item">
-    <div class="bento-label">Role</div>
-    <div class="bento-value" id="panelRole">—</div>
-  </div>
+  <!-- BENTO GRID -->
+  <div class="bento" id="bentoGrid">
 
-  <div class="bento-item">
-    <div class="bento-label">Location</div>
-    <div class="bento-value" id="panelLocation" contenteditable="true" data-collection="users" data-field="location">—</div>
-  </div>
-</section>
+    <!-- 1. HERO NAME CARD -->
+    <div class="card c-hero hero-card card-cyan">
+      <div class="hero-mesh"></div>
+      <div class="card-inner">
+        <p class="hero-eyebrow">✦ Available for work</p>
+        <h1 class="hero-name">
+          Hi, I'm<br/>
+          <span id="heroName" contenteditable="true" data-collection="users" data-field="fullName">Your Name</span>
+        </h1>
+        <p class="hero-bio" id="heroBio" contenteditable="true" data-collection="users" data-field="about">
+          Your professional bio will appear here.
+        </p>
+      </div>
+    </div>
 
-<section class="section" id="about">
-  <div class="sec-label">About</div>
-  <h2 class="sec-title">My Story</h2>
-  <div class="about-text" id="aboutText">Loading…</div>
-</section>
+    <!-- 2. AVATAR CARD -->
+    <div class="card c-avatar card-violet">
+      <div class="card-inner avatar-card">
+        <div class="avatar-blob" id="avatarBlob">?</div>
+        <div class="avatar-name" id="avatarName">—</div>
+        <div class="avatar-role" id="avatarRole">—</div>
+        <div class="status-dot">Open to opportunities</div>
+      </div>
+    </div>
 
-<section class="section" id="skills">
-  <div class="sec-label">Expertise</div>
-  <h2 class="sec-title">Skills & Abilities</h2>
-  <div class="skills-bento" id="skillsGrid"></div>
-</section>
+    <!-- 3. ROLE CARD -->
+    <div class="card c-role role-card card-violet">
+      <div class="card-inner" style="justify-content:center;">
+        <p class="role-label">Current Role</p>
+        <p class="role-value" id="roleVal" contenteditable="true" data-collection="users" data-field="role">—</p>
+      </div>
+      <div class="role-accent" id="roleAccentBg" aria-hidden="true"></div>
+    </div>
 
-<section class="section" id="projects">
-  <div class="sec-label">Portfolio</div>
-  <h2 class="sec-title">Projects & Works</h2>
-  <div class="projects-bento" id="projectsGrid"></div>
-</section>
+    <!-- 4. LOCATION CARD -->
+    <div class="card c-loc loc-card card-amber">
+      <div class="card-inner" style="flex-direction:row;align-items:center;">
+        <div class="loc-icon">📍</div>
+        <div>
+          <p class="loc-label">Based in</p>
+          <p class="loc-value" id="locVal" contenteditable="true" data-collection="users" data-field="location">—</p>
+        </div>
+      </div>
+    </div>
 
-<section class="section" id="education">
-  <div class="sec-label">Learning</div>
-  <h2 class="sec-title">Educational Background</h2>
-  <div class="edu-bento" id="educationList"></div>
-</section>
+    <!-- 5. ABOUT CARD -->
+    <div class="card c-about about-card card-rose">
+      <div class="card-inner">
+        <span class="card-chip chip-rose">About Me</span>
+        <p class="about-text" id="aboutText" contenteditable="true" data-collection="users" data-field="about">—</p>
+      </div>
+    </div>
 
-<footer>
-  <div class="footer-logo">bento © 2024</div>
-  <div class="footer-socials">
-    <a class="social-btn" id="footerGithub" href="#" target="_blank"><i class="fab fa-github"></i></a>
-    <a class="social-btn" id="footerLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-  </div>
-</footer>
+    <!-- 6. SKILLS CARD -->
+    <div class="card c-skills skills-card card-lime">
+      <div class="card-inner">
+        <span class="card-chip chip-lime">Toolkit</span>
+        <div class="skills-wrap" id="skillsWrap">
+          <!-- pills injected -->
+        </div>
+      </div>
+    </div>
 
+    <!-- 7–9. PROJECT CARDS injected via JS -->
+
+    <!-- 10. EDUCATION CARD -->
+    <div class="card c-edu card-violet">
+      <div class="card-inner">
+        <span class="card-chip chip-violet">Education</span>
+        <div class="edu-list" id="eduList">
+          <!-- items injected -->
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /bento -->
+</div><!-- /page -->
+
+<!-- ═══════════════════════════════════════════════════
+     FIREBASE + LOGIC
+═══════════════════════════════════════════════════ -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   getFirestore, doc, getDoc,
   collection, getDocs, updateDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
-  authDomain: "portfoliox-2e787.firebaseapp.com",
-  projectId: "portfoliox-2e787"
+  apiKey:      "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain:  "portfoliox-2e787.firebaseapp.com",
+  projectId:   "portfoliox-2e787"
 };
 
-const app = initializeApp(firebaseConfig);
+const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db   = getFirestore(app);
+
 let currentUser = null;
 
-function setText(id, val, fb="—") {
-  const el = document.getElementById(id);
-  if(el) el.textContent = val || fb;
+/* ── helpers ──────────────────────────────────────── */
+function initials(name=""){
+  return name.trim().split(/\s+/).map(w=>w[0]||"").join("").toUpperCase().slice(0,2)||"?";
 }
 
-onAuthStateChanged(auth, async (user) => {
-  if(!user) return;
-  currentUser = user;
-
-  const snap = await getDoc(doc(db, "users", user.uid));
-  const d = snap.exists() ? snap.data() : {};
-
-  const fullName = d.fullName || "Creator";
-  const parts = fullName.trim().split(" ");
-  setText("heroFirstName", parts[0]);
-  setText("heroLastName", parts.slice(1).join(" ") || "Creator");
-  setText("heroBio", d.about || "");
-  setText("panelRole", d.role || "Designer");
-  setText("panelLocation", d.location || "—");
-  setText("aboutText", d.about || "");
-
-  if(d.github) ["footerGithub"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.github;});
-  if(d.linkedin) ["footerLinkedin"].forEach(id => {const el = document.getElementById(id); if(el) el.href = d.linkedin;});
-
-  const skillsSnap = await getDocs(collection(db,"users",user.uid,"skills"));
-  const grid = document.getElementById("skillsGrid");
-  grid.innerHTML = "";
-  skillsSnap.forEach(ds => {
-    const s = ds.data();
-    grid.innerHTML += `<div class="skill-bento" contenteditable="true" data-collection="skills" data-docid="${ds.id}" data-field="name">${s.name || ""}</div>`;
+function setMirrors(field, val){
+  const mirrors = {
+    fullName: ["heroName","avatarName"],
+    role:     ["avatarRole","roleVal"],
+    about:    ["heroBio","aboutText"],
+    location: ["locVal"]
+  };
+  (mirrors[field]||[]).forEach(id=>{
+    const el = document.getElementById(id);
+    if(el && el.textContent !== val) el.textContent = val;
   });
-
-  const projSnap = await getDocs(collection(db,"users",user.uid,"projects"));
-  const projGrid = document.getElementById("projectsGrid");
-  projGrid.innerHTML = "";
-  projSnap.forEach(ds => {
-    const p = ds.data();
-    const tags = (p.tech || "").split(",").map(t => t.trim()).filter(Boolean).map(t => `<span class="proj-tag">${t}</span>`).join("");
-    projGrid.innerHTML += `<div class="project-bento">
-      <div>
-        <div class="proj-title" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="title">${p.title || ""}</div>
-        <div class="proj-desc" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="description">${p.description || ""}</div>
-      </div>
-      <div class="proj-tags">${tags}</div>
-    </div>`;
-  });
-
-  const eduSnap = await getDocs(collection(db,"users",user.uid,"education"));
-  const eduList = document.getElementById("educationList");
-  eduList.innerHTML = "";
-  console.log("Education records found:", eduSnap.size);
-  let eduCount = 0;
-  eduSnap.forEach(ds => {
-    const e = ds.data();
-    eduCount++;
-    console.log("Education entry:", e);
-    eduList.innerHTML += `<div class="edu-bento-card">
-      <div class="edu-year">${e.year || ""}</div>
-      <div class="edu-degree" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="degree">${e.degree || ""}</div>
-      <div class="edu-school" contenteditable="true" data-collection="education" data-docid="${ds.id}" data-field="institute">${e.institute || ""}</div>
-    </div>`;
-  });
-  if(eduCount === 0) {
-    console.warn("No education records found in Firestore");
-    eduList.innerHTML = `<p style="color:#999;font-size:0.9rem;padding:20px;text-align:center;">No education records added yet. Add education details in dashboard to see them here.</p>`;
+  if(field==="fullName"){
+    document.getElementById("avatarBlob").textContent = initials(val);
+    document.getElementById("roleAccentBg").textContent = document.getElementById("roleVal").textContent;
   }
+}
 
-  if(new URLSearchParams(window.location.search).get("mode") === "readonly") {
-    document.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
+/* ── project card builder ─────────────────────────── */
+function buildProjectCard(docSnap, idx, isWide){
+  const p = docSnap.data();
+  const divId = docSnap.id;
+  const colors = ["card-cyan","card-lime","card-rose"];
+  const icons  = ["🚀","⚡","🎯","💡","🔮"];
+
+  const card = document.createElement("div");
+  card.className = `card ${isWide?"c-proj1":"c-proj2"} ${colors[idx%3]}`;
+
+  if(isWide){
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="proj-body">
+          <p class="proj-index">Project ${String(idx+1).padStart(2,"0")}</p>
+          <h3 class="proj-title" contenteditable="true"
+              data-collection="projects" data-docid="${divId}" data-field="title"
+          >${p.title||"Project Title"}</h3>
+          <p class="proj-desc" contenteditable="true"
+             data-collection="projects" data-docid="${divId}" data-field="description"
+          >${p.description||""}</p>
+          <p class="proj-tech" contenteditable="true"
+             data-collection="projects" data-docid="${divId}" data-field="tech"
+          >${p.tech||""}</p>
+          ${p.link?`<a href="${p.link}" target="_blank" class="proj-link">
+            View Project
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+            </svg></a>`:""}
+        </div>
+        <div class="proj-visual">${icons[idx%icons.length]}</div>
+      </div>`;
+  } else {
+    card.innerHTML = `
+      <div class="card-inner">
+        <p class="proj-index">Project ${String(idx+1).padStart(2,"0")}</p>
+        <h3 class="proj-title" contenteditable="true"
+            data-collection="projects" data-docid="${divId}" data-field="title"
+        >${p.title||"Project Title"}</h3>
+        <p class="proj-desc" contenteditable="true"
+           data-collection="projects" data-docid="${divId}" data-field="description"
+        >${p.description||""}</p>
+        <p class="proj-tech" contenteditable="true"
+           data-collection="projects" data-docid="${divId}" data-field="tech"
+        >${p.tech||""}</p>
+        ${p.link?`<a href="${p.link}" target="_blank" class="proj-link">
+          View Project
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+          </svg></a>`:""}
+      </div>`;
   }
+  return card;
+}
+
+/* ── mouse glow tracker ───────────────────────────── */
+document.querySelectorAll(".card").forEach(card=>{
+  card.addEventListener("mousemove",e=>{
+    const r = card.getBoundingClientRect();
+    card.style.setProperty("--mx",`${e.clientX-r.left}px`);
+    card.style.setProperty("--my",`${e.clientY-r.top}px`);
+  });
 });
 
-document.addEventListener("blur", async (e) => {
+/* ── auth + data load ─────────────────────────────── */
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    document.getElementById("loader").classList.add("gone");
+    document.getElementById("heroName").textContent = "Please log in";
+    return;
+  }
+  currentUser = user;
+
+  /* PROFILE */
+  const snap = await getDoc(doc(db,"users",user.uid));
+  const d = snap.data()||{};
+  const name     = d.fullName  ||"Your Name";
+  const role     = d.role      ||"Your Role";
+  const about    = d.about     ||"Your bio here.";
+  const location = d.location  ||"Location";
+  const github   = d.github    ||"#";
+  const linkedin = d.linkedin  ||"#";
+
+  /* Avatar */
+  document.getElementById("avatarBlob").textContent = initials(name);
+  document.getElementById("avatarName").textContent = name;
+  document.getElementById("avatarRole").textContent = role;
+
+  /* Hero */
+  document.getElementById("heroName").textContent = name;
+  document.getElementById("heroBio").textContent  = about;
+
+  /* Role card */
+  document.getElementById("roleVal").textContent      = role;
+  document.getElementById("roleAccentBg").textContent = role;
+
+  /* Location */
+  document.getElementById("locVal").textContent = location;
+
+  /* About */
+  document.getElementById("aboutText").textContent = about;
+
+  /* GitHub / LinkedIn buttons — set href ONLY, no contenteditable */
+  document.getElementById("githubBtn").href   = github   || "#";
+  document.getElementById("linkedinBtn").href = linkedin || "#";
+
+  /* SKILLS */
+  const skillSnap = await getDocs(collection(db,"users",user.uid,"skills"));
+  const wrap = document.getElementById("skillsWrap");
+  skillSnap.forEach(ds=>{
+    const s = ds.data();
+    const pill = document.createElement("div");
+    pill.className = "skill-pill";
+    pill.setAttribute("contenteditable","true");
+    pill.setAttribute("data-collection","skills");
+    pill.setAttribute("data-docid",ds.id);
+    pill.setAttribute("data-field","name");
+    pill.textContent = s.name||"";
+    wrap.appendChild(pill);
+  });
+
+  /* PROJECTS */
+  const projSnap = await getDocs(collection(db,"users",user.uid,"projects"));
+  const grid = document.getElementById("bentoGrid");
+  const eduCard = document.querySelector(".c-edu");
+
+  let pIdx = 0;
+  projSnap.forEach(ds=>{
+    const isWide = pIdx===0;
+    const card = buildProjectCard(ds, pIdx, isWide);
+    grid.insertBefore(card, eduCard);
+    /* attach glow tracker to new card */
+    card.addEventListener("mousemove",e=>{
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mx",`${e.clientX-r.left}px`);
+      card.style.setProperty("--my",`${e.clientY-r.top}px`);
+    });
+    pIdx++;
+  });
+
+  /* EDUCATION */
+  const eduSnap = await getDocs(collection(db,"users",user.uid,"education"));
+  const eduList = document.getElementById("eduList");
+  eduSnap.forEach(ds=>{
+    const e = ds.data();
+    const degree    = e.degree    || e.name            || e.university?.degree || e.school?.name  || "Degree";
+    const institute = e.institute || e.university?.name|| e.school?.board      || "Institution";
+    const year      = e.year      || e.university?.year|| e.school?.year       || "Year";
+    const grade     = e.grade     || e.university?.grade|| e.school?.grade     || "";
+
+    const item = document.createElement("div");
+    item.className = "edu-item";
+    item.innerHTML = `
+      <p class="edu-year"
+         contenteditable="true"
+         data-collection="education" data-docid="${ds.id}" data-field="year">${year}</p>
+      <p class="edu-degree"
+         contenteditable="true"
+         data-collection="education" data-docid="${ds.id}" data-field="degree">${degree}</p>
+      <p class="edu-inst"
+         contenteditable="true"
+         data-collection="education" data-docid="${ds.id}" data-field="institute">${institute}</p>
+      <p class="edu-grade"
+         contenteditable="true"
+         data-collection="education" data-docid="${ds.id}" data-field="grade">${grade}</p>
+    `;
+    eduList.appendChild(item);
+  });
+
+  /* READ-ONLY MODE */
+  const isReadOnly = new URLSearchParams(window.location.search).get("mode")==="readonly";
+  if(isReadOnly){
+    document.querySelectorAll("[contenteditable]").forEach(el=>el.removeAttribute("contenteditable"));
+  }
+
+  /* hide loader */
+  document.getElementById("loader").classList.add("gone");
+});
+
+/* ── save on blur ─────────────────────────────────── */
+document.addEventListener("blur", async e=>{
   const el = e.target;
-  if(!el.hasAttribute("contenteditable") || !currentUser) return;
-  const col = el.getAttribute("data-collection");
+  if(!el.hasAttribute("contenteditable")||!currentUser) return;
+
+  const col   = el.getAttribute("data-collection");
   const docId = el.getAttribute("data-docid") || currentUser.uid;
   const field = el.getAttribute("data-field");
-  const val = el.innerText.trim();
-  if(!col || !field) return;
-  try {
-    const ref = col === "users" ? doc(db, "users", docId) : doc(db, "users", currentUser.uid, col, docId);
-    await updateDoc(ref, { [field]: val });
-  } catch(err) { }
+  const val   = el.innerText.trim();
+  if(!col||!field) return;
+
+  try{
+    const ref = col==="users"
+      ? doc(db,"users",docId)
+      : doc(db,"users",currentUser.uid,col,docId);
+    await updateDoc(ref,{[field]:val});
+    setMirrors(field, val);
+    console.log(`✓ ${col}/${docId} → ${field}`);
+  }catch(err){
+    console.error("Save error:",err);
+  }
 }, true);
 </script>
-
 </body>
 </html>

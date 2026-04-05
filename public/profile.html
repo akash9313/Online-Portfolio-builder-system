@@ -4,158 +4,241 @@
   <meta charset="UTF-8">
   <title>Profile | PortfolioX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="profile.css">
 </head>
 <body>
 
-<!-- Loading -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loader-content">
-    <div class="loader-ring"></div>
-    <p>Loading your profile…</p>
-  </div>
-</div>
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- Toast -->
-<div class="toast" id="toast">
-  <i class="fas fa-check-circle" id="toastIcon"></i>
-  <span id="toastMsg">Profile saved successfully!</span>
-</div>
+  <!-- Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-<!-- Navbar -->
-<header class="navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <i class="fas fa-rocket"></i>
-      Portfolio<span class="x">X</span>
-    </a>
-    <div class="nav-actions">
-      <a href="preview.html" class="nav-btn btn-preview">
-        <i class="fas fa-eye"></i><span>Preview</span>
-      </a>
-      <a href="publish.html" class="nav-btn btn-publish">
-        <i class="fas fa-rocket"></i><span>Publish</span>
-      </a>
-      <button class="nav-btn btn-logout" id="logoutBtn">
-        <i class="fas fa-power-off"></i>
-      </button>
+  <!-- Loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-inner">
+      <div class="loader-icon"><i class="fas fa-user"></i></div>
+      <span class="loader-brand">Portfolio<span class="x">X</span></span>
+      <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+      <p class="loader-text">Loading your profile…</p>
     </div>
   </div>
-</header>
 
-<div class="layout">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h3>Portfolio Builder</h3>
-      <div class="sidebar-progress">
-        <div class="sidebar-progress-fill" id="sidebarProgress"></div>
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle" id="toastIcon"></i>
+    <span id="toastMsg">Saved successfully!</span>
+  </div>
+
+  <!-- Unsaved changes bar -->
+  <div class="unsaved-bar" id="unsavedBar">
+    <div class="ub-dot"></div>
+    <div class="ub-text"><strong>Unsaved changes</strong> — don't forget to save</div>
+    <div class="ub-btns">
+      <button class="ub-discard" id="ubDiscard">Discard</button>
+      <button class="ub-save" id="ubSave"><i class="fas fa-save"></i> Save</button>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+        <span class="logo-text">Portfolio<span class="x">X</span></span>
+      </a>
+      <div class="nav-completion-pill" style="flex:1;justify-content:center;display:flex;">
+        <div class="nav-completion-pill">
+          <span class="ncp-label">Profile</span>
+          <div class="ncp-bar"><div class="ncp-fill" id="navPFill"></div></div>
+          <span class="ncp-percent" id="navPText">0%</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="preview.html" target="_blank" class="nav-btn btn-preview"><i class="fas fa-eye"></i> Preview</a>
+        <a href="publish.html" class="nav-btn btn-publish"><i class="fas fa-rocket"></i> Publish</a>
+        <button class="nav-logout" id="logoutBtn" title="Sign Out"><i class="fas fa-power-off"></i></button>
       </div>
     </div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-      <a href="profile.html"   class="nav-item active"><i class="fas fa-user"></i><span>Profile</span></a>
-      <a href="skills.html"    class="nav-item"><i class="fas fa-brain"></i><span>Skills</span></a>
-      <a href="education.html" class="nav-item"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
-      <a href="projects.html"  class="nav-item"><i class="fas fa-project-diagram"></i><span>Projects</span></a>
-      <a href="templates.html" class="nav-item"><i class="fas fa-palette"></i><span>Templates</span></a>
-      <a href="preview.html"   class="nav-item" target="_blank"><i class="fas fa-eye"></i><span>Preview</span></a>
-      <a href="publish.html"   class="nav-item"><i class="fas fa-globe"></i><span>Publish</span></a>
-      <a href="settings.html"  class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
-    </nav>
-  </aside>
+  </header>
 
-  <!-- Main Content -->
-  <main class="profile-main">
+  <div class="app-layout">
 
-    <div class="page-title">
-      <h2>My Profile</h2>
-      <p>Keep your information up to date to make your portfolio shine.</p>
-    </div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="sp-avatar" id="spAvatar">?</div>
+        <div>
+          <p class="sp-name" id="spName">Loading…</p>
+          <span class="sp-badge"><span class="sp-dot"></span> Active</span>
+        </div>
+      </div>
 
-    <!-- Completion Ring -->
-    <div class="completion-tracker">
-      <div class="completion-ring">
-        <svg width="64" height="64" viewBox="0 0 64 64">
+      <div class="sidebar-ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 80 80">
           <defs>
-            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"   stop-color="#38bdf8"/>
+            <linearGradient id="sidebarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8"/>
               <stop offset="100%" stop-color="#6366f1"/>
             </linearGradient>
           </defs>
-          <circle class="ring-bg"   cx="32" cy="32" r="26"/>
-          <circle class="ring-fill" cx="32" cy="32" r="26" id="ringFill"/>
+          <circle class="ring-track" cx="40" cy="40" r="30"/>
+          <circle class="ring-fill-el" id="sidebarRing" cx="40" cy="40" r="30"
+            stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
         </svg>
-        <div class="ring-label" id="ringLabel">0%</div>
-      </div>
-      <div class="completion-info">
-        <h4>Profile Completion</h4>
-        <p id="completionMsg">Fill in all fields to complete your profile</p>
-      </div>
-      <div class="completion-chips" id="completionChips"></div>
-    </div>
-
-    <!-- Hero Card -->
-    <div class="hero-card">
-      <div class="avatar-wrap">
-        <div class="avatar" id="avatarEl" onclick="document.getElementById('avatarInput').click()">
-          <i class="fas fa-user"></i>
-        </div>
-        <div class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()">
-          <i class="fas fa-camera"></i>
-        </div>
-        <input type="file" id="avatarInput" accept="image/*" style="display:none">
-      </div>
-
-      <div class="hero-info">
-        <h1 id="heroName">Your Name</h1>
-        <div class="hero-role"><i class="fas fa-briefcase"></i><span id="heroRole">Your Role</span></div>
-        <div class="hero-location"><i class="fas fa-map-marker-alt"></i><span id="heroLocation">Location</span></div>
-        <div class="status-badge">
-          <div class="status-dot"></div>
-          Available for opportunities
+        <div class="ring-inner">
+          <span class="ring-pct" id="sidebarPct">0%</span>
+          <span class="ring-sub">done</span>
         </div>
       </div>
 
-      <div class="hero-stats">
-        <div class="h-stat">
-          <div class="h-stat-num" id="statSkills">0</div>
-          <div class="h-stat-label">Skills</div>
-        </div>
-        <div class="h-stat">
-          <div class="h-stat-num" id="statProjects">0</div>
-          <div class="h-stat-label">Projects</div>
-        </div>
-        <div class="h-stat">
-          <div class="h-stat-num" id="statEdu">0</div>
-          <div class="h-stat-label">Education</div>
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">Main</div>
+        <a href="dashboard.html" class="nav-item"><span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span><span class="nav-label">Dashboard</span></a>
+        <a href="profile.html"   class="nav-item active"><span class="nav-icon"><i class="fas fa-user"></i></span><span class="nav-label">Profile</span><span class="nav-active-dot"></span></a>
+        <a href="skills.html"    class="nav-item"><span class="nav-icon"><i class="fas fa-brain"></i></span><span class="nav-label">Skills</span></a>
+        <a href="education.html" class="nav-item"><span class="nav-icon"><i class="fas fa-graduation-cap"></i></span><span class="nav-label">Education</span></a>
+        <a href="projects.html"  class="nav-item"><span class="nav-icon"><i class="fas fa-project-diagram"></i></span><span class="nav-label">Projects</span></a>
+
+        <div class="nav-group-label" style="margin-top:1.2rem;">Publish</div>
+        <a href="templates.html" class="nav-item"><span class="nav-icon"><i class="fas fa-palette"></i></span><span class="nav-label">Templates</span></a>
+        <a href="preview.html"   class="nav-item"><span class="nav-icon"><i class="fas fa-eye"></i></span><span class="nav-label">Preview</span></a>
+        <a href="publish.html"   class="nav-item"><span class="nav-icon"><i class="fas fa-globe"></i></span><span class="nav-label">Publish</span></a>
+        <a href="settings.html"  class="nav-item"><span class="nav-icon"><i class="fas fa-cog"></i></span><span class="nav-label">Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sf-tip">
+          <i class="fas fa-lightbulb"></i>
+          <span>Complete all sections to unlock publishing</span>
         </div>
       </div>
-    </div>
+    </aside>
 
-    <!-- Profile Form -->
-    <form id="profileForm">
+    <!-- Main -->
+    <main class="profile-main">
+
+      <!-- Page Header -->
+      <div class="page-header reveal">
+        <div class="page-header-left">
+          <div class="ph-eyebrow"><span class="ph-eyebrow-dot"></span> Edit Mode</div>
+          <h2>My Profile</h2>
+          <p>Keep your information up to date to make your portfolio shine.</p>
+        </div>
+        <div class="ph-right-stats">
+          <div class="ph-mini-stat" style="color:var(--muted);">
+            <i class="fas fa-brain" style="color:var(--accent-2)"></i>
+            <span id="navSkills">0</span> Skills
+          </div>
+          <div class="ph-mini-stat" style="color:var(--muted);">
+            <i class="fas fa-project-diagram" style="color:var(--pink)"></i>
+            <span id="navProjects">0</span> Projects
+          </div>
+          <div class="ph-mini-stat" style="color:var(--muted);">
+            <i class="fas fa-graduation-cap" style="color:var(--accent-3)"></i>
+            <span id="navEdu">0</span> Edu
+          </div>
+        </div>
+      </div>
+
+      <!-- Completion Tracker -->
+      <div class="completion-tracker reveal reveal-d1">
+        <svg style="width:0;height:0;position:absolute">
+          <defs>
+            <linearGradient id="ctGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="50%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#ec4899"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="ct-ring-wrap">
+          <svg class="ct-ring-svg" viewBox="0 0 72 72">
+            <circle class="ct-track" cx="36" cy="36" r="28"/>
+            <circle class="ct-arc" id="ctArc" cx="36" cy="36" r="28"/>
+          </svg>
+          <div class="ct-label">
+            <span class="ct-pct" id="ctPct">0%</span>
+          </div>
+        </div>
+        <div class="ct-info">
+          <h4>Profile Completion</h4>
+          <p id="ctMsg">Fill in all fields to complete</p>
+        </div>
+        <div class="ct-bar-section">
+          <div class="ct-bar-label"><span>Progress</span><span id="ctBarPct">0 / 7 fields</span></div>
+          <div class="ct-bar"><div class="ct-bar-fill" id="ctBarFill"></div></div>
+        </div>
+        <div class="ct-chips" id="ctChips"></div>
+      </div>
+
+      <!-- Hero Card -->
+      <div class="hero-card reveal reveal-d2">
+        <div class="avatar-section">
+          <div class="avatar-ring" id="avatarRing" onclick="document.getElementById('avatarInput').click()" title="Click to change photo">
+            <div class="avatar-inner" id="avatarEl">?</div>
+          </div>
+          <div class="avatar-edit" onclick="document.getElementById('avatarInput').click()"><i class="fas fa-camera"></i></div>
+          <div class="avatar-online"></div>
+          <input type="file" id="avatarInput" accept="image/*" style="display:none">
+        </div>
+
+        <div class="hero-info">
+          <h1 class="hero-name" id="heroName">Your Name</h1>
+          <div class="hero-meta">
+            <div class="hero-role-badge"><i class="fas fa-briefcase"></i><span id="heroRole">Your Role</span></div>
+            <div class="hero-loc"><i class="fas fa-map-marker-alt"></i><span id="heroLoc">Location</span></div>
+          </div>
+          <div class="hero-tags" id="heroTags"></div>
+          <div class="status-pill"><div class="status-dot"></div> Available for opportunities</div>
+        </div>
+
+        <div class="hero-stats-grid">
+          <div class="hsg-item">
+            <span class="hsg-val" id="hsgSkills">0</span>
+            <span class="hsg-key">Skills</span>
+          </div>
+          <div class="hsg-item">
+            <span class="hsg-val" id="hsgProjects">0</span>
+            <span class="hsg-key">Projects</span>
+          </div>
+          <div class="hsg-item">
+            <span class="hsg-val" id="hsgEdu">0</span>
+            <span class="hsg-key">Education</span>
+          </div>
+        </div>
+      </div>
 
       <!-- Personal Info -->
-      <div class="section-card">
-        <div class="section-title">
-          <div class="icon-box"><i class="fas fa-id-card"></i></div>
-          Personal Information
+      <div class="section-card reveal reveal-d2">
+        <div class="sc-header">
+          <div class="sc-title">
+            <div class="sc-icon"><i class="fas fa-id-card"></i></div>
+            <div>
+              <div class="sc-title-text">Personal Information</div>
+              <div class="sc-title-sub">Your core profile details</div>
+            </div>
+          </div>
+          <span class="sc-badge" id="personalBadge">0 / 5</span>
         </div>
-        <div class="form-grid">
 
+        <div class="form-grid">
           <div class="form-group">
-            <label>Full Name</label>
+            <label><i class="fas fa-user" style="color:var(--accent);font-size:0.68rem"></i> Full Name <span class="req">*</span></label>
             <div class="input-wrap">
               <i class="fas fa-user input-icon"></i>
               <input type="text" id="fullName" placeholder="e.g. Alex Johnson" autocomplete="name">
+              <span class="field-status" id="fs-fullName"></span>
             </div>
           </div>
 
           <div class="form-group">
-            <label>Email Address</label>
+            <label><i class="fas fa-envelope" style="color:var(--accent);font-size:0.68rem"></i> Email Address</label>
             <div class="input-wrap">
               <i class="fas fa-envelope input-icon"></i>
               <input type="email" id="email" disabled placeholder="your@email.com">
@@ -163,108 +246,158 @@
           </div>
 
           <div class="form-group">
-            <label>Phone Number</label>
+            <label><i class="fas fa-phone" style="color:var(--accent);font-size:0.68rem"></i> Phone Number</label>
             <div class="input-wrap">
               <i class="fas fa-phone input-icon"></i>
               <input type="tel" id="phone" placeholder="+1 (555) 000-0000">
+              <span class="field-status" id="fs-phone"></span>
             </div>
           </div>
 
           <div class="form-group">
-            <label>Location</label>
+            <label><i class="fas fa-map-marker-alt" style="color:var(--accent);font-size:0.68rem"></i> Location <span class="req">*</span></label>
             <div class="input-wrap">
               <i class="fas fa-map-marker-alt input-icon"></i>
               <input type="text" id="location" placeholder="City, Country">
+              <span class="field-status" id="fs-location"></span>
             </div>
           </div>
 
           <div class="form-group">
-            <label>Role / Title</label>
+            <label><i class="fas fa-briefcase" style="color:var(--accent);font-size:0.68rem"></i> Role / Title <span class="req">*</span></label>
             <div class="input-wrap">
               <i class="fas fa-briefcase input-icon"></i>
               <input type="text" id="role" placeholder="Full Stack Developer, UX Designer…">
+              <span class="field-status" id="fs-role"></span>
             </div>
           </div>
 
           <div class="form-group">
-            <label>Website / Portfolio URL</label>
+            <label><i class="fas fa-globe" style="color:var(--accent);font-size:0.68rem"></i> Website / Portfolio URL</label>
             <div class="input-wrap">
               <i class="fas fa-globe input-icon"></i>
               <input type="url" id="website" placeholder="https://yourwebsite.com">
+              <span class="field-status" id="fs-website"></span>
             </div>
+            <div class="url-preview" id="websitePreview"><i class="fas fa-external-link-alt"></i><span id="websitePreviewText"></span></div>
           </div>
 
-          <div class="form-group full">
-            <label>About You</label>
+          <div class="form-group fg-full">
+            <label><i class="fas fa-align-left" style="color:var(--accent);font-size:0.68rem"></i> About You <span class="req">*</span></label>
             <div class="input-wrap">
               <i class="fas fa-align-left input-icon top"></i>
-              <textarea id="about" maxlength="500"
-                placeholder="Tell the world about yourself — your experience, passion, and what makes you stand out…"></textarea>
+              <textarea id="about" maxlength="500" placeholder="Tell the world about yourself — your experience, passion, and what makes you stand out…"></textarea>
             </div>
             <div class="char-count" id="charCount">0 / 500</div>
           </div>
-
         </div>
       </div>
 
       <!-- Social Links -->
-      <div class="section-card">
-        <div class="section-title">
-          <div class="icon-box"><i class="fas fa-share-alt"></i></div>
-          Social &amp; Professional Links
+      <div class="section-card reveal reveal-d3">
+        <div class="sc-header">
+          <div class="sc-title">
+            <div class="sc-icon purple"><i class="fas fa-share-alt"></i></div>
+            <div>
+              <div class="sc-title-text">Social &amp; Professional Links</div>
+              <div class="sc-title-sub">Connect your online presence</div>
+            </div>
+          </div>
+          <span class="sc-badge" id="socialBadge">0 / 4</span>
         </div>
-        <div class="form-grid">
 
-          <div class="form-group social-group">
-            <label>GitHub</label>
-            <div class="input-wrap">
+        <div class="social-cards-grid">
+
+          <!-- GitHub -->
+          <div class="social-card">
+            <div class="social-card-header">
+              <div class="sc-social-icon si-github"><i class="fab fa-github"></i></div>
+              <div>
+                <div class="sc-social-name">GitHub</div>
+                <div class="sc-social-hint">Your code portfolio</div>
+              </div>
+            </div>
+            <div class="input-wrap social-wrap">
               <i class="fab fa-github input-icon"></i>
               <input type="url" id="github" placeholder="https://github.com/username">
+              <span class="field-status" id="fs-github"></span>
             </div>
+            <div class="url-preview" id="githubPreview"><i class="fas fa-external-link-alt"></i><span id="githubPreviewText"></span></div>
           </div>
 
-          <div class="form-group social-group">
-            <label>LinkedIn</label>
-            <div class="input-wrap">
+          <!-- LinkedIn -->
+          <div class="social-card">
+            <div class="social-card-header">
+              <div class="sc-social-icon si-linkedin"><i class="fab fa-linkedin"></i></div>
+              <div>
+                <div class="sc-social-name">LinkedIn</div>
+                <div class="sc-social-hint">Professional network</div>
+              </div>
+            </div>
+            <div class="input-wrap social-wrap">
               <i class="fab fa-linkedin input-icon"></i>
               <input type="url" id="linkedin" placeholder="https://linkedin.com/in/username">
+              <span class="field-status" id="fs-linkedin"></span>
             </div>
+            <div class="url-preview" id="linkedinPreview"><i class="fas fa-external-link-alt"></i><span id="linkedinPreviewText"></span></div>
           </div>
 
-          <div class="form-group social-group">
-            <label>Twitter / X</label>
-            <div class="input-wrap">
+          <!-- Twitter -->
+          <div class="social-card">
+            <div class="social-card-header">
+              <div class="sc-social-icon si-twitter"><i class="fab fa-twitter"></i></div>
+              <div>
+                <div class="sc-social-name">Twitter / X</div>
+                <div class="sc-social-hint">Thoughts &amp; updates</div>
+              </div>
+            </div>
+            <div class="input-wrap social-wrap">
               <i class="fab fa-twitter input-icon"></i>
               <input type="url" id="twitter" placeholder="https://twitter.com/username">
+              <span class="field-status" id="fs-twitter"></span>
             </div>
           </div>
 
-          <div class="form-group social-group">
-            <label>Dribbble / Behance</label>
-            <div class="input-wrap">
+          <!-- Dribbble -->
+          <div class="social-card">
+            <div class="social-card-header">
+              <div class="sc-social-icon si-dribbble"><i class="fab fa-dribbble"></i></div>
+              <div>
+                <div class="sc-social-name">Dribbble / Behance</div>
+                <div class="sc-social-hint">Design showcase</div>
+              </div>
+            </div>
+            <div class="input-wrap social-wrap">
               <i class="fab fa-dribbble input-icon"></i>
               <input type="url" id="dribbble" placeholder="https://dribbble.com/username">
+              <span class="field-status" id="fs-dribbble"></span>
             </div>
           </div>
 
         </div>
       </div>
 
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <button type="button" class="btn btn-secondary" id="cancelBtn">
-          <i class="fas fa-times"></i> Discard
-        </button>
-        <button type="submit" class="btn btn-primary" id="saveBtn">
-          <div class="spinner-mini"></div>
-          <span class="btn-text"><i class="fas fa-save"></i>&nbsp; Save Profile</span>
-        </button>
+      <!-- Actions -->
+      <div class="reveal reveal-d4">
+        <div class="form-actions">
+          <div class="fa-left">
+            <i class="fas fa-shield-alt"></i>
+            <span>Changes are saved securely to your account</span>
+          </div>
+          <div class="fa-right">
+            <button type="button" class="btn btn-danger-soft" id="cancelBtn">
+              <i class="fas fa-times"></i> Discard
+            </button>
+            <button type="button" class="btn btn-primary" id="saveBtn">
+              <div class="spinner-mini" id="saveSpinner"></div>
+              <span class="btn-label"><i class="fas fa-save"></i> Save Profile</span>
+            </button>
+          </div>
+        </div>
       </div>
 
-    </form>
-  </main>
-</div>
-
-<script type="module" src="profile.js"></script>
+    </main>
+  </div>
+  <script type="module" src="profile.js"></script>
 </body>
 </html>

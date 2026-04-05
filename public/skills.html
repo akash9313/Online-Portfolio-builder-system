@@ -4,207 +4,307 @@
   <meta charset="UTF-8"/>
   <title>Skills | PortfolioX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="skills.css">
+  <link rel="stylesheet" href="skills.css"/>
 </head>
 <body>
 
-<!-- Loading -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loader-content">
-    <div class="loader-ring"></div>
-    <p>Loading your skills…</p>
-  </div>
-</div>
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- Toast -->
-<div class="toast" id="toast">
-  <i class="fas fa-check-circle" id="toastIcon"></i>
-  <span id="toastMsg"></span>
-</div>
+  <!-- Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-<!-- Delete Confirm Modal -->
-<div class="modal-overlay" id="deleteModal">
-  <div class="modal-box">
-    <h3>Remove Skill?</h3>
-    <p>Are you sure you want to remove <strong id="deleteSkillName"></strong>? This action cannot be undone.</p>
-    <div class="modal-actions">
-      <button class="modal-cancel" id="modalCancel">Cancel</button>
-      <button class="modal-confirm" id="modalConfirm"><i class="fas fa-trash"></i> Remove</button>
+  <!-- Loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-inner">
+      <div class="loader-icon"><i class="fas fa-brain"></i></div>
+      <span class="loader-brand">Portfolio<span class="x">X</span></span>
+      <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+      <p class="loader-text">Loading your skills…</p>
     </div>
   </div>
-</div>
 
-<!-- Navbar -->
-<header class="navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <i class="fas fa-rocket"></i>Portfolio<span class="x">X</span>
-    </a>
-    <div class="nav-actions">
-      <a href="preview.html" class="nav-btn btn-preview"><i class="fas fa-eye"></i><span>Preview</span></a>
-      <a href="publish.html" class="nav-btn btn-publish"><i class="fas fa-rocket"></i><span>Publish</span></a>
-      <button class="nav-btn btn-logout" id="logoutBtn"><i class="fas fa-power-off"></i></button>
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle" id="toastIcon"></i>
+    <span id="toastMsg"></span>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+      <div class="modal-icon"><i class="fas fa-trash-alt"></i></div>
+      <h3>Remove this skill?</h3>
+      <p>You're about to remove <strong id="deleteSkillName"></strong> from your portfolio. This cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="modal-cancel" id="modalCancel">Cancel</button>
+        <button class="modal-confirm" id="modalConfirm"><i class="fas fa-trash"></i> Remove</button>
+      </div>
     </div>
   </div>
-</header>
 
-<div class="layout">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h3>Portfolio Builder</h3>
-      <div class="sidebar-progress"><div class="sidebar-progress-fill" id="sidebarProgress"></div></div>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-      <a href="profile.html"   class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
-      <a href="skills.html"    class="nav-item active"><i class="fas fa-brain"></i><span>Skills</span></a>
-      <a href="education.html" class="nav-item"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
-      <a href="projects.html"  class="nav-item"><i class="fas fa-project-diagram"></i><span>Projects</span></a>
-      <a href="templates.html" class="nav-item"><i class="fas fa-palette"></i><span>Templates</span></a>
-      <a href="preview.html"   class="nav-item" target="_blank"><i class="fas fa-eye"></i><span>Preview</span></a>
-      <a href="publish.html"   class="nav-item"><i class="fas fa-globe"></i><span>Publish</span></a>
-      <a href="settings.html"  class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
-    </nav>
-  </aside>
-
-  <!-- Main -->
-  <main class="skills-main">
-
-    <div class="page-title">
-      <h2>My Skills</h2>
-      <p>Showcase your expertise and proficiency across technologies and tools.</p>
-    </div>
-
-    <!-- Stats bar -->
-    <div class="stats-bar">
-      <div class="stat-pill">
-        <div class="stat-pill-icon blue"><i class="fas fa-layer-group"></i></div>
-        <div class="stat-pill-info">
-          <div class="stat-pill-num" id="statTotal">0</div>
-          <div class="stat-pill-label">Total Skills</div>
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+        <span class="logo-text">Portfolio<span class="x">X</span></span>
+      </a>
+      <div class="nav-center-pill">
+        <div class="nav-completion-pill">
+          <span class="ncp-label">Skills</span>
+          <div class="ncp-bar"><div class="ncp-fill" id="navSkillBar"></div></div>
+          <span class="ncp-count" id="navSkillCount">0</span>
         </div>
       </div>
-      <div class="stat-pill">
-        <div class="stat-pill-icon green"><i class="fas fa-trophy"></i></div>
-        <div class="stat-pill-info">
-          <div class="stat-pill-num" id="statAdvanced">0</div>
-          <div class="stat-pill-label">Advanced</div>
-        </div>
-      </div>
-      <div class="stat-pill">
-        <div class="stat-pill-icon purple"><i class="fas fa-chart-bar"></i></div>
-        <div class="stat-pill-info">
-          <div class="stat-pill-num" id="statIntermediate">0</div>
-          <div class="stat-pill-label">Intermediate</div>
-        </div>
-      </div>
-      <div class="stat-pill">
-        <div class="stat-pill-icon yellow"><i class="fas fa-seedling"></i></div>
-        <div class="stat-pill-info">
-          <div class="stat-pill-num" id="statBeginner">0</div>
-          <div class="stat-pill-label">Beginner</div>
-        </div>
+      <div class="nav-actions">
+        <a href="preview.html" target="_blank" class="nav-btn btn-preview"><i class="fas fa-eye"></i> Preview</a>
+        <a href="publish.html" class="nav-btn btn-publish"><i class="fas fa-rocket"></i> Publish</a>
+        <button class="nav-logout" id="logoutBtn" title="Sign Out"><i class="fas fa-power-off"></i></button>
       </div>
     </div>
+  </header>
 
-    <!-- Add Skill -->
-    <div class="section-card">
-      <div class="section-title">
-        <div class="icon-box"><i class="fas fa-plus"></i></div>
-        Add New Skill
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="sp-avatar" id="spAvatar">?</div>
+        <div>
+          <p class="sp-name" id="spName">Loading…</p>
+          <span class="sp-badge"><span class="sp-dot"></span> Active</span>
+        </div>
       </div>
-      <div class="skill-form">
-        <div class="form-group">
-          <label>Skill Name</label>
-          <div class="input-wrap">
-            <i class="fas fa-code input-icon"></i>
-            <input type="text" id="skillName" list="skillsList"
-              placeholder="e.g. React, Python, Figma…" autocomplete="off">
-            <datalist id="skillsList">
-              <option value="HTML"><option value="CSS"><option value="JavaScript">
-              <option value="TypeScript"><option value="React"><option value="Vue.js">
-              <option value="Angular"><option value="Next.js"><option value="Node.js">
-              <option value="Python"><option value="Java"><option value="Go">
-              <option value="Rust"><option value="Swift"><option value="Kotlin">
-              <option value="MongoDB"><option value="PostgreSQL"><option value="MySQL">
-              <option value="Redis"><option value="Docker"><option value="Kubernetes">
-              <option value="AWS"><option value="Azure"><option value="Git">
-              <option value="Figma"><option value="Photoshop"><option value="Illustrator">
-              <option value="Tailwind CSS"><option value="GraphQL"><option value="REST APIs">
-            </datalist>
+
+      <div class="sidebar-ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 80 80">
+          <defs>
+            <linearGradient id="sbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="40" cy="40" r="30"/>
+          <circle class="ring-fill-el" id="sidebarRing" cx="40" cy="40" r="30" stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+        </svg>
+        <div class="ring-inner">
+          <span class="ring-pct" id="sidebarPct">0</span>
+          <span class="ring-sub">skills</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">Main</div>
+        <a href="dashboard.html" class="nav-item"><span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span><span class="nav-label">Dashboard</span></a>
+        <a href="profile.html"   class="nav-item"><span class="nav-icon"><i class="fas fa-user"></i></span><span class="nav-label">Profile</span></a>
+        <a href="skills.html"    class="nav-item active"><span class="nav-icon"><i class="fas fa-brain"></i></span><span class="nav-label">Skills</span><span class="nav-active-dot"></span></a>
+        <a href="education.html" class="nav-item"><span class="nav-icon"><i class="fas fa-graduation-cap"></i></span><span class="nav-label">Education</span></a>
+        <a href="projects.html"  class="nav-item"><span class="nav-icon"><i class="fas fa-project-diagram"></i></span><span class="nav-label">Projects</span></a>
+
+        <div class="nav-group-label" style="margin-top:1.2rem;">Publish</div>
+        <a href="templates.html" class="nav-item"><span class="nav-icon"><i class="fas fa-palette"></i></span><span class="nav-label">Templates</span></a>
+        <a href="preview.html"   class="nav-item"><span class="nav-icon"><i class="fas fa-eye"></i></span><span class="nav-label">Preview</span></a>
+        <a href="publish.html"   class="nav-item"><span class="nav-icon"><i class="fas fa-globe"></i></span><span class="nav-label">Publish</span></a>
+        <a href="settings.html"  class="nav-item"><span class="nav-icon"><i class="fas fa-cog"></i></span><span class="nav-label">Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sf-tip">
+          <i class="fas fa-lightbulb"></i>
+          <span>Add at least 5 skills for a strong portfolio impression</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="skills-main">
+
+      <!-- Page Header -->
+      <div class="page-header reveal">
+        <div>
+          <div class="ph-eyebrow"><span class="ph-eyebrow-dot"></span> Skills &amp; Expertise</div>
+          <h2>My Skills</h2>
+          <p>Showcase your expertise and proficiency across technologies and tools.</p>
+        </div>
+        <span class="ph-skill-count" id="phSkillCount">0 skills</span>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-row reveal rd1">
+        <div class="stat-card s-blue">
+          <div class="sc-icon"><i class="fas fa-layer-group"></i></div>
+          <div class="sc-body">
+            <span class="sc-val" id="statTotal">0</span>
+            <span class="sc-key">Total Skills</span>
+          </div>
+        </div>
+        <div class="stat-card s-green">
+          <div class="sc-icon"><i class="fas fa-trophy"></i></div>
+          <div class="sc-body">
+            <span class="sc-val" id="statAdv">0</span>
+            <span class="sc-key">Advanced</span>
+          </div>
+        </div>
+        <div class="stat-card s-purple">
+          <div class="sc-icon"><i class="fas fa-chart-bar"></i></div>
+          <div class="sc-body">
+            <span class="sc-val" id="statInt">0</span>
+            <span class="sc-key">Intermediate</span>
+          </div>
+        </div>
+        <div class="stat-card s-yellow">
+          <div class="sc-icon"><i class="fas fa-seedling"></i></div>
+          <div class="sc-body">
+            <span class="sc-val" id="statBeg">0</span>
+            <span class="sc-key">Beginner</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Skill Card -->
+      <div class="add-card reveal rd2">
+        <div class="card-header">
+          <div class="card-icon"><i class="fas fa-plus-circle"></i></div>
+          <div class="card-title-wrap">
+            <div class="card-title">Add New Skill</div>
+            <div class="card-sub">Type a skill name or pick from suggestions below</div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Proficiency Level</label>
-          <div class="custom-select" id="levelSelect">
-            <div class="selected" id="selectedLevel">
-              <span class="level-dot" id="selectedDot"></span>
-              <span class="selected-text" id="selectedText">Select level</span>
-              <i class="fas fa-chevron-down chevron"></i>
+        <!-- Quick suggestions -->
+        <div class="suggest-row" id="suggestRow">
+          <span class="suggest-chip" data-name="React">⚛️ React</span>
+          <span class="suggest-chip" data-name="TypeScript">🔷 TypeScript</span>
+          <span class="suggest-chip" data-name="Python">🐍 Python</span>
+          <span class="suggest-chip" data-name="Node.js">🟢 Node.js</span>
+          <span class="suggest-chip" data-name="Figma">🎨 Figma</span>
+          <span class="suggest-chip" data-name="Docker">🐳 Docker</span>
+          <span class="suggest-chip" data-name="AWS">☁️ AWS</span>
+          <span class="suggest-chip" data-name="Next.js">▲ Next.js</span>
+          <span class="suggest-chip" data-name="PostgreSQL">🐘 PostgreSQL</span>
+          <span class="suggest-chip" data-name="GraphQL">◈ GraphQL</span>
+          <span class="suggest-chip" data-name="Tailwind CSS">🌊 Tailwind</span>
+          <span class="suggest-chip" data-name="Go">🔵 Go</span>
+        </div>
+
+        <div class="skill-form">
+          <div class="form-group">
+            <label>Skill Name</label>
+            <div class="input-wrap">
+              <i class="fas fa-code input-icon"></i>
+              <input type="text" id="skillName" list="skillsList" placeholder="e.g. React, Python, Figma…" autocomplete="off">
+              <datalist id="skillsList">
+                <option value="HTML"><option value="CSS"><option value="JavaScript">
+                <option value="TypeScript"><option value="React"><option value="Vue.js">
+                <option value="Angular"><option value="Next.js"><option value="Node.js">
+                <option value="Python"><option value="Java"><option value="Go">
+                <option value="Rust"><option value="Swift"><option value="Kotlin">
+                <option value="MongoDB"><option value="PostgreSQL"><option value="MySQL">
+                <option value="Redis"><option value="Docker"><option value="Kubernetes">
+                <option value="AWS"><option value="Azure"><option value="Git">
+                <option value="Figma"><option value="Photoshop"><option value="Tailwind CSS">
+                <option value="GraphQL"><option value="REST APIs"><option value="Next.js">
+              </datalist>
             </div>
-            <div class="options">
-              <div class="option" data-level="Beginner">
-                <span class="option-dot dot-beginner"></span>Beginner
+          </div>
+
+          <div class="form-group">
+            <label>Proficiency Level</label>
+            <div class="custom-select" id="levelSelect">
+              <div class="cs-selected" id="csSelected">
+                <div class="cs-selected-inner">
+                  <span class="level-dot" id="selectedDot"></span>
+                  <span id="selectedText" style="color:var(--muted)">Select level</span>
+                </div>
+                <i class="fas fa-chevron-down cs-chevron"></i>
               </div>
-              <div class="option" data-level="Intermediate">
-                <span class="option-dot dot-intermediate"></span>Intermediate
-              </div>
-              <div class="option" data-level="Advanced">
-                <span class="option-dot dot-advanced"></span>Advanced
+              <div class="cs-options" id="csOptions">
+                <div class="cs-option" data-level="Beginner">
+                  <span class="level-dot dot-beg"></span>
+                  <div class="cs-opt-info">
+                    <div class="cs-opt-name">Beginner</div>
+                    <div class="cs-opt-desc">Just getting started</div>
+                  </div>
+                </div>
+                <div class="cs-option" data-level="Intermediate">
+                  <span class="level-dot dot-int"></span>
+                  <div class="cs-opt-info">
+                    <div class="cs-opt-name">Intermediate</div>
+                    <div class="cs-opt-desc">Working knowledge</div>
+                  </div>
+                </div>
+                <div class="cs-option" data-level="Advanced">
+                  <span class="level-dot dot-adv"></span>
+                  <div class="cs-opt-info">
+                    <div class="cs-opt-name">Advanced</div>
+                    <div class="cs-opt-desc">Expert-level proficiency</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button class="btn-add" id="addSkillBtn">
+              <i class="fas fa-plus"></i> Add Skill
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills List Card -->
+      <div class="list-card reveal rd3">
+        <div class="card-header">
+          <div class="card-icon purple"><i class="fas fa-brain"></i></div>
+          <div class="card-title-wrap">
+            <div class="card-title">Your Skills</div>
+            <div class="card-sub" id="listSubTitle">All your added skills</div>
+          </div>
+          <span style="margin-left:auto;font-size:0.78rem;font-weight:600;color:var(--muted);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);padding:4px 12px;border-radius:100px;" id="skillCountBadge">0 skills</span>
         </div>
 
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <button type="button" class="btn-add" id="addSkillBtn">
-            <i class="fas fa-plus"></i> Add Skill
+        <!-- Toolbar -->
+        <div class="list-toolbar">
+          <div class="search-wrap">
+            <i class="fas fa-search input-icon"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search skills…">
+          </div>
+          <div class="filter-chips">
+            <button class="filter-chip all active" data-filter="all">All</button>
+            <button class="filter-chip beg"        data-filter="Beginner">Beginner</button>
+            <button class="filter-chip int"        data-filter="Intermediate">Intermediate</button>
+            <button class="filter-chip adv"        data-filter="Advanced">Advanced</button>
+          </div>
+          <button class="sort-btn" id="sortBtn" title="Toggle sort order">
+            <i class="fas fa-sort-alpha-down" id="sortIcon"></i>
+            <span id="sortLabel">A–Z</span>
           </button>
+          <div class="view-toggle">
+            <button class="vt-btn active" id="gridViewBtn" title="Grid view"><i class="fas fa-th-large"></i></button>
+            <button class="vt-btn"        id="listViewBtn" title="List view"><i class="fas fa-list"></i></button>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Skills List -->
-    <div class="section-card">
-      <div class="section-title">
-        <div class="icon-box"><i class="fas fa-brain"></i></div>
-        <span>Your Skills</span>
-        <span id="skillCountBadge" style="margin-left:auto;font-size:0.78rem;font-weight:600;color:var(--text-muted);background:rgba(255,255,255,0.06);padding:4px 12px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);">0 skills</span>
-      </div>
-
-      <!-- Toolbar -->
-      <div class="list-toolbar">
-        <div class="search-wrap">
-          <i class="fas fa-search input-icon"></i>
-          <input type="text" class="search-input" id="searchInput" placeholder="Search skills…">
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+          <div class="empty-icon"><i class="fas fa-brain"></i></div>
+          <h3 id="emptyTitle">No skills added yet</h3>
+          <p id="emptyMsg">Add your first skill using the form above to get started.</p>
         </div>
-        <div class="filter-chips">
-          <button class="filter-chip all active" data-filter="all">All</button>
-          <button class="filter-chip beg" data-filter="Beginner">Beginner</button>
-          <button class="filter-chip int" data-filter="Intermediate">Intermediate</button>
-          <button class="filter-chip adv" data-filter="Advanced">Advanced</button>
-        </div>
+
+        <!-- Grid -->
+        <div class="skills-grid" id="skillsGrid"></div>
       </div>
 
-      <!-- Empty state -->
-      <div class="empty-state" id="emptyState">
-        <div class="empty-icon"><i class="fas fa-brain"></i></div>
-        <h3>No skills added yet</h3>
-        <p>Add your first skill using the form above to get started.</p>
-      </div>
-
-      <!-- Grid -->
-      <div class="skills-grid" id="skillsGrid"></div>
-    </div>
-
-  </main>
-</div>
-
-<script type="module" src="skills.js"></script>
+    </main>
+  </div>
+  <script type = "module" src="skills.js"></script>
 </body>
 </html>

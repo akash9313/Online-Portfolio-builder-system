@@ -2,492 +2,757 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Modern Portfolio</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Modern Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: #f1f5f9;
-            color: #1e293b;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Glassmorphism background elements */
-        .bg-shape {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-        }
+    :root {
+      --ink:      #0d0d0d;
+      --paper:    #f5f2ed;
+      --cream:    #ece9e2;
+      --accent:   #c84b31;
+      --accent2:  #3a6b8a;
+      --muted:    #6b6560;
+      --rule:     #d5d0c8;
+      --card-bg:  #ffffff;
+    }
 
-        .shape-1 {
-            width: 400px;
-            height: 400px;
-            background: rgba(99, 102, 241, 0.3);
-            top: -100px;
-            left: -100px;
-        }
+    html { scroll-behavior: smooth; }
 
-        .shape-2 {
-            width: 500px;
-            height: 500px;
-            background: rgba(236, 72, 153, 0.2);
-            bottom: -150px;
-            right: -100px;
-        }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
 
-        [contenteditable="true"] {
-            transition: all 0.2s ease;
-            border-radius: 6px;
-            border: 1px solid transparent;
-        }
+    /* ─── EDITABLE HINTS ───────────────────────────────────── */
+    [contenteditable="true"]:hover {
+      outline: 1.5px dashed var(--accent);
+      border-radius: 3px;
+      cursor: text;
+    }
+    [contenteditable="true"]:focus {
+      outline: 2px solid var(--accent);
+      background: rgba(200, 75, 49, 0.05);
+      border-radius: 3px;
+      padding: 1px 4px;
+    }
 
-        [contenteditable="true"]:hover {
-            cursor: text;
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px dashed rgba(99, 102, 241, 0.4);
-        }
+    /* ─── TOP BAR ──────────────────────────────────────────── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--paper);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 56px;
+    }
+    .topbar-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.01em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .topbar-nav {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .topbar-nav a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .topbar-nav a:hover { color: var(--accent); }
 
-        [contenteditable="true"]:focus {
-            outline: none;
-            background: #ffffff;
-            border: 1px solid #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
+    /* ─── HERO ─────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      padding-top: 56px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+    .hero-left {
+      background: var(--ink);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 64px 56px;
+      position: relative;
+    }
+    .hero-left::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 28px,
+        rgba(255,255,255,0.02) 28px,
+        rgba(255,255,255,0.02) 29px
+      );
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    #fullName {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.4rem);
+      line-height: 1.08;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+    #role {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.02em;
+      margin-bottom: 40px;
+    }
+    .hero-cta-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 2px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 1.5px solid var(--accent);
+    }
+    .btn-primary:hover { background: #a83826; border-color: #a83826; }
+    .btn-outline {
+      background: transparent;
+      color: rgba(255,255,255,0.75);
+      border: 1.5px solid rgba(255,255,255,0.25);
+    }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.7);
+      color: #fff;
+    }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 24px;
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            margin-bottom: 40px;
-        }
+    .hero-right {
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 64px 56px;
+      gap: 40px;
+    }
+    .hero-stat {
+      border-top: 1px solid var(--rule);
+      padding-top: 20px;
+    }
+    .hero-stat-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .hero-stat-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    #location {
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #location::before {
+      content: '◎';
+      color: var(--accent2);
+      font-size: 1rem;
+    }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
+    /* ─── MAIN CONTENT ─────────────────────────────────────── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
 
-        /* Header / Hero */
-        header {
-            text-align: center;
-            padding: 60px 40px;
-        }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    .section-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: var(--ink);
+      flex: 1;
+    }
+    .section-rule {
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+    section { margin-bottom: 100px; }
 
-        #fullName {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin: 0 0 10px 0;
-            background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-        }
+    /* ─── ABOUT ────────────────────────────────────────────── */
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .about-pull {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.55rem;
+      font-style: italic;
+      line-height: 1.45;
+      color: var(--ink);
+      border-left: 3px solid var(--accent);
+      padding-left: 24px;
+    }
+    #about {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.85;
+    }
 
-        #role {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #64748b;
-            margin: 0 0 10px 0;
-        }
+    /* ─── SKILLS ───────────────────────────────────────────── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0;
+      border: 1px solid var(--rule);
+    }
+    .skill-tag {
+      padding: 20px 24px;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--ink);
+      transition: background 0.2s, color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-tag::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.25s ease;
+    }
+    .skill-tag:hover { background: var(--cream); }
+    .skill-tag:hover::before { transform: scaleY(1); }
 
-        #location {
-            font-size: 1rem;
-            color: #94a3b8;
-            display: inline-block;
-        }
+    /* ─── PROJECTS ─────────────────────────────────────────── */
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--rule);
+    }
+    .project-card {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 32px;
+      align-items: start;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--rule);
+      transition: background 0.2s;
+    }
+    .project-card:hover { background: var(--cream); padding-left: 16px; padding-right: 16px; margin: 0 -16px; }
+    .project-index {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      color: var(--rule);
+      line-height: 1;
+      user-select: none;
+    }
+    .project-body {}
+    .project-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .project-desc {
+      font-size: 0.93rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .project-tech {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tech-chip {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      background: rgba(58, 107, 138, 0.08);
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+    .project-arrow {
+      align-self: center;
+      font-size: 1.4rem;
+      color: var(--rule);
+      transition: color 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+    .project-card:hover .project-arrow {
+      color: var(--accent);
+      transform: translate(4px, -4px);
+    }
 
-        .contact-links {
-            margin-top: 25px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
+    /* ─── EDUCATION ────────────────────────────────────────── */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+    .edu-card {
+      background: var(--card-bg);
+      padding: 36px 40px;
+      position: relative;
+    }
+    .edu-card::before {
+      content: '✦';
+      position: absolute;
+      top: 36px; right: 40px;
+      font-size: 0.75rem;
+      color: var(--accent);
+      opacity: 0.5;
+    }
+    .edu-year {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .edu-degree {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .edu-institute {
+      font-size: 0.9rem;
+      color: var(--accent2);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .edu-grade {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
 
-        .contact-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
-            color: #4f46e5;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
+    /* ─── FOOTER ───────────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 40px 48px;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+    }
+    footer span { color: var(--accent); }
 
-        .contact-links a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            background: #ffffff;
-        }
+    /* ─── LOADING OVERLAY ──────────────────────────────────── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--paper);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      transition: opacity 0.5s ease;
+    }
+    .loader-ring {
+      width: 48px; height: 48px;
+      border: 3px solid var(--rule);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    #loader.hide { opacity: 0; pointer-events: none; }
 
-        h2.section-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-top: 0;
-            margin-bottom: 25px;
-            position: relative;
-            display: inline-block;
-        }
-
-        h2.section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 40px;
-            height: 4px;
-            background: #6366f1;
-            border-radius: 2px;
-        }
-
-        #about {
-            font-size: 1.1rem;
-            color: #475569;
-        }
-
-        .skills-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .skill-badge {
-            background: white;
-            color: #4f46e5;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        .project-card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0, 0, 0, 0.02);
-        }
-
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .project-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-            color: #0f172a;
-        }
-
-        .project-desc {
-            color: #64748b;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
-
-        .project-tech {
-            font-size: 0.85rem;
-            color: #6366f1;
-            font-weight: 500;
-            margin-bottom: 15px;
-            padding: 6px 12px;
-            background: #e0e7ff;
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        .project-link {
-            display: block;
-            color: #ec4899;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .project-link:hover {
-            text-decoration: underline;
-        }
-
-        .edu-item {
-            position: relative;
-            padding-left: 30px;
-            margin-bottom: 30px;
-        }
-
-        .edu-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 5px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #6366f1;
-        }
-
-        .edu-item::after {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 25px;
-            width: 2px;
-            height: calc(100% + 5px);
-            background: #e2e8f0;
-        }
-
-        .edu-item:last-child::after {
-            display: none;
-        }
-
-        .edu-degree {
-            margin: 0 0 5px 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .edu-institute {
-            margin: 0 0 5px 0;
-            color: #475569;
-            font-weight: 500;
-        }
-
-        .edu-meta {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin: 0;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        @media (max-width: 768px) {
-            #fullName {
-                font-size: 2.5rem;
-            }
-
-            .glass-panel {
-                padding: 25px;
-            }
-        }
-    </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    /* ─── RESPONSIVE ───────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-left { min-height: 65vh; }
+      .about-layout { grid-template-columns: 1fr; gap: 32px; }
+      .edu-grid { grid-template-columns: 1fr; }
+      .project-card { grid-template-columns: 48px 1fr auto; gap: 20px; }
+      main { padding: 60px 24px; }
+      .topbar { padding: 0 24px; }
+    }
+    @media (max-width: 600px) {
+      .topbar-nav { display: none; }
+      #fullName { font-size: 2.4rem; }
+      .hero-left { padding: 48px 28px; }
+      .hero-right { padding: 40px 28px; }
+    }
+  </style>
 </head>
 
 <body>
 
-    <div class="bg-shape shape-1"></div>
-    <div class="bg-shape shape-2"></div>
+  <!-- Loading Overlay -->
+  <div id="loader">
+    <div class="loader-ring"></div>
+    <p class="loader-label">Loading Portfolio…</p>
+  </div>
 
-    <div class="container">
-        <header class="glass-panel">
-            <h1 id="fullName" contenteditable="true" data-collection="users" data-field="fullName">...</h1>
-            <p id="role" contenteditable="true" data-collection="users" data-field="role">...</p>
-            <p id="location" contenteditable="true" data-collection="users" data-field="location"></p>
+  <!-- Top Navigation -->
+  <nav class="topbar">
+    <a class="topbar-logo" href="#">Portfolio</a>
+    <ul class="topbar-nav">
+      <li><a href="#about-section">About</a></li>
+      <li><a href="#skills-section">Skills</a></li>
+      <li><a href="#projects-section">Work</a></li>
+      <li><a href="#education-section">Education</a></li>
+    </ul>
+  </nav>
 
-            <div class="contact-links">
-                <a id="github" target="_blank" contenteditable="true" data-collection="users"
-                    data-field="github">GitHub</a>
-                <a id="linkedin" target="_blank" contenteditable="true" data-collection="users"
-                    data-field="linkedin">LinkedIn</a>
-            </div>
-        </header>
-
-        <section class="glass-panel">
-            <h2 class="section-title">About Me</h2>
-            <p id="about" contenteditable="true" data-collection="users" data-field="about"></p>
-        </section>
-
-        <section class="glass-panel">
-            <h2 class="section-title">Skills</h2>
-            <div class="skills-grid" id="skills"></div>
-        </section>
-
-        <section class="glass-panel">
-            <h2 class="section-title">Projects</h2>
-            <div class="projects-grid" id="projects"></div>
-        </section>
-
-        <section class="glass-panel">
-            <h2 class="section-title">Education</h2>
-            <div id="education"></div>
-        </section>
-
-        <footer>
-            <p>© 2026 PortfolioX • Modern Edition</p>
-        </footer>
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Portfolio · 2026</p>
+      <h1 id="fullName" contenteditable="true" data-collection="users" data-field="fullName">Loading…</h1>
+      <p id="role" contenteditable="true" data-collection="users" data-field="role">Role</p>
+      <div class="hero-cta-row">
+        <a id="github" class="btn btn-primary" target="_blank"
+           contenteditable="true" data-collection="users" data-field="github">GitHub ↗</a>
+        <a id="linkedin" class="btn btn-outline" target="_blank"
+           contenteditable="true" data-collection="users" data-field="linkedin">LinkedIn ↗</a>
+      </div>
     </div>
-
-    <!-- ================= FIREBASE DATA FETCH & SYNC ================= -->
-    <script type="module">
-        import { initializeApp } from
-            "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from
-            "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import {
-            getFirestore,
-            doc,
-            getDoc,
-            collection,
-            getDocs,
-            updateDoc
-        } from
-            "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
-            authDomain: "portfoliox-2e787.firebaseapp.com",
-            projectId: "portfoliox-2e787"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        const fullName = document.getElementById("fullName");
-        const role = document.getElementById("role");
-        const about = document.getElementById("about");
-        const locationEl = document.getElementById("location");
-        const github = document.getElementById("github");
-        const linkedin = document.getElementById("linkedin");
-
-        const skillsEl = document.getElementById("skills");
-        const projectsEl = document.getElementById("projects");
-        const educationEl = document.getElementById("education");
-
-        let currentUser = null;
-
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) return;
-            currentUser = user;
-
-            /* PROFILE */
-            const userRef = doc(db, "users", user.uid);
-            const snap = await getDoc(userRef);
-            const data = snap.data();
-
-            fullName.textContent = data.fullName || "Your Name";
-            role.textContent = data.role || "Your Role";
-            about.textContent = data.about || "Your Bio";
-            locationEl.textContent = data.location || "Location";
-            if (data.github) github.href = data.github;
-            if (data.linkedin) linkedin.href = data.linkedin;
-
-            /* SKILLS */
-            const skillsSnap = await getDocs(collection(db, "users", user.uid, "skills"));
-            skillsSnap.forEach(docSnap => {
-                const s = docSnap.data();
-                skillsEl.innerHTML += `<div class="skill-badge" contenteditable="true" data-collection="skills" data-docid="${docSnap.id}" data-field="name">${s.name}</div>`;
-            });
-
-            /* PROJECTS */
-            const projectSnap = await getDocs(collection(db, "users", user.uid, "projects"));
-            projectSnap.forEach(docSnap => {
-                const p = docSnap.data();
-                projectsEl.innerHTML += `
-      <div class="project-card">
-        <h3 class="project-title" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="title">${p.title}</h3>
-        <p class="project-desc" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="description">${p.description}</p>
-        <div class="project-tech" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="tech">${p.tech}</div>
-        ${p.link ? `<a href="${p.link}" target="_blank" class="project-link" contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="link">View Live Project →</a>` : ""}
+    <div class="hero-right">
+      <div class="hero-stat">
+        <div class="hero-stat-number" id="projects-count">—</div>
+        <div class="hero-stat-label">Featured Projects</div>
       </div>
-    `;
-            });
-
-            /* EDUCATION */
-            const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
-            eduSnap.forEach(docSnap => {
-                const e = docSnap.data();
-                const degree = e.degree || e.name || e.university?.degree || e.school?.name || "Degree";
-                const institute = e.institute || e.university?.name || e.school?.board || "Institution";
-                const year = e.year || e.university?.year || e.school?.year || "Year";
-                const grade = e.grade || e.university?.grade || e.school?.grade || "";
-                educationEl.innerHTML += `
-      <div class="edu-item">
-        <h3 class="edu-degree" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="degree">${degree}</h3>
-        <p class="edu-institute" contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="institute">${institute}</p>
-        <p class="edu-meta"><span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="year">${year}</span> ${grade ? `| <span contenteditable="true" data-collection="education" data-docid="${docSnap.id}" data-field="grade">${grade}</span>` : ""}</p>
+      <div class="hero-stat">
+        <div class="hero-stat-number" id="skills-count">—</div>
+        <div class="hero-stat-label">Skills &amp; Tools</div>
       </div>
-    `;
-            });
+      <div class="hero-stat">
+        <p id="location" contenteditable="true" data-collection="users" data-field="location">Location</p>
+      </div>
+    </div>
+  </header>
 
-            /* READ-ONLY MODE CHECK */
-            const urlParams = new URLSearchParams(window.location.search);
-            const isReadOnly = urlParams.get('mode') === 'readonly';
-            if (isReadOnly) {
-                const editableElements = document.querySelectorAll('[contenteditable="true"]');
-                editableElements.forEach(el => el.removeAttribute('contenteditable'));
-            } else {
-                document.querySelectorAll('a[contenteditable="true"]').forEach(el => {
-                    el.addEventListener('click', (e) => e.preventDefault());
-                });
-            }
+  <!-- Main Content -->
+  <main>
+
+    <!-- About -->
+    <section id="about-section">
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2 class="section-title">About Me</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="about-layout">
+        <p class="about-pull" id="about-pull">Crafting digital experiences with purpose and precision.</p>
+        <p id="about" contenteditable="true" data-collection="users" data-field="about">Bio loading…</p>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills-section">
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2 class="section-title">My Toolkit</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="skills-grid" id="skills"></div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects-section">
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2 class="section-title">Featured Work</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="projects-list" id="projects"></div>
+    </section>
+
+    <!-- Education -->
+    <section id="education-section">
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2 class="section-title">Education Journey</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="edu-grid" id="education"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2026 &nbsp;·&nbsp; Crafted with <span>♥</span> using <span>PortfolioX</span></p>
+  </footer>
+
+  <!-- ═══════════════ FIREBASE ═══════════════ -->
+  <script type="module">
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from
+      "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import {
+      getFirestore, doc, getDoc,
+      collection, getDocs, updateDoc
+    } from
+      "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    /* ── Firebase Config ─────────────────────────────────── */
+    const firebaseConfig = {
+      apiKey:      "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+      authDomain:  "portfoliox-2e787.firebaseapp.com",
+      projectId:   "portfoliox-2e787"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    const loader        = document.getElementById("loader");
+    const fullNameEl    = document.getElementById("fullName");
+    const roleEl        = document.getElementById("role");
+    const aboutEl       = document.getElementById("about");
+    const aboutPullEl   = document.getElementById("about-pull");
+    const locationEl    = document.getElementById("location");
+    const githubEl      = document.getElementById("github");
+    const linkedinEl    = document.getElementById("linkedin");
+    const skillsEl      = document.getElementById("skills");
+    const projectsEl    = document.getElementById("projects");
+    const educationEl   = document.getElementById("education");
+    const projCount     = document.getElementById("projects-count");
+    const skillCount    = document.getElementById("skills-count");
+
+    let currentUser = null;
+
+    /* ── Auth & Data Load ────────────────────────────────── */
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { loader.classList.add("hide"); return; }
+      currentUser = user;
+
+      /* — Profile — */
+      const snap = await getDoc(doc(db, "users", user.uid));
+      const data = snap.data() || {};
+
+      fullNameEl.textContent = data.fullName  || "Your Name";
+      roleEl.textContent     = data.role      || "Your Role";
+      aboutEl.textContent    = data.about     || "Tell your story here.";
+      locationEl.textContent = data.location  || "Your Location";
+
+      /* Dynamic pull‑quote from first sentence of bio */
+      if (data.about) {
+        const firstSentence = data.about.split(/[.!?]/)[0].trim();
+        aboutPullEl.textContent = firstSentence ? firstSentence + "." : aboutPullEl.textContent;
+      }
+
+      if (data.github)   githubEl.href   = data.github;
+      if (data.linkedin) linkedinEl.href = data.linkedin;
+
+      /* — Skills — */
+      const skillsSnap = await getDocs(collection(db, "users", user.uid, "skills"));
+      let sc = 0;
+      skillsSnap.forEach(docSnap => {
+        const s = docSnap.data();
+        sc++;
+        skillsEl.innerHTML += `
+          <div class="skill-tag"
+               contenteditable="true"
+               data-collection="skills"
+               data-docid="${docSnap.id}"
+               data-field="name">${s.name}</div>`;
+      });
+      skillCount.textContent = sc;
+
+      /* — Projects — */
+      const projSnap = await getDocs(collection(db, "users", user.uid, "projects"));
+      let pc = 0;
+      projSnap.forEach(docSnap => {
+        const p = docSnap.data();
+        pc++;
+        const techChips = (p.tech || "")
+          .split(",")
+          .map(t => t.trim())
+          .filter(Boolean)
+          .map(t => `<span class="tech-chip">${t}</span>`)
+          .join("");
+
+        projectsEl.innerHTML += `
+          <div class="project-card">
+            <div class="project-index">${String(pc).padStart(2, "0")}</div>
+            <div class="project-body">
+              <h3 class="project-title"
+                  contenteditable="true"
+                  data-collection="projects"
+                  data-docid="${docSnap.id}"
+                  data-field="title">${p.title || "Untitled Project"}</h3>
+              <p class="project-desc"
+                 contenteditable="true"
+                 data-collection="projects"
+                 data-docid="${docSnap.id}"
+                 data-field="description">${p.description || ""}</p>
+              <div class="project-tech" data-raw="${p.tech || ""}">${techChips || `<span contenteditable="true" data-collection="projects" data-docid="${docSnap.id}" data-field="tech">${p.tech || ""}</span>`}</div>
+            </div>
+            ${p.link
+              ? `<a href="${p.link}" target="_blank" class="project-arrow"
+                    contenteditable="true"
+                    data-collection="projects"
+                    data-docid="${docSnap.id}"
+                    data-field="link">↗</a>`
+              : `<span class="project-arrow" style="opacity:0.2">↗</span>`}
+          </div>`;
+      });
+      projCount.textContent = pc;
+
+      /* — Education — */
+      const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
+      eduSnap.forEach(docSnap => {
+        const e = docSnap.data();
+        const degree    = e.degree    || e.name || e.university?.degree || "Degree";
+        const institute = e.institute || e.university?.name || e.school?.board || "Institution";
+        const year      = e.year      || e.university?.year || e.school?.year  || "Year";
+        const grade     = e.grade     || e.university?.grade || e.school?.grade || "";
+
+        educationEl.innerHTML += `
+          <div class="edu-card">
+            <p class="edu-year"
+               contenteditable="true"
+               data-collection="education"
+               data-docid="${docSnap.id}"
+               data-field="year">${year}</p>
+            <h3 class="edu-degree"
+                contenteditable="true"
+                data-collection="education"
+                data-docid="${docSnap.id}"
+                data-field="degree">${degree}</h3>
+            <p class="edu-institute"
+               contenteditable="true"
+               data-collection="education"
+               data-docid="${docSnap.id}"
+               data-field="institute">${institute}</p>
+            <p class="edu-grade"
+               contenteditable="true"
+               data-collection="education"
+               data-docid="${docSnap.id}"
+               data-field="grade">${grade}</p>
+          </div>`;
+      });
+
+      /* — Read-only mode — */
+      const isReadOnly = new URLSearchParams(window.location.search).get("mode") === "readonly";
+      if (isReadOnly) {
+        document.querySelectorAll("[contenteditable]").forEach(el => el.removeAttribute("contenteditable"));
+      } else {
+        /* Prevent link navigation in edit mode */
+        document.querySelectorAll("a[contenteditable='true']").forEach(el => {
+          el.addEventListener("click", e => e.preventDefault());
         });
+      }
 
-        /* IN-PLACE EDITING (SAVE ON BLUR) */
-        document.addEventListener("blur", async (e) => {
-            if (e.target.hasAttribute("contenteditable") && currentUser) {
-                const el = e.target;
-                // Don't save empty tags easily to DB unless meant to be empty
-                const collectionName = el.getAttribute("data-collection");
-                const docId = el.getAttribute("data-docid") || currentUser.uid;
-                const field = el.getAttribute("data-field");
-                const newValue = el.innerText.trim();
+      /* Hide loader */
+      loader.classList.add("hide");
+      setTimeout(() => loader.remove(), 600);
+    });
 
-                if (collectionName && field) {
-                    try {
-                        let docRef;
-                        if (collectionName === "users") {
-                            docRef = doc(db, "users", docId);
-                        } else {
-                            docRef = doc(db, "users", currentUser.uid, collectionName, docId);
-                        }
+    /* ── In-place Edit → Save on Blur ───────────────────── */
+    document.addEventListener("blur", async (e) => {
+      if (!e.target.hasAttribute("contenteditable") || !currentUser) return;
 
-                        await updateDoc(docRef, { [field]: newValue });
-                        console.log(`Updated ${field} in ${collectionName}`);
-                    } catch (err) {
-                        console.error("Error updating document:", err);
-                    }
-                }
-            }
-        }, true);
+      const el             = e.target;
+      const collectionName = el.getAttribute("data-collection");
+      const docId          = el.getAttribute("data-docid") || currentUser.uid;
+      const field          = el.getAttribute("data-field");
+      const newValue       = el.innerText.trim();
 
-    </script>
+      if (!collectionName || !field) return;
+
+      try {
+        const docRef = collectionName === "users"
+          ? doc(db, "users", docId)
+          : doc(db, "users", currentUser.uid, collectionName, docId);
+
+        await updateDoc(docRef, { [field]: newValue });
+        console.log(`✔ Saved "${field}" → "${newValue}"`);
+      } catch (err) {
+        console.error("Save failed:", err);
+      }
+    }, true);
+  </script>
 
 </body>
-
 </html>
