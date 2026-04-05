@@ -10,33 +10,19 @@
 </head>
 <body>
 
-<!-- Toast -->
-<div class="toast" id="toast">
-  <i class="fas fa-check-circle"></i>
-  <span id="toastMsg">Copied!</span>
-</div>
+<div class="toast" id="toast"><i class="fas fa-check-circle" id="toastIcon"></i><span id="toastMsg"></span></div>
 
-<!-- Navbar -->
 <header class="navbar">
   <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <i class="fas fa-rocket"></i>
-      Portfolio<span class="x">X</span>
-    </a>
+    <a href="dashboard.html" class="logo"><i class="fas fa-rocket"></i>Portfolio<span class="x">X</span></a>
     <div class="nav-actions">
-      <a href="preview.html" class="nav-btn btn-preview">
-        <i class="fas fa-eye"></i><span>Preview</span>
-      </a>
-      <button class="nav-btn btn-logout" id="logoutBtn">
-        <i class="fas fa-power-off"></i>
-      </button>
+      <a href="preview.html" class="nav-btn btn-preview"><i class="fas fa-eye"></i><span>Preview</span></a>
+      <button class="nav-btn btn-logout" id="logoutBtn"><i class="fas fa-power-off"></i></button>
     </div>
   </div>
 </header>
 
 <div class="layout">
-
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-header"><h3>Portfolio Builder</h3></div>
     <nav class="sidebar-nav">
@@ -52,38 +38,25 @@
     </nav>
   </aside>
 
-  <!-- Main -->
   <main class="publish-main">
-
     <div class="page-header">
       <h2>Publish Portfolio</h2>
       <p>Review everything and make your portfolio live for the world to see.</p>
     </div>
 
     <div class="publish-grid">
-
-      <!-- LEFT COLUMN -->
       <div class="publish-left">
 
-        <!-- Readiness Checklist -->
+        <!-- Checklist -->
         <div class="section-card">
-          <div class="section-title">
-            <div class="icon-box green"><i class="fas fa-clipboard-check"></i></div>
-            Readiness Checklist
-          </div>
-          <div class="checklist" id="checklist">
-            <!-- Injected by JS -->
-          </div>
+          <div class="section-title"><div class="icon-box green"><i class="fas fa-clipboard-check"></i></div>Readiness Checklist</div>
+          <div class="checklist" id="checklist"></div>
         </div>
 
         <!-- Template & Visibility -->
         <div class="section-card">
-          <div class="section-title">
-            <div class="icon-box"><i class="fas fa-palette"></i></div>
-            Template &amp; Visibility
-          </div>
-
-          <div class="template-display" id="templateDisplay">
+          <div class="section-title"><div class="icon-box"><i class="fas fa-palette"></i></div>Template &amp; Visibility</div>
+          <div class="template-display">
             <div class="template-thumb"><i class="fas fa-palette"></i></div>
             <div class="template-display-info">
               <strong id="templateNameEl">No template selected</strong>
@@ -91,71 +64,44 @@
             </div>
             <a href="templates.html" class="change-link">Change</a>
           </div>
-
-          <div style="margin-top:1.4rem; margin-bottom:0.7rem;">
+          <div style="margin-top:1.4rem;margin-bottom:0.7rem;">
             <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Visibility</label>
           </div>
           <div class="visibility-options">
-            <div class="vis-option active" data-vis="public">
-              <i class="fas fa-globe"></i>
-              <strong>Public</strong>
-              <span>Anyone with the link</span>
-            </div>
-            <div class="vis-option" data-vis="unlisted">
-              <i class="fas fa-link"></i>
-              <strong>Unlisted</strong>
-              <span>Only people with link</span>
-            </div>
-            <div class="vis-option" data-vis="private">
-              <i class="fas fa-lock"></i>
-              <strong>Private</strong>
-              <span>Only you</span>
-            </div>
+            <div class="vis-option active" data-vis="public"><i class="fas fa-globe"></i><strong>Public</strong><span>Anyone with the link</span></div>
+            <div class="vis-option" data-vis="unlisted"><i class="fas fa-link"></i><strong>Unlisted</strong><span>Only people with link</span></div>
+            <div class="vis-option" data-vis="private"><i class="fas fa-lock"></i><strong>Private</strong><span>Only you</span></div>
           </div>
         </div>
 
-        <!-- Custom URL Slug -->
+        <!-- URL Slug -->
         <div class="section-card">
-          <div class="section-title">
-            <div class="icon-box purple"><i class="fas fa-link"></i></div>
-            Custom Portfolio URL
-          </div>
+          <div class="section-title"><div class="icon-box purple"><i class="fas fa-link"></i></div>Custom Portfolio URL</div>
           <div class="slug-wrap">
-            <div class="slug-prefix">portfoliox.web.app/</div>
+            <div class="slug-prefix">portfoliox.web.app/u/</div>
             <input type="text" class="slug-input" id="slugInput" placeholder="your-name" maxlength="30">
           </div>
-          <p class="slug-hint"><i class="fas fa-info-circle" style="color:var(--accent);margin-right:4px;"></i>Use lowercase letters, numbers and hyphens only.</p>
-
-          <!-- Stats row -->
+          <p class="slug-status" id="slugStatus"></p>
+          <p class="slug-hint"><i class="fas fa-info-circle" style="color:var(--accent);margin-right:4px;"></i>Lowercase letters, numbers and hyphens only.</p>
           <div class="stats-row">
-            <div class="stat-mini">
-              <div class="stat-mini-num" id="statSkills">0</div>
-              <div class="stat-mini-label">Skills</div>
-            </div>
-            <div class="stat-mini">
-              <div class="stat-mini-num" id="statProjects">0</div>
-              <div class="stat-mini-label">Projects</div>
-            </div>
-            <div class="stat-mini">
-              <div class="stat-mini-num" id="statEdu">0</div>
-              <div class="stat-mini-label">Education</div>
-            </div>
+            <div class="stat-mini"><div class="stat-mini-num" id="statSkills">0</div><div class="stat-mini-label">Skills</div></div>
+            <div class="stat-mini"><div class="stat-mini-num" id="statProjects">0</div><div class="stat-mini-label">Projects</div></div>
+            <div class="stat-mini"><div class="stat-mini-num" id="statEdu">0</div><div class="stat-mini-label">Education</div></div>
           </div>
         </div>
 
       </div>
 
-      <!-- RIGHT COLUMN -->
       <div class="publish-right">
 
-        <!-- Publish Card -->
+        <!-- Score card -->
         <div class="publish-card">
           <div class="publish-score">
             <div class="score-ring">
               <svg width="88" height="88" viewBox="0 0 88 88">
                 <defs>
                   <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%"   stop-color="#38bdf8"/>
+                    <stop offset="0%" stop-color="#38bdf8"/>
                     <stop offset="100%" stop-color="#6366f1"/>
                   </linearGradient>
                 </defs>
@@ -170,23 +116,16 @@
             <h4 id="scoreTitle">Profile Incomplete</h4>
             <p  id="scoreDesc">Complete your checklist to publish</p>
           </div>
-
           <button class="btn-publish-big" id="publishBtn" disabled>
             <div class="spinner"></div>
             <span class="btn-label"><i class="fas fa-rocket"></i>&nbsp; Publish Portfolio</span>
           </button>
-          <p class="publish-note" id="publishNote">
-            <i class="fas fa-shield-alt"></i>
-            Complete the checklist above to enable publishing.
-          </p>
+          <p class="publish-note" id="publishNote"><i class="fas fa-shield-alt"></i>Complete the checklist above to enable publishing.</p>
         </div>
 
-        <!-- Live Link (shown after publish) -->
+        <!-- Live link (shown after publish) -->
         <div class="live-link-card" id="liveLinkCard">
-          <div class="live-header">
-            <div class="live-dot"></div>
-            <h4>Portfolio is Live! 🎉</h4>
-          </div>
+          <div class="live-header"><div class="live-dot"></div><h4>Portfolio is Live! 🎉</h4></div>
           <div class="link-box">
             <input type="text" id="linkInput" readonly>
             <button class="btn-copy" id="copyBtn"><i class="fas fa-copy"></i> Copy</button>

@@ -5,218 +5,406 @@
   <title>Dashboard | PortfolioX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="dashboard.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Ambient orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loadingOverlay">
-    <div class="spinner">
-      <i class="fas fa-spinner fa-spin"></i>
-      <span>Loading Dashboard...</span>
+    <div class="loader-inner">
+      <div class="loader-logo">
+        <div class="loader-icon"><i class="fas fa-rocket"></i></div>
+        <span class="loader-brand">Portfolio<span class="x">X</span></span>
+      </div>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar"></div>
+      </div>
+      <p class="loader-text">Loading your dashboard...</p>
     </div>
   </div>
 
-  <!-- Premium Navbar -->
-  <header class="navbar">
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
     <div class="nav-container">
-      <div class="logo">
-        <i class="fas fa-rocket"></i>
-        <span>Portfolio<span class="x">X</span></span>
+      <a href="index.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+        <span class="logo-text">Portfolio<span class="x">X</span></span>
+      </a>
+
+      <div class="nav-center">
+        <div class="nav-completion-pill">
+          <span class="ncp-label">Completion</span>
+          <div class="ncp-bar">
+            <div class="ncp-fill" id="navProgressFill"></div>
+          </div>
+          <span class="ncp-percent" id="navProgressText">0%</span>
+        </div>
       </div>
+
       <div class="nav-actions">
-        <button class="preview-btn" onclick="window.open('preview.html', '_blank')">
+        <a href="preview.html" target="_blank" class="nav-btn btn-preview">
           <i class="fas fa-eye"></i> Preview
-        </button>
-        <button class="publish-btn" onclick="location.href='publish.html'">
+        </a>
+        <a href="publish.html" class="nav-btn btn-publish">
           <i class="fas fa-rocket"></i> Publish
-        </button>
-        <button class="logout-btn" id="logoutBtn">
+        </a>
+        <button class="nav-logout" id="logoutBtn" title="Sign Out">
           <i class="fas fa-power-off"></i>
         </button>
       </div>
     </div>
   </header>
 
-  <div class="layout">
-    <!-- Enhanced Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h3>Portfolio Builder</h3>
-        <div class="progress-mini">
-          <div class="progress-mini-fill" id="sidebarProgress"></div>
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- User mini card -->
+      <div class="sidebar-profile">
+        <div class="sp-avatar" id="spAvatar">?</div>
+        <div class="sp-info">
+          <p class="sp-name" id="spName">Loading...</p>
+          <span class="sp-badge"><span class="sp-dot"></span> Active</span>
         </div>
       </div>
-      
+
+      <!-- Progress ring -->
+      <div class="sidebar-ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 80 80">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="40" cy="40" r="30"/>
+          <circle class="ring-fill" id="sidebarRing" cx="40" cy="40" r="30"
+            stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+        </svg>
+        <div class="ring-inner">
+          <span class="ring-pct" id="sidebarPct">0%</span>
+          <span class="ring-sub">done</span>
+        </div>
+      </div>
+
       <nav class="sidebar-nav">
+        <div class="nav-group-label">Main</div>
         <a href="dashboard.html" class="nav-item active" data-page="dashboard">
-          <i class="fas fa-tachometer-alt"></i>
-          <span>Dashboard</span>
+          <span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span>
+          <span class="nav-label">Dashboard</span>
+          <span class="nav-active-dot"></span>
         </a>
         <a href="profile.html" class="nav-item" data-page="profile">
-          <i class="fas fa-user"></i>
-          <span>Profile</span>
+          <span class="nav-icon"><i class="fas fa-user"></i></span>
+          <span class="nav-label">Profile</span>
         </a>
         <a href="skills.html" class="nav-item" data-page="skills">
-          <i class="fas fa-brain"></i>
-          <span>Skills</span>
+          <span class="nav-icon"><i class="fas fa-brain"></i></span>
+          <span class="nav-label">Skills</span>
         </a>
         <a href="education.html" class="nav-item" data-page="education">
-          <i class="fas fa-graduation-cap"></i>
-          <span>Education</span>
+          <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
+          <span class="nav-label">Education</span>
         </a>
         <a href="projects.html" class="nav-item" data-page="projects">
-          <i class="fas fa-project-diagram"></i>
-          <span>Projects</span>
+          <span class="nav-icon"><i class="fas fa-project-diagram"></i></span>
+          <span class="nav-label">Projects</span>
         </a>
+
+        <div class="nav-group-label" style="margin-top:1.2rem;">Publish</div>
         <a href="templates.html" class="nav-item" data-page="templates">
-          <i class="fas fa-palette"></i>
-          <span>Templates</span>
+          <span class="nav-icon"><i class="fas fa-palette"></i></span>
+          <span class="nav-label">Templates</span>
         </a>
         <a href="preview.html" class="nav-item" data-page="preview">
-          <i class="fas fa-eye"></i>
-          <span>Preview</span>
+          <span class="nav-icon"><i class="fas fa-eye"></i></span>
+          <span class="nav-label">Preview</span>
         </a>
         <a href="publish.html" class="nav-item" data-page="publish">
-          <i class="fas fa-globe"></i>
-          <span>Publish</span>
+          <span class="nav-icon"><i class="fas fa-globe"></i></span>
+          <span class="nav-label">Publish</span>
         </a>
         <a href="settings.html" class="nav-item" data-page="settings">
-          <i class="fas fa-cog"></i>
-          <span>Settings</span>
+          <span class="nav-icon"><i class="fas fa-cog"></i></span>
+          <span class="nav-label">Settings</span>
         </a>
       </nav>
+
+      <div class="sidebar-footer">
+        <div class="sf-tip">
+          <i class="fas fa-lightbulb"></i>
+          <span>Complete all sections to unlock publishing</span>
+        </div>
+      </div>
     </aside>
 
-    <!-- Enhanced Dashboard Content -->
-    <main class="dashboard">
-      <!-- Welcome Section -->
-      <section class="welcome-section">
-        <div class="welcome-content">
-          <div class="welcome-greeting">
-            <h1 id="welcomeText">Welcome Back 👋</h1>
-            <p>Your portfolio progress is shown below. Complete all sections to get 100% ready!</p>
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Welcome Hero -->
+      <section class="welcome-hero reveal">
+        <div class="wh-left">
+          <div class="wh-eyebrow">
+            <span class="eyebrow-dot"></span>
+            <span id="timeGreet">Good morning</span>
           </div>
-          <div class="welcome-actions">
-            <button class="btn btn-primary" onclick="location.href='profile.html'">
-              <i class="fas fa-edit"></i> Edit Profile
-            </button>
+          <h1 class="wh-title" id="welcomeText">Welcome Back <span class="wave">👋</span></h1>
+          <p class="wh-sub">Your portfolio is taking shape. Keep filling sections to go live and impress recruiters.</p>
+          <div class="wh-actions">
+            <a href="profile.html" class="h-btn h-btn-primary"><i class="fas fa-edit"></i> Edit Profile</a>
+            <a href="preview.html" class="h-btn h-btn-outline" target="_blank"><i class="fas fa-eye"></i> Live Preview</a>
           </div>
+        </div>
+        <div class="wh-right">
+          <div class="completion-orb">
+            <svg viewBox="0 0 160 160" class="co-svg">
+              <defs>
+                <linearGradient id="coGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#38bdf8"/>
+                  <stop offset="50%" stop-color="#6366f1"/>
+                  <stop offset="100%" stop-color="#ec4899"/>
+                </linearGradient>
+              </defs>
+              <circle class="co-track" cx="80" cy="80" r="65"/>
+              <circle class="co-arc" id="heroArc" cx="80" cy="80" r="65"
+                stroke-dasharray="408.41" stroke-dashoffset="408.41"/>
+            </svg>
+            <div class="co-inner">
+              <span class="co-pct" id="heroPct">0%</span>
+              <span class="co-label">Complete</span>
+            </div>
+          </div>
+          <!-- floating labels -->
+          <div class="orb-label ol-1"><i class="fas fa-user"></i> Profile</div>
+          <div class="orb-label ol-2"><i class="fas fa-brain"></i> Skills</div>
+          <div class="orb-label ol-3"><i class="fas fa-project-diagram"></i> Projects</div>
         </div>
       </section>
 
-      <!-- Main Progress -->
-      <section class="progress-section">
-        <div class="progress-card">
-          <div class="progress-header">
-            <h3><i class="fas fa-chart-line"></i> Portfolio Completion</h3>
-            <span class="progress-badge" id="progressPercent">0%</span>
+      <!-- Stats Pills Row -->
+      <section class="stats-row reveal reveal-delay-1">
+        <a href="profile.html" class="stat-pill" id="statProfile">
+          <div class="stat-pill-icon fi-blue"><i class="fas fa-user"></i></div>
+          <div class="stat-pill-body">
+            <span class="stat-pill-val" id="profileStatus">Checking...</span>
+            <span class="stat-pill-key">Profile</span>
           </div>
-          <div class="progress-container">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill"></div>
-            </div>
+          <i class="fas fa-chevron-right stat-pill-arrow"></i>
+        </a>
+        <a href="skills.html" class="stat-pill" id="statSkills">
+          <div class="stat-pill-icon fi-purple"><i class="fas fa-brain"></i></div>
+          <div class="stat-pill-body">
+            <span class="stat-pill-val" id="skillsCount">0</span>
+            <span class="stat-pill-key">Skills Added</span>
           </div>
-          <div class="progress-details">
-            <span>4 sections remaining</span>
+          <i class="fas fa-chevron-right stat-pill-arrow"></i>
+        </a>
+        <a href="education.html" class="stat-pill" id="statEdu">
+          <div class="stat-pill-icon fi-green"><i class="fas fa-graduation-cap"></i></div>
+          <div class="stat-pill-body">
+            <span class="stat-pill-val" id="educationCount">0</span>
+            <span class="stat-pill-key">Education Records</span>
           </div>
-        </div>
+          <i class="fas fa-chevron-right stat-pill-arrow"></i>
+        </a>
+        <a href="projects.html" class="stat-pill" id="statProj">
+          <div class="stat-pill-icon fi-pink"><i class="fas fa-project-diagram"></i></div>
+          <div class="stat-pill-body">
+            <span class="stat-pill-val" id="projectsCount">0</span>
+            <span class="stat-pill-key">Projects</span>
+          </div>
+          <i class="fas fa-chevron-right stat-pill-arrow"></i>
+        </a>
       </section>
 
-      <!-- Quick Actions Grid -->
-      <section class="quick-actions-section">
-        <h3>Quick Actions</h3>
-        <div class="quick-actions-grid">
-          <button class="action-card primary" onclick="location.href='profile.html'">
-            <i class="fas fa-user-plus"></i>
-            <span>Setup Profile</span>
-          </button>
-          <button class="action-card" onclick="location.href='skills.html'">
-            <i class="fas fa-plus"></i>
-            <span>Add Skills</span>
-          </button>
-          <button class="action-card" onclick="location.href='projects.html'">
-            <i class="fas fa-project-diagram"></i>
-            <span>Add Projects</span>
-          </button>
-          <button class="action-card" onclick="location.href='templates.html'">
-            <i class="fas fa-palette"></i>
-            <span>Choose Template</span>
-          </button>
+      <!-- Mid Grid -->
+      <div class="mid-grid">
+
+        <!-- Progress Breakdown Card -->
+        <section class="progress-card reveal reveal-delay-1">
+          <div class="pc-header">
+            <div>
+              <h3 class="pc-title"><i class="fas fa-chart-line"></i> Portfolio Progress</h3>
+              <p class="pc-sub">4 sections · Complete all to publish</p>
+            </div>
+            <span class="pc-badge" id="progressPercent">0%</span>
+          </div>
+
+          <div class="pc-master-bar">
+            <div class="pc-master-fill" id="progressFill"></div>
+          </div>
+
+          <div class="pc-items">
+            <div class="pc-item">
+              <div class="pc-item-left">
+                <span class="pci-icon fi-blue"><i class="fas fa-user"></i></span>
+                <span class="pci-label">Profile Setup</span>
+              </div>
+              <div class="pc-item-right">
+                <div class="pci-bar"><div class="pci-fill" id="profileBar"></div></div>
+                <span class="pci-val" id="profileVal">0%</span>
+              </div>
+            </div>
+            <div class="pc-item">
+              <div class="pc-item-left">
+                <span class="pci-icon fi-purple"><i class="fas fa-brain"></i></span>
+                <span class="pci-label">Skills Added</span>
+              </div>
+              <div class="pc-item-right">
+                <div class="pci-bar"><div class="pci-fill" id="skillsBar"></div></div>
+                <span class="pci-val" id="skillsVal">0%</span>
+              </div>
+            </div>
+            <div class="pc-item">
+              <div class="pc-item-left">
+                <span class="pci-icon fi-green"><i class="fas fa-graduation-cap"></i></span>
+                <span class="pci-label">Education</span>
+              </div>
+              <div class="pc-item-right">
+                <div class="pci-bar"><div class="pci-fill" id="educationBar"></div></div>
+                <span class="pci-val" id="educationVal">0%</span>
+              </div>
+            </div>
+            <div class="pc-item">
+              <div class="pc-item-left">
+                <span class="pci-icon fi-pink"><i class="fas fa-project-diagram"></i></span>
+                <span class="pci-label">Projects</span>
+              </div>
+              <div class="pc-item-right">
+                <div class="pci-bar"><div class="pci-fill" id="projectsBar"></div></div>
+                <span class="pci-val" id="projectsVal">0%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions reveal reveal-delay-2">
+          <h3 class="qa-title">Quick Actions</h3>
+          <div class="qa-grid">
+            <a href="profile.html" class="qa-card qa-primary">
+              <div class="qa-icon"><i class="fas fa-user-edit"></i></div>
+              <div class="qa-body">
+                <span class="qa-name">Setup Profile</span>
+                <span class="qa-hint">Name, bio, contacts</span>
+              </div>
+              <i class="fas fa-arrow-right qa-arrow"></i>
+            </a>
+            <a href="skills.html" class="qa-card">
+              <div class="qa-icon qi-purple"><i class="fas fa-brain"></i></div>
+              <div class="qa-body">
+                <span class="qa-name">Add Skills</span>
+                <span class="qa-hint">Languages & tools</span>
+              </div>
+              <i class="fas fa-arrow-right qa-arrow"></i>
+            </a>
+            <a href="projects.html" class="qa-card">
+              <div class="qa-icon qi-pink"><i class="fas fa-project-diagram"></i></div>
+              <div class="qa-body">
+                <span class="qa-name">Add Projects</span>
+                <span class="qa-hint">Showcase your work</span>
+              </div>
+              <i class="fas fa-arrow-right qa-arrow"></i>
+            </a>
+            <a href="templates.html" class="qa-card">
+              <div class="qa-icon qi-green"><i class="fas fa-palette"></i></div>
+              <div class="qa-body">
+                <span class="qa-name">Choose Template</span>
+                <span class="qa-hint">Pick your style</span>
+              </div>
+              <i class="fas fa-arrow-right qa-arrow"></i>
+            </a>
+            <a href="education.html" class="qa-card">
+              <div class="qa-icon qi-yellow"><i class="fas fa-graduation-cap"></i></div>
+              <div class="qa-body">
+                <span class="qa-name">Add Education</span>
+                <span class="qa-hint">Degrees & courses</span>
+              </div>
+              <i class="fas fa-arrow-right qa-arrow"></i>
+            </a>
+            <a href="publish.html" class="qa-card qa-publish">
+              <div class="qa-icon"><i class="fas fa-globe"></i></div>
+              <div class="qa-body">
+                <span class="qa-name">Go Live</span>
+                <span class="qa-hint">Publish portfolio</span>
+              </div>
+              <i class="fas fa-rocket qa-arrow"></i>
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <!-- Activity Feed -->
+      <section class="activity-section reveal reveal-delay-2">
+        <div class="as-header">
+          <h3 class="as-title">Recent Activity</h3>
+          <span class="as-live"><span class="live-dot"></span> Live</span>
         </div>
-      </section>
-
-      <!-- Stats Grid -->
-      <section class="stats-section">
-        <h3>Portfolio Status</h3>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <h4>Profile</h4>
-            <p id="profileStatus">Checking...</p>
-            <span class="stat-progress">
-              <i class="fas fa-circle-notch fa-spin" id="profileSpinner"></i>
-              <span id="profileProgress">0%</span>
-            </span>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon">
-              <i class="fas fa-brain"></i>
-            </div>
-            <h4>Skills</h4>
-            <p id="skillsCount">0 Skills Added</p>
-            <span class="stat-count"><i class="fas fa-arrow-up"></i> +3</span>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon">
-              <i class="fas fa-graduation-cap"></i>
-            </div>
-            <h4>Education</h4>
-            <p id="educationCount">0 Records Added</p>
-            <span class="stat-count"><i class="fas fa-arrow-up"></i> +1</span>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon">
-              <i class="fas fa-project-diagram"></i>
-            </div>
-            <h4>Projects</h4>
-            <p id="projectsCount">0 Projects Added</p>
-            <span class="stat-count"><i class="fas fa-arrow-up"></i> +2</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Recent Activity -->
-      <section class="activity-section">
-        <h3>Recent Activity</h3>
-        <div class="activity-list">
+        <div class="activity-list" id="activityList">
           <div class="activity-item">
-            <div class="activity-icon success">
-              <i class="fas fa-check"></i>
+            <div class="act-icon act-success"><i class="fas fa-check"></i></div>
+            <div class="act-body">
+              <span class="act-text">Dashboard loaded successfully</span>
+              <span class="act-time">Just now</span>
             </div>
-            <div class="activity-content">
-              <span>Profile updated successfully</span>
-              <span class="activity-time">2 minutes ago</span>
-            </div>
+            <span class="act-tag tag-green">Success</span>
           </div>
           <div class="activity-item">
-            <div class="activity-icon warning">
-              <i class="fas fa-exclamation-triangle"></i>
+            <div class="act-icon act-info"><i class="fas fa-info"></i></div>
+            <div class="act-body">
+              <span class="act-text">Complete your profile to boost completion score</span>
+              <span class="act-time">Recommended</span>
             </div>
-            <div class="activity-content">
-              <span>Add skills to improve completion</span>
-              <span class="activity-time">5 minutes ago</span>
+            <span class="act-tag tag-blue">Tip</span>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon act-warn"><i class="fas fa-star"></i></div>
+            <div class="act-body">
+              <span class="act-text">Add projects to stand out to recruiters</span>
+              <span class="act-time">Pro Tip</span>
             </div>
+            <span class="act-tag tag-yellow">Pro</span>
           </div>
         </div>
       </section>
+
     </main>
   </div>
+
   <script type="module" src="dashboard.js"></script>
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursorRing');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+      ring.style.left   = e.clientX + 'px'; ring.style.top   = e.clientY + 'px';
+    });
+    // Navbar scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+    // Greeting
+    const hr = new Date().getHours();
+    const greetEl = document.getElementById('timeGreet');
+    if (greetEl) greetEl.textContent = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+    // Reveal on scroll
+    const revealEls = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    revealEls.forEach(el => obs.observe(el));
+  </script>
 </body>
 </html>

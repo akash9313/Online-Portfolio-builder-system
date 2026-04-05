@@ -15,6 +15,17 @@
         "source": "/:username",
         "destination": "/portfolio.html"
       }
+    ],
+    "headers": [
+      {
+        "source": "**/*.html",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      }
     ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
   }
 }

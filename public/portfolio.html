@@ -1,267 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Portfolio | PortfolioX</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial,sans-serif;
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg: #0a0e1a; --accent: #38bdf8; --accent-2: #6366f1; --accent-3: #22c55e;
+      --text: #f1f5f9; --muted: #94a3b8; --danger: #ef4444;
+      --gradient: linear-gradient(135deg, #38bdf8, #6366f1);
     }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; margin:0; }
 
-    body{
-      background:linear-gradient(135deg,#020617,#0f172a);
-      color:white;
-      min-height:100vh;
-      padding:40px 20px;
+    /* ── Loading ── */
+    #loadingScreen {
+      position:fixed; inset:0; background:var(--bg);
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2rem;
+      z-index:9999; transition:opacity 0.5s ease;
     }
+    #loadingScreen.fade { opacity:0; pointer-events:none; }
+    .load-logo { font-size:1.4rem; font-weight:800; }
+    .load-logo .x { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .load-bar { width:220px; height:3px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
+    .load-fill { height:100%; background:var(--gradient); border-radius:2px; animation:loadIn 1.4s ease forwards; }
+    .load-text { font-size:0.85rem; color:var(--muted); }
+    @keyframes loadIn { from{width:0} to{width:100%} }
 
-    .container{
-      max-width:1000px;
-      margin:auto;
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:24px;
-      padding:40px;
-      backdrop-filter:blur(16px);
-      box-shadow:0 20px 60px rgba(0,0,0,0.4);
+    /* ── Not found ── */
+    #notFound {
+      display:none; min-height:100vh;
+      flex-direction:column; align-items:center; justify-content:center; gap:1.2rem;
+      text-align:center; padding:2rem;
     }
+    #notFound .nf-icon { font-size:3rem; color:var(--danger); margin-bottom:0.5rem; }
+    #notFound h2 { font-size:1.6rem; font-weight:800; }
+    #notFound p  { color:var(--muted); max-width:360px; line-height:1.6; }
+    #notFound a  { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:12px; background:var(--gradient); color:white; text-decoration:none; font-weight:600; margin-top:0.5rem; transition:all 0.3s; }
+    #notFound a:hover { transform:translateY(-2px); }
 
-    .top{
-      display:flex;
-      gap:30px;
-      align-items:center;
-      flex-wrap:wrap;
-      margin-bottom:40px;
+    /* ── Private ── */
+    #privateScreen {
+      display:none; min-height:100vh;
+      flex-direction:column; align-items:center; justify-content:center; gap:1.2rem;
+      text-align:center; padding:2rem;
     }
+    #privateScreen .priv-icon { width:72px; height:72px; border-radius:20px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:#f59e0b; margin:0 auto; }
+    #privateScreen h2 { font-size:1.5rem; font-weight:800; }
+    #privateScreen p  { color:var(--muted); max-width:340px; line-height:1.6; }
 
-    .top img{
-      width:140px;
-      height:140px;
-      border-radius:50%;
-      object-fit:cover;
-      border:4px solid #38bdf8;
-      box-shadow:0 0 25px rgba(56,189,248,0.5);
-    }
-
-    .top h1{
-      font-size:36px;
-      margin-bottom:8px;
-    }
-
-    .top h2{
-      color:#38bdf8;
-      font-size:22px;
-      margin-bottom:12px;
-    }
-
-    .info{
-      color:#cbd5e1;
-      line-height:1.8;
-    }
-
-    .section{
-      margin-top:35px;
-    }
-
-    .section h3{
-      font-size:24px;
-      margin-bottom:18px;
-      color:#38bdf8;
-      border-bottom:1px solid rgba(255,255,255,0.08);
-      padding-bottom:8px;
-    }
-
-    .card{
-      background:rgba(255,255,255,0.04);
-      padding:18px;
-      border-radius:16px;
-      margin-bottom:15px;
-      border:1px solid rgba(255,255,255,0.05);
-    }
-
-    .skill{
-      display:inline-block;
-      background:rgba(56,189,248,0.15);
-      border:1px solid rgba(56,189,248,0.25);
-      color:#38bdf8;
-      padding:10px 14px;
-      border-radius:999px;
-      margin:6px;
-      font-size:14px;
-    }
-
-    .not-found{
-      text-align:center;
-      margin-top:100px;
-      font-size:30px;
-      color:#f87171;
+    /* ── Template iframe ── */
+    #portfolioFrame {
+      display:none; width:100%; height:100vh; border:none;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="portfolioContainer" style="display:none;">
-    <div class="top">
-      <img id="photo" src="https://via.placeholder.com/140" alt="Profile Photo" />
-      <div>
-        <h1 id="name">Loading...</h1>
-        <h2 id="title"></h2>
 
-    <main id="mainArea" class="content">
-      <aside class="profile-card" id="profileCard">
-        <img id="photo" class="profile-photo" src="https://via.placeholder.com/320x320.png?text=No+Photo" alt="Profile photo" />
-        <div id="name" class="profile-name">Name</div>
-        <div id="role" class="profile-role">Role</div>
-        <ul class="info-list">
-          <li><strong>Email</strong><span id="email">-</span></li>
-          <li><strong>Phone</strong><span id="phone">-</span></li>
-          <li><strong>Location</strong><span id="location">-</span></li>
-          <li><strong>Languages</strong><span id="languages">-</span></li>
-        </ul>
-      </aside>
+<!-- Loading -->
+<div id="loadingScreen">
+  <div class="load-logo">Portfolio<span class="x">X</span></div>
+  <div class="load-bar"><div class="load-fill"></div></div>
+  <div class="load-text">Loading portfolio…</div>
+</div>
 
-      <section class="main-panel" id="contentPanel">
-        <div class="card">
-          <div class="section-title">About</div>
-          <p id="about" class="bio">Loading…</p>
-        </div>
+<!-- Not found -->
+<div id="notFound" style="display:flex;">
+  <div class="nf-icon"><i class="fas fa-face-frown"></i></div>
+  <h2>Portfolio Not Found</h2>
+  <p>The portfolio you're looking for doesn't exist or hasn't been published yet.</p>
+  <a href="loginpage.html"><i class="fas fa-rocket"></i> Create Your Portfolio</a>
+</div>
 
-        <div id="skillsCard" class="card">
-          <div class="section-title">Skills</div>
-          <div id="skills" class="tags"></div>
-        </div>
+<!-- Private -->
+<div id="privateScreen">
+  <div class="priv-icon"><i class="fas fa-lock"></i></div>
+  <h2>This Portfolio is Private</h2>
+  <p>The owner has set this portfolio to private. Only they can view it.</p>
+</div>
 
-        <div id="projectsCard" class="card">
-          <div class="section-title">Projects</div>
-          <div id="projects" class="project-grid"></div>
-        </div>
+<!--
+  The actual portfolio renders inside an iframe pointing to the chosen template file.
+  The template file reads the userId from the URL param and fetches data itself.
+-->
+<iframe id="portfolioFrame" title="Portfolio"></iframe>
 
-        <div id="educationCard" class="card">
-          <div class="section-title">Education</div>
-          <div id="education" class="edu-list"></div>
-        </div>
+<script type="module">
+  import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, query, where, getDocs }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        <div id="experienceCard" class="card">
-          <div class="section-title">Experience</div>
-          <div id="experience" class="exp-list"></div>
-        </div>
-      </section>
-    </main>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+    authDomain: "portfoliox-2e787.firebaseapp.com",
+    projectId: "portfoliox-2e787",
+    storageBucket: "portfoliox-2e787.firebasestorage.app",
+    messagingSenderId: "562709786891",
+    appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+  };
 
-    <div id="message" class="alert" style="display:none"></div>
-  </div>
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      query,
-      where,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  /* ── Parse username from URL
+     Supports:
+       /u/username            → path-based (Firebase Hosting rewrites)
+       /portfolio.html?u=username → query param fallback
+  ── */
+  function getUsername() {
+    // Query param: ?u=username  (works without hosting rewrites)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('u')) return params.get('u').trim().toLowerCase();
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
-      authDomain: "portfoliox-2e787.firebaseapp.com",
-      projectId: "portfoliox-2e787",
-      storageBucket: "portfoliox-2e787.firebasestorage.app",
-      messagingSenderId: "562709786891",
-      appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
-    };
+    // Path: /u/username
+    const parts = window.location.pathname.split('/').filter(Boolean);
+    const uIdx  = parts.indexOf('u');
+    if (uIdx !== -1 && parts[uIdx+1]) return parts[uIdx+1].trim().toLowerCase();
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // Fallback: last path segment
+    const last = parts[parts.length - 1];
+    if (last && last !== 'portfolio.html') return last.toLowerCase();
 
-    const username = window.location.pathname.replace("/", "").trim();
+    return null;
+  }
 
-    async function loadPortfolio() {
-      try {
-        if (!username) {
-          document.getElementById("notFound").style.display = "block";
-          return;
-        }
+  const username = getUsername();
 
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, where("username", "==", username));
-        const userSnap = await getDocs(q);
+  const loadingEl  = document.getElementById('loadingScreen');
+  const notFoundEl = document.getElementById('notFound');
+  const privateEl  = document.getElementById('privateScreen');
+  const frameEl    = document.getElementById('portfolioFrame');
 
-        if (userSnap.empty) {
-          document.getElementById("notFound").style.display = "block";
-          return;
-        }
+  function hideLoader() {
+    setTimeout(() => {
+      loadingEl.classList.add('fade');
+      setTimeout(() => loadingEl.style.display = 'none', 500);
+    }, 900);
+  }
 
-        const userDoc = userSnap.docs[0];
-        const userId = userDoc.id;
-        const userData = userDoc.data();
+  async function loadPortfolio() {
+    if (!username) { notFoundEl.style.display = 'flex'; hideLoader(); return; }
 
-        document.getElementById("portfolioContainer").style.display = "block";
+    try {
+      // Query Firestore for user with this username
+      const q    = query(collection(db,'users'), where('username','==',username));
+      const snap = await getDocs(q);
 
-        document.getElementById("name").innerText = userData.name || "No Name";
-        document.getElementById("title").innerText = userData.title || "";
-        document.getElementById("about").innerText = userData.about || "";
-        document.getElementById("email").innerText = userData.email || "";
-        document.getElementById("phone").innerText = userData.phone || "";
-        document.getElementById("location").innerText = userData.location || "";
+      if (snap.empty) { notFoundEl.style.display = 'flex'; hideLoader(); return; }
 
-        if (userData.photoURL) {
-          document.getElementById("photo").src = userData.photoURL;
-        }
+      const userDoc  = snap.docs[0];
+      const userId   = userDoc.id;
+      const userData = userDoc.data();
 
-        // Skills
-        const skillsSnap = await getDocs(collection(db, "users", userId, "skills"));
-        const skillsContainer = document.getElementById("skills");
-        skillsSnap.forEach(doc => {
-          const s = doc.data();
-          const div = document.createElement("div");
-          div.className = "skill";
-          div.innerText = s.name || "Skill";
-          skillsContainer.appendChild(div);
-        });
-
-        // Education
-        const eduSnap = await getDocs(collection(db, "users", userId, "education"));
-        const eduContainer = document.getElementById("education");
-        eduSnap.forEach(doc => {
-          const e = doc.data();
-          const div = document.createElement("div");
-          div.className = "card";
-          div.innerHTML = `
-            <strong>${e.degree || e.name || "Education"}</strong><br>
-            <span>${e.institute || e.institution || e.school || ""}</span><br>
-            <small>${e.year || ""}</small>
-          `;
-          eduContainer.appendChild(div);
-        });
-
-        // Projects
-        const projSnap = await getDocs(collection(db, "users", userId, "projects"));
-        const projContainer = document.getElementById("projects");
-        projSnap.forEach(doc => {
-          const p = doc.data();
-          const div = document.createElement("div");
-          div.className = "card";
-          div.innerHTML = `
-            <strong>${p.title || "Project"}</strong><br>
-            <p>${p.description || ""}</p>
-            ${p.link ? `<a href="${p.link}" target="_blank" style="color:#38bdf8;">View Project</a>` : ""}
-          `;
-          projContainer.appendChild(div);
-        });
-
-      } catch (error) {
-        console.error("Portfolio load error:", error);
-        document.getElementById("notFound").style.display = "block";
+      // Check visibility
+      if (userData.visibility === 'private') {
+        privateEl.style.display = 'flex'; hideLoader(); return;
       }
-    }
 
-    loadPortfolio();
-  </script>
+      // Not published
+      if (!userData.published) {
+        notFoundEl.style.display = 'flex'; hideLoader(); return;
+      }
+
+      // ✅ Load the template file in the iframe, passing userId as a query param
+      // The template file will use userId to fetch all user data from Firestore
+      const templateFile = userData.templateFile || 'templates/classic.html';
+      frameEl.src        = `${templateFile}?uid=${userId}&readonly=true`;
+      frameEl.style.display = 'block';
+
+      // Update page title with user's name
+      if (userData.fullName) document.title = `${userData.fullName} | PortfolioX`;
+
+      frameEl.onload = hideLoader;
+
+    } catch (err) {
+      console.error('Portfolio load error:', err);
+      notFoundEl.style.display = 'flex';
+      hideLoader();
+    }
+  }
+
+  loadPortfolio();
+</script>
 </body>
 </html>

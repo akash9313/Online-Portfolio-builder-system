@@ -1,0 +1,59 @@
+// firestore.rules
+// Deploy with: firebase deploy --only firestore:rules
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── USER DOCUMENTS ──────────────────────────────────────────
+    match /users/{userId} {
+
+      // Public read if portfolio is published AND not private
+      allow read: if resource.data.published == true
+                  && resource.data.visibility != 'private';
+
+      // Logged-in owner can always read/write their own doc
+      allow read, write: if request.auth != null
+                         && request.auth.uid == userId;
+
+      // ── Sub-collections: skills, projects, education ──
+      match /skills/{skillId} {
+        // Public read if parent portfolio is published and public
+        allow read: if get(/databases/$(database)/documents/users/$(userId)).data.published == true
+                    && get(/databases/$(database)/documents/users/$(userId)).data.visibility != 'private';
+        // Owner can read/write
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /projects/{projectId} {
+        allow read: if get(/databases/$(database)/documents/users/$(userId)).data.published == true
+                    && get(/databases/$(database)/documents/users/$(userId)).data.visibility != 'private';
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /education/{eduId} {
+        allow read: if get(/databases/$(database)/documents/users/$(userId)).data.published == true
+                    && get(/databases/$(database)/documents/users/$(userId)).data.visibility != 'private';
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /settings/{settingId} {
+        // Settings are private — owner only
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // ── USERNAME UNIQUENESS CHECK ────────────────────────────────
+    // Allow any authenticated user to query users by username (for slug availability check)
+    // and allow public to query by username (for portfolio.html lookup)
+    // This is handled by the read rule above — querying users collection
+    // where published == true will work. For slug checks (authenticated only):
+    // The query in publish.html runs as authenticated user so the owner read rule covers it.
+
+    // Deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
