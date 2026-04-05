@@ -4,206 +4,285 @@
   <meta charset="UTF-8">
   <title>Education | PortfolioX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="education.css">
 </head>
 <body>
 
-<!-- Loading -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loader-content">
-    <div class="loader-ring"></div>
-    <p>Loading education details…</p>
-  </div>
-</div>
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- Toast -->
-<div class="toast" id="toast">
-  <i class="fas fa-check-circle" id="toastIcon"></i>
-  <span id="toastMsg"></span>
-</div>
+  <!-- Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-<!-- Navbar -->
-<header class="navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <i class="fas fa-rocket"></i>Portfolio<span class="x">X</span>
-    </a>
-    <div class="nav-actions">
-      <a href="preview.html" class="nav-btn btn-preview"><i class="fas fa-eye"></i><span>Preview</span></a>
-      <a href="publish.html" class="nav-btn btn-publish"><i class="fas fa-rocket"></i><span>Publish</span></a>
-      <button class="nav-btn btn-logout" id="logoutBtn"><i class="fas fa-power-off"></i></button>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-inner">
+      <div class="loader-logo">
+        <div class="loader-icon"><i class="fas fa-graduation-cap"></i></div>
+        <span class="loader-brand">Portfolio<span class="x">X</span></span>
+      </div>
+      <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+      <p class="loader-text">Loading education details…</p>
     </div>
   </div>
-</header>
 
-<div class="layout">
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle" id="toastIcon"></i>
+    <span id="toastMsg">Saved!</span>
+  </div>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h3>Portfolio Builder</h3>
-      <div class="sidebar-progress"><div class="sidebar-progress-fill" id="sidebarProgress"></div></div>
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+        <span class="logo-text">Portfolio<span class="x">X</span></span>
+      </a>
+      <div class="nav-actions">
+        <a href="preview.html" target="_blank" class="nav-btn btn-preview">
+          <i class="fas fa-eye"></i> Preview
+        </a>
+        <a href="publish.html" class="nav-btn btn-publish">
+          <i class="fas fa-rocket"></i> Publish
+        </a>
+        <button class="nav-logout" id="logoutBtn" title="Sign Out">
+          <i class="fas fa-power-off"></i>
+        </button>
+      </div>
     </div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-      <a href="profile.html"   class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
-      <a href="skills.html"    class="nav-item"><i class="fas fa-brain"></i><span>Skills</span></a>
-      <a href="education.html" class="nav-item active"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
-      <a href="projects.html"  class="nav-item"><i class="fas fa-project-diagram"></i><span>Projects</span></a>
-      <a href="templates.html" class="nav-item"><i class="fas fa-palette"></i><span>Templates</span></a>
-      <a href="preview.html"   class="nav-item" target="_blank"><i class="fas fa-eye"></i><span>Preview</span></a>
-      <a href="publish.html"   class="nav-item"><i class="fas fa-globe"></i><span>Publish</span></a>
-      <a href="settings.html"  class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
-    </nav>
-  </aside>
+  </header>
 
-  <!-- Main Content -->
-  <main class="edu-main">
+  <div class="app-layout">
 
-    <div class="page-title">
-      <h2>Education</h2>
-      <p>Add your academic background to strengthen your portfolio.</p>
-    </div>
-
-    <!-- Info banner -->
-    <div class="info-banner">
-      <i class="fas fa-info-circle"></i>
-      <span>You can add up to <strong style="color:var(--accent)">2 education records</strong> — one for your university/institute and one for your school.</span>
-    </div>
-
-    <!-- Forms grid -->
-    <div class="forms-grid">
-
-      <!-- University Card -->
-      <div class="section-card uni">
-        <div class="section-title">
-          <div class="icon-box blue"><i class="fas fa-university"></i></div>
-          University / Institute
-        </div>
-
-        <div class="form-group">
-          <label>Degree / Program</label>
-          <div class="input-wrap">
-            <i class="fas fa-graduation-cap input-icon"></i>
-            <input type="text" id="uniDegree" placeholder="e.g. B.Tech in Computer Science">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Institution Name</label>
-          <div class="input-wrap">
-            <i class="fas fa-building-columns input-icon"></i>
-            <input type="text" id="uniName" placeholder="e.g. MIT, IIT Bombay">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Duration / Year</label>
-          <div class="input-wrap">
-            <i class="fas fa-calendar input-icon"></i>
-            <input type="text" id="uniYear" placeholder="e.g. 2022 – 2026">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>CGPA / Grade <span class="optional-tag">optional</span></label>
-          <div class="input-wrap">
-            <i class="fas fa-star input-icon"></i>
-            <input type="text" id="uniGrade" placeholder="e.g. 8.5 / 10">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Location <span class="optional-tag">optional</span></label>
-          <div class="input-wrap">
-            <i class="fas fa-map-marker-alt input-icon"></i>
-            <input type="text" id="uniLocation" placeholder="e.g. Mumbai, India">
-          </div>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-profile">
+        <div class="sp-avatar" id="spAvatar">?</div>
+        <div class="sp-info">
+          <p class="sp-name" id="spName">Loading…</p>
+          <span class="sp-badge"><span class="sp-dot"></span> Active</span>
         </div>
       </div>
 
-      <!-- School Card -->
-      <div class="section-card school">
-        <div class="section-title">
-          <div class="icon-box yellow"><i class="fas fa-school"></i></div>
-          School Education
-        </div>
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-page="dashboard">
+          <span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="profile.html" class="nav-item" data-page="profile">
+          <span class="nav-icon"><i class="fas fa-user"></i></span>
+          <span class="nav-label">Profile</span>
+        </a>
+        <a href="skills.html" class="nav-item" data-page="skills">
+          <span class="nav-icon"><i class="fas fa-brain"></i></span>
+          <span class="nav-label">Skills</span>
+        </a>
+        <a href="education.html" class="nav-item active" data-page="education">
+          <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
+          <span class="nav-label">Education</span>
+          <span class="nav-active-dot"></span>
+        </a>
+        <a href="projects.html" class="nav-item" data-page="projects">
+          <span class="nav-icon"><i class="fas fa-project-diagram"></i></span>
+          <span class="nav-label">Projects</span>
+        </a>
 
-        <div class="form-group">
-          <label>School Name</label>
-          <div class="input-wrap school-wrap">
-            <i class="fas fa-school input-icon"></i>
-            <input type="text" id="schoolName" class="school-inp" placeholder="e.g. Delhi Public School">
-          </div>
-        </div>
+        <div class="nav-group-label" style="margin-top:1.2rem;">Publish</div>
+        <a href="templates.html" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-palette"></i></span>
+          <span class="nav-label">Templates</span>
+        </a>
+        <a href="preview.html" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-eye"></i></span>
+          <span class="nav-label">Preview</span>
+        </a>
+        <a href="publish.html" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-globe"></i></span>
+          <span class="nav-label">Publish</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon"><i class="fas fa-cog"></i></span>
+          <span class="nav-label">Settings</span>
+        </a>
+      </nav>
 
-        <div class="form-group">
-          <label>Board</label>
-          <div class="input-wrap school-wrap">
-            <i class="fas fa-certificate input-icon"></i>
-            <input type="text" id="schoolBoard" class="school-inp" placeholder="e.g. CBSE, ICSE, State Board">
-          </div>
+      <div class="sidebar-footer">
+        <div class="sf-tip">
+          <i class="fas fa-lightbulb"></i>
+          <span>Add both university & school to maximize your completion score</span>
         </div>
+      </div>
+    </aside>
 
-        <div class="form-group">
-          <label>Location</label>
-          <div class="input-wrap school-wrap">
-            <i class="fas fa-map-marker-alt input-icon"></i>
-            <input type="text" id="schoolLocation" class="school-inp" placeholder="e.g. New Delhi, India">
-          </div>
-        </div>
+    <!-- Main -->
+    <main class="main-content">
 
-        <div class="form-group">
-          <label>Passed Out Year</label>
-          <div class="input-wrap school-wrap">
-            <i class="fas fa-calendar-check input-icon"></i>
-            <input type="text" id="schoolYear" class="school-inp" placeholder="e.g. 2022">
+      <!-- Page Header -->
+      <div class="page-header reveal">
+        <div class="page-header-left">
+          <div class="page-eyebrow">
+            <span class="page-eyebrow-dot"></span>
+            Academic Background
           </div>
-        </div>
-
-        <div class="form-group">
-          <label>Percentage / Grade <span class="optional-tag">optional</span></label>
-          <div class="input-wrap school-wrap">
-            <i class="fas fa-percent input-icon"></i>
-            <input type="text" id="schoolGrade" class="school-inp" placeholder="e.g. 92%">
-          </div>
+          <h1 class="page-title">Education</h1>
+          <p class="page-subtitle">Add your academic background to strengthen your portfolio and impress recruiters.</p>
         </div>
       </div>
 
-    </div><!-- /forms-grid -->
+      <!-- Info Banner -->
+      <div class="info-banner reveal reveal-delay-1">
+        <i class="fas fa-info-circle"></i>
+        <span>You can add up to <strong>2 education records</strong> — one for your university / institute and one for your school.</span>
+      </div>
 
-    <!-- Save row -->
-    <div class="save-row">
-      <button class="btn-save" id="saveBtn">
-        <div class="spinner-mini" id="saveSpin"></div>
-        <i class="fas fa-save" id="saveIcon"></i>
-        <span id="saveTxt">Save Education</span>
-      </button>
-    </div>
+      <!-- Forms Grid -->
+      <div class="forms-grid reveal reveal-delay-2">
 
-    <!-- Preview / Timeline -->
-    <div class="preview-section" id="previewSection" style="display:none">
-      <div class="preview-title">
-        <div class="icon-box blue" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(56,189,248,0.15);color:var(--accent);font-size:0.9rem;">
-          <i class="fas fa-timeline"></i>
+        <!-- University Card -->
+        <div class="section-card uni">
+          <div class="card-header">
+            <div class="card-icon blue"><i class="fas fa-university"></i></div>
+            <div class="card-title-wrap">
+              <div class="card-title">University / Institute</div>
+              <div class="card-desc">Higher education & degrees</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Degree / Program</label>
+            <div class="input-wrap">
+              <i class="fas fa-graduation-cap input-icon"></i>
+              <input type="text" id="uniDegree" class="field-input" placeholder="e.g. B.Tech in Computer Science">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Institution Name</label>
+            <div class="input-wrap">
+              <i class="fas fa-building-columns input-icon"></i>
+              <input type="text" id="uniName" class="field-input" placeholder="e.g. MIT, IIT Bombay">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration / Year</label>
+            <div class="input-wrap">
+              <i class="fas fa-calendar input-icon"></i>
+              <input type="text" id="uniYear" class="field-input" placeholder="e.g. 2022 – 2026">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">CGPA / Grade <span class="optional-badge">optional</span></label>
+            <div class="input-wrap">
+              <i class="fas fa-star input-icon"></i>
+              <input type="text" id="uniGrade" class="field-input" placeholder="e.g. 8.5 / 10">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location <span class="optional-badge">optional</span></label>
+            <div class="input-wrap">
+              <i class="fas fa-map-marker-alt input-icon"></i>
+              <input type="text" id="uniLocation" class="field-input" placeholder="e.g. Mumbai, India">
+            </div>
+          </div>
         </div>
-        Education Timeline
-      </div>
-      <div class="timeline" id="eduTimeline"></div>
-    </div>
 
-    <!-- Empty state (shown when no saved data) -->
-    <div class="preview-section" id="emptySection">
-      <div class="empty-edu">
-        <div class="empty-edu-icon"><i class="fas fa-graduation-cap"></i></div>
-        <h3>No education saved yet</h3>
-        <p>Fill in the forms above and click <strong style="color:var(--accent)">Save Education</strong> to see your timeline here.</p>
+        <!-- School Card -->
+        <div class="section-card school">
+          <div class="card-header">
+            <div class="card-icon warm"><i class="fas fa-school"></i></div>
+            <div class="card-title-wrap">
+              <div class="card-title">School Education</div>
+              <div class="card-desc">Secondary & higher secondary</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">School Name</label>
+            <div class="input-wrap school-wrap">
+              <i class="fas fa-school input-icon"></i>
+              <input type="text" id="schoolName" class="field-input school-inp" placeholder="e.g. Delhi Public School">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Board</label>
+            <div class="input-wrap school-wrap">
+              <i class="fas fa-certificate input-icon"></i>
+              <input type="text" id="schoolBoard" class="field-input school-inp" placeholder="e.g. CBSE, ICSE, State Board">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <div class="input-wrap school-wrap">
+              <i class="fas fa-map-marker-alt input-icon"></i>
+              <input type="text" id="schoolLocation" class="field-input school-inp" placeholder="e.g. New Delhi, India">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Passed Out Year</label>
+            <div class="input-wrap school-wrap">
+              <i class="fas fa-calendar-check input-icon"></i>
+              <input type="text" id="schoolYear" class="field-input school-inp" placeholder="e.g. 2022">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Percentage / Grade <span class="optional-badge">optional</span></label>
+            <div class="input-wrap school-wrap">
+              <i class="fas fa-percent input-icon"></i>
+              <input type="text" id="schoolGrade" class="field-input school-inp" placeholder="e.g. 92%">
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /forms-grid -->
+
+      <!-- Save Row -->
+      <div class="save-row reveal reveal-delay-3">
+        <span class="save-hint">
+          <i class="fas fa-shield-check"></i>
+          Your data is saved securely to the cloud
+        </span>
+        <button class="btn-save" id="saveBtn">
+          <div class="spinner-mini" id="saveSpin"></div>
+          <i class="fas fa-save" id="saveIcon"></i>
+          <span id="saveTxt">Save Education</span>
+        </button>
       </div>
-    </div>
-  </main>
-</div>
+
+      <!-- Timeline Section -->
+      <div class="timeline-section reveal reveal-delay-4" id="timelineSection">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-icon"><i class="fas fa-timeline"></i></div>
+            <div>
+              <div class="section-title-text">Education Timeline</div>
+              <div class="section-count" id="timelineCount">No records yet</div>
+            </div>
+          </div>
+          <span class="section-badge" id="timelineBadge" style="display:none;">
+            <span class="badge-dot"></span> Saved
+          </span>
+        </div>
+
+        <!-- Timeline (populated by JS) -->
+        <div class="timeline" id="eduTimeline"></div>
+
+        <!-- Empty state -->
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon"><i class="fas fa-graduation-cap"></i></div>
+          <div class="empty-title">No education saved yet</div>
+          <p class="empty-sub">Fill in the forms above and click <strong>Save Education</strong><br>to see your timeline here.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
 <script type="module" src="education.js"></script>
 </body>
 </html>

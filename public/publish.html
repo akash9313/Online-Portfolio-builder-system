@@ -4,144 +4,269 @@
   <meta charset="UTF-8">
   <title>Publish | PortfolioX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="publish.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
 </head>
 <body>
 
-<div class="toast" id="toast"><i class="fas fa-check-circle" id="toastIcon"></i><span id="toastMsg"></span></div>
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<header class="navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo"><i class="fas fa-rocket"></i>Portfolio<span class="x">X</span></a>
-    <div class="nav-actions">
-      <a href="preview.html" class="nav-btn btn-preview"><i class="fas fa-eye"></i><span>Preview</span></a>
-      <button class="nav-btn btn-logout" id="logoutBtn"><i class="fas fa-power-off"></i></button>
+  <!-- Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-inner">
+      <div class="loader-icon"><i class="fas fa-rocket"></i></div>
+      <span class="loader-brand">Portfolio<span class="x">X</span></span>
+      <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+      <p class="loader-text">Preparing your publish page…</p>
     </div>
   </div>
-</header>
 
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-header"><h3>Portfolio Builder</h3></div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-      <a href="profile.html"   class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
-      <a href="skills.html"    class="nav-item"><i class="fas fa-brain"></i><span>Skills</span></a>
-      <a href="education.html" class="nav-item"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
-      <a href="projects.html"  class="nav-item"><i class="fas fa-project-diagram"></i><span>Projects</span></a>
-      <a href="templates.html" class="nav-item"><i class="fas fa-palette"></i><span>Templates</span></a>
-      <a href="preview.html"   class="nav-item" target="_blank"><i class="fas fa-eye"></i><span>Preview</span></a>
-      <a href="publish.html"   class="nav-item active"><i class="fas fa-globe"></i><span>Publish</span></a>
-      <a href="settings.html"  class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
-    </nav>
-  </aside>
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle" id="toastIcon"></i>
+    <span id="toastMsg"></span>
+  </div>
 
-  <main class="publish-main">
-    <div class="page-header">
-      <h2>Publish Portfolio</h2>
-      <p>Review everything and make your portfolio live for the world to see.</p>
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+        <span class="logo-text">Portfolio<span class="x">X</span></span>
+      </a>
+      <div class="nav-actions">
+        <a href="preview.html" class="nav-btn btn-preview"><i class="fas fa-eye"></i> Preview</a>
+        <button class="nav-logout" id="logoutBtn" title="Sign Out"><i class="fas fa-power-off"></i></button>
+      </div>
     </div>
+  </header>
 
-    <div class="publish-grid">
-      <div class="publish-left">
+  <div class="app-layout">
 
-        <!-- Checklist -->
-        <div class="section-card">
-          <div class="section-title"><div class="icon-box green"><i class="fas fa-clipboard-check"></i></div>Readiness Checklist</div>
-          <div class="checklist" id="checklist"></div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="sp-avatar" id="spAvatar">?</div>
+        <div>
+          <p class="sp-name" id="spName">Loading…</p>
+          <span class="sp-badge"><span class="sp-dot"></span> Active</span>
         </div>
-
-        <!-- Template & Visibility -->
-        <div class="section-card">
-          <div class="section-title"><div class="icon-box"><i class="fas fa-palette"></i></div>Template &amp; Visibility</div>
-          <div class="template-display">
-            <div class="template-thumb"><i class="fas fa-palette"></i></div>
-            <div class="template-display-info">
-              <strong id="templateNameEl">No template selected</strong>
-              <span>Portfolio template</span>
-            </div>
-            <a href="templates.html" class="change-link">Change</a>
-          </div>
-          <div style="margin-top:1.4rem;margin-bottom:0.7rem;">
-            <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Visibility</label>
-          </div>
-          <div class="visibility-options">
-            <div class="vis-option active" data-vis="public"><i class="fas fa-globe"></i><strong>Public</strong><span>Anyone with the link</span></div>
-            <div class="vis-option" data-vis="unlisted"><i class="fas fa-link"></i><strong>Unlisted</strong><span>Only people with link</span></div>
-            <div class="vis-option" data-vis="private"><i class="fas fa-lock"></i><strong>Private</strong><span>Only you</span></div>
-          </div>
-        </div>
-
-        <!-- URL Slug -->
-        <div class="section-card">
-          <div class="section-title"><div class="icon-box purple"><i class="fas fa-link"></i></div>Custom Portfolio URL</div>
-          <div class="slug-wrap">
-            <div class="slug-prefix">portfoliox.web.app/u/</div>
-            <input type="text" class="slug-input" id="slugInput" placeholder="your-name" maxlength="30">
-          </div>
-          <p class="slug-status" id="slugStatus"></p>
-          <p class="slug-hint"><i class="fas fa-info-circle" style="color:var(--accent);margin-right:4px;"></i>Lowercase letters, numbers and hyphens only.</p>
-          <div class="stats-row">
-            <div class="stat-mini"><div class="stat-mini-num" id="statSkills">0</div><div class="stat-mini-label">Skills</div></div>
-            <div class="stat-mini"><div class="stat-mini-num" id="statProjects">0</div><div class="stat-mini-label">Projects</div></div>
-            <div class="stat-mini"><div class="stat-mini-num" id="statEdu">0</div><div class="stat-mini-label">Education</div></div>
-          </div>
-        </div>
-
       </div>
 
-      <div class="publish-right">
+      <!-- Score mini in sidebar -->
+      <div class="sb-score-wrap">
+        <div class="sb-score-label">Publish Readiness</div>
+        <div class="sb-score-bar"><div class="sb-score-fill" id="sbScoreFill"></div></div>
+        <div class="sb-score-nums"><span id="sbScoreLeft">0 / 5 complete</span><span class="sb-score-pct" id="sbScorePct">0%</span></div>
+      </div>
 
-        <!-- Score card -->
-        <div class="publish-card">
-          <div class="publish-score">
-            <div class="score-ring">
-              <svg width="88" height="88" viewBox="0 0 88 88">
-                <defs>
-                  <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#38bdf8"/>
-                    <stop offset="100%" stop-color="#6366f1"/>
-                  </linearGradient>
-                </defs>
-                <circle class="score-ring-bg"   cx="44" cy="44" r="36"/>
-                <circle class="score-ring-fill" cx="44" cy="44" r="36" id="scoreRingFill"/>
-              </svg>
-              <div class="score-label">
-                <span class="score-num"  id="scoreNum">0%</span>
-                <span class="score-text">Ready</span>
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">Main</div>
+        <a href="dashboard.html" class="nav-item"><span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span><span class="nav-label">Dashboard</span></a>
+        <a href="profile.html"   class="nav-item"><span class="nav-icon"><i class="fas fa-user"></i></span><span class="nav-label">Profile</span></a>
+        <a href="skills.html"    class="nav-item"><span class="nav-icon"><i class="fas fa-brain"></i></span><span class="nav-label">Skills</span></a>
+        <a href="education.html" class="nav-item"><span class="nav-icon"><i class="fas fa-graduation-cap"></i></span><span class="nav-label">Education</span></a>
+        <a href="projects.html"  class="nav-item"><span class="nav-icon"><i class="fas fa-project-diagram"></i></span><span class="nav-label">Projects</span></a>
+
+        <div class="nav-group-label" style="margin-top:1.2rem;">Publish</div>
+        <a href="templates.html" class="nav-item"><span class="nav-icon"><i class="fas fa-palette"></i></span><span class="nav-label">Templates</span></a>
+        <a href="preview.html"   class="nav-item"><span class="nav-icon"><i class="fas fa-eye"></i></span><span class="nav-label">Preview</span></a>
+        <a href="publish.html"   class="nav-item active"><span class="nav-icon"><i class="fas fa-globe"></i></span><span class="nav-label">Publish</span><span class="nav-active-dot"></span></a>
+        <a href="settings.html"  class="nav-item"><span class="nav-icon"><i class="fas fa-cog"></i></span><span class="nav-label">Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sf-tip"><i class="fas fa-lightbulb"></i><span>Complete all 5 checks to unlock the publish button</span></div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="publish-main">
+
+      <!-- Header -->
+      <div class="page-header reveal">
+        <div class="ph-eyebrow"><span class="ph-eyebrow-dot"></span> Final Step</div>
+        <h2>Publish Portfolio</h2>
+        <p>Review everything and make your portfolio live for the world to see.</p>
+      </div>
+
+      <div class="pub-grid">
+        <div class="pub-left">
+
+          <!-- Checklist -->
+          <div class="sc sc-top-line reveal rd1">
+            <div class="sc-header">
+              <div class="sc-icon sci-green"><i class="fas fa-clipboard-check"></i></div>
+              <div>
+                <div class="sc-title">Readiness Checklist</div>
+                <div class="sc-sub">Complete all items to enable publishing</div>
+              </div>
+              <span class="sc-badge" id="checkBadge">0 / 5</span>
+            </div>
+            <div class="checklist" id="checklist"></div>
+          </div>
+
+          <!-- Template & Visibility -->
+          <div class="sc reveal rd2">
+            <div class="sc-header">
+              <div class="sc-icon sci-blue"><i class="fas fa-palette"></i></div>
+              <div>
+                <div class="sc-title">Template &amp; Visibility</div>
+                <div class="sc-sub">Choose how your portfolio appears</div>
               </div>
             </div>
-            <h4 id="scoreTitle">Profile Incomplete</h4>
-            <p  id="scoreDesc">Complete your checklist to publish</p>
-          </div>
-          <button class="btn-publish-big" id="publishBtn" disabled>
-            <div class="spinner"></div>
-            <span class="btn-label"><i class="fas fa-rocket"></i>&nbsp; Publish Portfolio</span>
-          </button>
-          <p class="publish-note" id="publishNote"><i class="fas fa-shield-alt"></i>Complete the checklist above to enable publishing.</p>
-        </div>
 
-        <!-- Live link (shown after publish) -->
-        <div class="live-link-card" id="liveLinkCard">
-          <div class="live-header"><div class="live-dot"></div><h4>Portfolio is Live! 🎉</h4></div>
-          <div class="link-box">
-            <input type="text" id="linkInput" readonly>
-            <button class="btn-copy" id="copyBtn"><i class="fas fa-copy"></i> Copy</button>
-          </div>
-          <div class="share-row">
-            <button class="share-btn twitter"  id="shareTwitter"><i class="fab fa-twitter"></i> Twitter</button>
-            <button class="share-btn linkedin" id="shareLinkedIn"><i class="fab fa-linkedin"></i> LinkedIn</button>
-            <button class="share-btn whatsapp" id="shareWhatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-          </div>
-        </div>
+            <div class="tpl-display">
+              <div class="tpl-thumb"><i class="fas fa-palette"></i></div>
+              <div class="tpl-info">
+                <strong id="tplNameEl">No template selected</strong>
+                <span>Active portfolio template</span>
+              </div>
+              <a href="templates.html" class="tpl-change"><i class="fas fa-exchange-alt"></i> Change</a>
+            </div>
 
+            <div class="vis-label">Visibility Setting</div>
+            <div class="vis-opts">
+              <div class="vis-opt active" data-vis="public">
+                <i class="fas fa-globe vo-icon"></i>
+                <span class="vo-name">Public</span>
+                <span class="vo-desc">Everyone can view</span>
+              </div>
+              <div class="vis-opt" data-vis="unlisted">
+                <i class="fas fa-link vo-icon"></i>
+                <span class="vo-name">Unlisted</span>
+                <span class="vo-desc">Only via direct link</span>
+              </div>
+              <div class="vis-opt" data-vis="private">
+                <i class="fas fa-lock vo-icon"></i>
+                <span class="vo-name">Private</span>
+                <span class="vo-desc">Only you can see</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- URL Slug -->
+          <div class="sc reveal rd3">
+            <div class="sc-header">
+              <div class="sc-icon sci-purple"><i class="fas fa-link"></i></div>
+              <div>
+                <div class="sc-title">Custom Portfolio URL</div>
+                <div class="sc-sub">Your unique shareable address</div>
+              </div>
+            </div>
+
+            <div class="slug-wrap">
+              <span class="slug-prefix">portfoliox.web.app/u/</span>
+              <input type="text" class="slug-input" id="slugInput" placeholder="your-name" maxlength="30">
+              <button class="slug-check-btn" id="checkSlugBtn"><i class="fas fa-search"></i> Check</button>
+            </div>
+            <div class="slug-status" id="slugStatus"></div>
+            <div class="slug-hint"><i class="fas fa-info-circle"></i> Lowercase letters, numbers and hyphens only</div>
+
+            <div class="stats-mini-row">
+              <div class="sm-card c-blue">
+                <span class="sm-val" id="statSkills">0</span>
+                <span class="sm-key">Skills</span>
+              </div>
+              <div class="sm-card c-purple">
+                <span class="sm-val" id="statProjects">0</span>
+                <span class="sm-key">Projects</span>
+              </div>
+              <div class="sm-card c-green">
+                <span class="sm-val" id="statEdu">0</span>
+                <span class="sm-key">Education</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /pub-left -->
+
+        <div class="pub-right">
+
+          <!-- Score card -->
+          <div class="score-card reveal rd2">
+            <svg style="width:0;height:0;position:absolute">
+              <defs>
+                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#38bdf8"/>
+                  <stop offset="50%" stop-color="#6366f1"/>
+                  <stop offset="100%" stop-color="#ec4899"/>
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <div class="score-ring-wrap">
+              <svg class="score-svg" viewBox="0 0 110 110">
+                <circle class="sr-track" cx="55" cy="55" r="45"/>
+                <circle class="sr-fill" id="srFill" cx="55" cy="55" r="45"/>
+              </svg>
+              <div class="score-inner">
+                <span class="score-pct" id="scorePct">0%</span>
+                <span class="score-word">Ready</span>
+              </div>
+            </div>
+
+            <h4 class="score-title" id="scoreTitle">Profile Incomplete</h4>
+            <p  class="score-desc"  id="scoreDesc">Complete your checklist to publish</p>
+
+            <!-- Mini check rows -->
+            <div class="score-checks" id="scoreChecks"></div>
+
+            <button class="btn-publish-big" id="publishBtn" disabled>
+              <div class="pub-spinner"></div>
+              <span class="pub-label"><i class="fas fa-rocket"></i>&nbsp; Publish Portfolio</span>
+            </button>
+            <p class="publish-note" id="publishNote"><i class="fas fa-shield-alt"></i> Complete all checks to enable publishing.</p>
+          </div>
+
+          <!-- Live card (shown after publish) -->
+          <div class="live-card" id="liveCard">
+            <div class="live-header">
+              <div class="live-dot"></div>
+              <h4>Portfolio is Live! 🎉</h4>
+            </div>
+            <div class="link-box">
+              <input type="text" id="linkInput" readonly>
+              <button class="btn-copy" id="copyBtn"><i class="fas fa-copy"></i> Copy</button>
+            </div>
+            <div class="live-actions">
+              <a class="la-btn la-twitter"  id="shareTwitter"  href="#" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+              <a class="la-btn la-linkedin" id="shareLinkedIn" href="#" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+              <a class="la-btn la-whatsapp" id="shareWhatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+              <a class="la-btn la-email"    id="shareEmail"    href="#"><i class="fas fa-envelope"></i> Email</a>
+            </div>
+            <div class="live-stats-row">
+              <div class="ls-stat">
+                <span class="ls-val" id="lsSkills">0</span>
+                <span class="ls-key">Skills</span>
+              </div>
+              <div class="ls-stat">
+                <span class="ls-val" id="lsProjects">0</span>
+                <span class="ls-key">Projects</span>
+              </div>
+              <div class="ls-stat">
+                <span class="ls-val" id="lsEdu">0</span>
+                <span class="ls-key">Education</span>
+              </div>
+            </div>
+            <button class="btn-unpublish" id="unpublishBtn"><i class="fas fa-eye-slash"></i> Unpublish Portfolio</button>
+          </div>
+
+        </div><!-- /pub-right -->
       </div>
-    </div>
-  </main>
-</div>
 
-<script type="module" src="publish.js"></script>
+    </main>
+  </div>
+
+  <script type="module" src="publish.js"></script>
 </body>
 </html>

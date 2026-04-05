@@ -1,109 +1,257 @@
-const selectedTemplate = localStorage.getItem('finalTemplate');
+import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut }
+      from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc }
+      from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  const templateMap = {
-  'Classic Developer':   'templates/classic.html',
-  'Modern Professional': 'templates/modern.html',
-  'Creative Designer':   'templates/creative.html',
-  'Minimal Resume':      'templates/minimal.html',
-  'Neon Dark':           'templates/neon-dark.html',
-  'Glass Morph':         'templates/glass-morph.html',
-  'Terminal Hacker':     'templates/terminal-hacker.html',
-  'Gradient Splash':     'templates/gradient-splash.html',
-  'Executive Pro':       'templates/executive-pro.html',
-  'Bento Grid':          'templates/bento-grid.html'
-  };
-
-  const iframe        = document.getElementById('previewIframe');
-  const overlay       = document.getElementById('iframeOverlay');
-  const controlBar    = document.getElementById('controlBar');
-  const browserWrap   = document.getElementById('browserWrap');
-  const emptyState    = document.getElementById('emptyState');
-  const browserChrome = document.getElementById('browserChrome');
-  const templateName  = document.getElementById('templateName');
-  const urlBarText    = document.getElementById('urlBarText');
-
-  /* ── Toast ── */
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    document.getElementById('toastMsg').textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
-
-  /* ── Init ── */
-  if (!selectedTemplate) {
-    emptyState.style.display = 'flex';
-  } else {
-    controlBar.style.display  = 'flex';
-    browserWrap.style.display = 'flex';
-
-    templateName.textContent = selectedTemplate;
-    urlBarText.textContent   = `portfoliox.app/u/${selectedTemplate.toLowerCase().replace(/\s+/g,'-')}`;
-
-    const file = templateMap[selectedTemplate] || 'templates/classic.html';
-    loadIframe(file);
-  }
-
-  /* ── Load iframe ── */
-  function loadIframe(src) {
-    overlay.classList.remove('hidden');
-    iframe.src = src;
-    iframe.onload = () => {
-      setTimeout(() => overlay.classList.add('hidden'), 400);
+    const firebaseConfig = {
+      apiKey:            "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+      authDomain:        "portfoliox-2e787.firebaseapp.com",
+      projectId:         "portfoliox-2e787",
+      storageBucket:     "portfoliox-2e787.firebasestorage.app",
+      messagingSenderId: "562709786891",
+      appId:             "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
     };
-  }
 
-  /* ── Viewport toggle ── */
-  document.querySelectorAll('.vp-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.vp-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const vp = btn.dataset.vp;
-      browserChrome.className = `browser-chrome ${vp}`;
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
 
-      // Adjust iframe wrap height for mobile/tablet
-      const wrap = document.getElementById('iframeWrap');
-      if (vp === 'mobile')       wrap.style.minHeight = '844px';
-      else if (vp === 'tablet')  wrap.style.minHeight = '1024px';
-      else                       wrap.style.minHeight = '';
+    const templateMap = {
+      'Classic Developer':   'templates/classic.html',
+      'Modern Professional': 'templates/modern.html',
+      'Creative Designer':   'templates/creative.html',
+      'Minimal Resume':      'templates/minimal.html',
+      'Neon Dark':           'templates/neon-dark.html',
+      'Glass Morph':         'templates/glass-morph.html',
+      'Terminal Hacker':     'templates/terminal-hacker.html',
+      'Gradient Splash':     'templates/gradient-splash.html',
+      'Executive Pro':       'templates/executive-pro.html',
+      'Bento Grid':          'templates/bento-grid.html'
+    };
+
+    const iframe        = document.getElementById('previewIframe');
+    const overlay       = document.getElementById('iframeOverlay');
+    const controlBar    = document.getElementById('controlBar');
+    const browserArea   = document.getElementById('browserArea');
+    const emptyState    = document.getElementById('emptyState');
+    const browserChrome = document.getElementById('browserChrome');
+    const loadBar       = document.getElementById('loadBar');
+
+    let currentZoom    = 1;
+    let isReadOnly     = false;
+    let currentSrc     = '';
+    let currentVp      = 'desktop';
+    let selectedTpl    = localStorage.getItem('finalTemplate') || '';
+    let portfolioUrl   = '';
+
+    /* ── Toast ── */
+    function showToast(msg, type='') {
+      const t = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      document.getElementById('toastIcon').className  = type === 'warn' ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle';
+      t.className = 'toast' + (type ? ' ' + type : '');
+      void t.offsetWidth;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+    /* ── Load iframe ── */
+    function loadIframe(src) {
+      currentSrc = src;
+      overlay.classList.remove('hidden');
+      document.getElementById('overlayText').textContent = 'Loading preview…';
+      loadBar.classList.add('loading');
+      iframe.src = src;
+      iframe.onload = () => {
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+          loadBar.classList.remove('loading');
+          document.getElementById('loadFill').style.width = '100%';
+          setTimeout(() => document.getElementById('loadFill').style.width = '0%', 600);
+        }, 450);
+      };
+    }
+
+    /* ── Apply zoom ── */
+    function applyZoom(z) {
+      currentZoom = Math.max(0.4, Math.min(1.5, z));
+      document.getElementById('zoomVal').textContent = Math.round(currentZoom * 100) + '%';
+      if (currentZoom < 1) {
+        iframe.style.transform       = `scale(${currentZoom})`;
+        iframe.style.width           = `${100 / currentZoom}%`;
+        iframe.style.height          = `${100 / currentZoom}%`;
+        iframe.style.transformOrigin = 'top left';
+      } else {
+        iframe.style.transform = `scale(${currentZoom})`;
+        iframe.style.width     = '100%';
+        iframe.style.height    = '100%';
+        iframe.style.transformOrigin = 'top left';
+      }
+    }
+
+    /* ── Auth + Init ── */
+    onAuthStateChanged(auth, async user => {
+      if (!user) { window.location.href = 'loginpage.html'; return; }
+
+      // Load profile
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      let userName = user.email.split('@')[0];
+      if (snap.exists()) {
+        const d = snap.data();
+        if (d.fullName) userName = d.fullName;
+      }
+      document.getElementById('spName').textContent   = userName;
+      document.getElementById('spAvatar').textContent = userName.charAt(0).toUpperCase();
+
+      // Build portfolio URL slug
+      const slug = userName.toLowerCase().replace(/\s+/g, '-');
+      portfolioUrl = `portfoliox.app/u/${slug}`;
+      document.getElementById('urlBarText').textContent  = portfolioUrl;
+      document.getElementById('shareUrlText').textContent = portfolioUrl;
+
+      // Share links
+      const encoded = encodeURIComponent('https://' + portfolioUrl);
+      document.getElementById('shareLinkedIn').href  = `https://www.linkedin.com/sharing/share-offsite/?url=${encoded}`;
+      document.getElementById('shareTwitter').href   = `https://twitter.com/intent/tweet?url=${encoded}&text=Check+out+my+portfolio!`;
+      document.getElementById('shareWhatsApp').onclick = () => window.open(`https://wa.me/?text=Check+out+my+portfolio!+https://${portfolioUrl}`, '_blank');
+      document.getElementById('shareEmail').onclick    = () => window.location.href = `mailto:?subject=My+Portfolio&body=https://${portfolioUrl}`;
+
+      // Check template
+      if (!selectedTpl) {
+        emptyState.style.display = 'flex';
+      } else {
+        controlBar.style.display  = 'flex';
+        browserArea.style.display = 'flex';
+        document.getElementById('navLiveBadge').style.display    = 'flex';
+        document.getElementById('sidebarTplCard').style.display  = 'block';
+        document.getElementById('stcName').textContent           = selectedTpl;
+        document.getElementById('tplPillName').textContent       = selectedTpl;
+
+        const file = templateMap[selectedTpl] || 'templates/classic.html';
+        loadIframe(file);
+      }
+
+      // Hide loader
+      const ol = document.getElementById('loadingOverlay');
+      ol.style.opacity = '0';
+      setTimeout(() => ol.style.display = 'none', 400);
     });
-  });
 
-  /* ── Zoom ── */
-  document.getElementById('zoomSelect').addEventListener('change', e => {
-    const z = parseFloat(e.target.value);
-    iframe.style.transform = `scale(${z})`;
-    iframe.style.width     = z < 1 ? `${100 / z}%` : '100%';
-    iframe.style.height    = z < 1 ? `${100 / z}%` : '100%';
-    iframe.style.transformOrigin = 'top left';
-  });
+    /* ── Viewport ── */
+    document.querySelectorAll('.vp-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.vp-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentVp = btn.dataset.vp;
+        browserChrome.className = `browser-chrome vp-${currentVp}`;
+        const wrap = document.getElementById('iframeWrap');
+        if (currentVp === 'mobile')      { wrap.style.minHeight = '844px'; }
+        else if (currentVp === 'tablet') { wrap.style.minHeight = '1024px'; }
+        else                             { wrap.style.minHeight = ''; }
+        showToast(`Switched to ${currentVp} view`);
+      });
+    });
 
-  /* ── Read-only toggle ── */
-  let isReadOnly = false;
-  document.getElementById('readonlyToggle').addEventListener('click', () => {
-    isReadOnly = !isReadOnly;
-    document.getElementById('readonlyToggle').classList.toggle('on', isReadOnly);
-    const base = iframe.src.split('?')[0];
-    loadIframe(isReadOnly ? `${base}?mode=readonly` : base);
-    showToast(isReadOnly ? 'Read-only mode enabled' : 'Edit mode enabled');
-  });
+    /* ── Zoom ── */
+    const ZOOM_STEPS = [0.4, 0.5, 0.6, 0.75, 0.85, 1, 1.1, 1.25, 1.5];
+    function stepZoom(dir) {
+      const idx  = ZOOM_STEPS.findIndex(z => Math.abs(z - currentZoom) < 0.01);
+      const next = dir === 'in' ? ZOOM_STEPS[Math.min(idx+1, ZOOM_STEPS.length-1)] : ZOOM_STEPS[Math.max(idx-1, 0)];
+      applyZoom(next);
+    }
+    document.getElementById('zoomIn') .addEventListener('click', () => stepZoom('in'));
+    document.getElementById('zoomOut').addEventListener('click', () => stepZoom('out'));
 
-  /* ── Refresh ── */
-  document.getElementById('refreshBtn').addEventListener('click', () => {
-    overlay.classList.remove('hidden');
-    iframe.src = iframe.src;
-    iframe.onload = () => setTimeout(() => overlay.classList.add('hidden'), 400);
-    showToast('Preview refreshed');
-  });
+    /* ── Read-only ── */
+    document.getElementById('roToggle').addEventListener('click', () => {
+      isReadOnly = !isReadOnly;
+      document.getElementById('roToggle').classList.toggle('on', isReadOnly);
+      const base = currentSrc.split('?')[0];
+      loadIframe(isReadOnly ? `${base}?mode=readonly` : base);
+      showToast(isReadOnly ? 'Read-only mode on' : 'Interactive mode on');
+    });
 
-  /* ── Copy URL ── */
-  document.getElementById('copyUrlBtn').addEventListener('click', () => {
-    navigator.clipboard.writeText(urlBarText.textContent).catch(() => {});
-    showToast('URL copied to clipboard!');
-  });
+    /* ── Refresh ── */
+    function doRefresh() {
+      const btn = document.getElementById('refreshBtn');
+      btn.classList.add('spinning');
+      setTimeout(() => btn.classList.remove('spinning'), 650);
+      overlay.classList.remove('hidden');
+      loadBar.classList.add('loading');
+      iframe.src = iframe.src;
+      iframe.onload = () => setTimeout(() => { overlay.classList.add('hidden'); loadBar.classList.remove('loading'); }, 450);
+      showToast('Preview refreshed');
+    }
+    document.getElementById('refreshBtn').addEventListener('click', doRefresh);
+    document.getElementById('reloadBtn') .addEventListener('click', doRefresh);
 
-  /* ── Logout ── */
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    localStorage.clear();
-    window.location.href = 'loginpage.html';
-  });
+    /* ── Browser URL bar copy ── */
+    function copyUrl() {
+      navigator.clipboard.writeText('https://' + portfolioUrl).catch(() => {});
+      showToast('URL copied to clipboard!');
+    }
+    document.getElementById('urlBar')   .addEventListener('click', copyUrl);
+    document.getElementById('copyUrlBtn').addEventListener('click', copyUrl);
+
+    /* ── New tab ── */
+    document.getElementById('newTabBtn').addEventListener('click', () => {
+      if (currentSrc) window.open(currentSrc, '_blank');
+    });
+    document.getElementById('openTabBtn').addEventListener('click', () => {
+      if (currentSrc) window.open(currentSrc, '_blank');
+      else showToast('Select a template first', 'warn');
+    });
+
+    /* ── Nav back/fwd (just navigate iframe history) ── */
+    document.getElementById('backBtn').addEventListener('click', () => {
+      try { iframe.contentWindow.history.back(); } catch(e) {}
+    });
+    document.getElementById('fwdBtn').addEventListener('click', () => {
+      try { iframe.contentWindow.history.forward(); } catch(e) {}
+    });
+
+    /* ── Fullscreen dot ── */
+    document.getElementById('fullscreenDot').addEventListener('click', () => {
+      const wrap = document.getElementById('iframeWrap');
+      if (!document.fullscreenElement) wrap.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    });
+
+    /* ── Share modal ── */
+    document.getElementById('shareBtn').addEventListener('click', () => {
+      document.getElementById('shareModal').classList.add('open');
+    });
+    document.getElementById('closeShareModal').addEventListener('click', () => {
+      document.getElementById('shareModal').classList.remove('open');
+    });
+    document.getElementById('shareModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('shareModal'))
+        document.getElementById('shareModal').classList.remove('open');
+    });
+    document.getElementById('copyShareUrl').addEventListener('click', () => {
+      navigator.clipboard.writeText('https://' + portfolioUrl).catch(() => {});
+      showToast('Link copied!');
+    });
+
+    /* ── Copy URL chip button ── */
+    document.getElementById('copyUrlBtn').addEventListener('click', copyUrl);
+
+    /* ── Logout ── */
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
+      localStorage.clear();
+      window.location.href = 'loginpage.html';
+    });
+  
+    /* Cursor */
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursorRing');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX+'px'; cursor.style.top = e.clientY+'px';
+      ring.style.left   = e.clientX+'px'; ring.style.top   = e.clientY+'px';
+    });
+    /* Navbar scroll */
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+    });

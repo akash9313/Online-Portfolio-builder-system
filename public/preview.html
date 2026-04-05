@@ -4,138 +4,232 @@
   <meta charset="UTF-8">
   <title>Preview | PortfolioX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="preview.css">
 </head>
 <body>
 
-<!-- Toast -->
-<div class="toast" id="toast">
-  <i class="fas fa-check-circle"></i>
-  <span id="toastMsg">Copied!</span>
-</div>
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- Navbar -->
-<header class="navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <i class="fas fa-rocket"></i>
-      Portfolio<span class="x">X</span>
-    </a>
-    <div class="nav-actions">
-      <a href="templates.html" class="nav-btn btn-edit">
-        <i class="fas fa-palette"></i><span>Change Template</span>
-      </a>
-      <a href="publish.html" class="nav-btn btn-publish">
-        <i class="fas fa-rocket"></i><span>Publish</span>
-      </a>
-      <button class="nav-btn btn-logout" id="logoutBtn">
-        <i class="fas fa-power-off"></i>
-      </button>
+  <!-- Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- Loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-inner">
+      <div class="loader-icon"><i class="fas fa-eye"></i></div>
+      <span class="loader-brand">Portfolio<span class="x">X</span></span>
+      <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+      <p class="loader-text">Loading preview…</p>
     </div>
   </div>
-</header>
 
-<div class="layout">
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle" id="toastIcon"></i>
+    <span id="toastMsg">Done!</span>
+  </div>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h3>Portfolio Builder</h3>
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="shareModal">
+    <div class="modal-box">
+      <div class="modal-title"><i class="fas fa-share-alt"></i> Share Your Portfolio</div>
+      <div class="modal-sub">Share your live portfolio link with anyone</div>
+      <div class="share-url-wrap">
+        <i class="fas fa-link"></i>
+        <span id="shareUrlText">portfoliox.app/u/your-portfolio</span>
+        <button class="copy-url-btn" id="copyShareUrl">Copy</button>
+      </div>
+      <div class="share-methods">
+        <a class="share-method" id="shareLinkedIn" href="#" target="_blank">
+          <div class="sm-icon" style="background:rgba(10,102,194,0.15);color:#60a5fa;"><i class="fab fa-linkedin"></i></div>
+          <span class="sm-text">LinkedIn</span>
+        </a>
+        <a class="share-method" id="shareTwitter" href="#" target="_blank">
+          <div class="sm-icon" style="background:rgba(29,161,242,0.15);color:#38bdf8;"><i class="fab fa-twitter"></i></div>
+          <span class="sm-text">Twitter / X</span>
+        </a>
+        <div class="share-method" id="shareWhatsApp">
+          <div class="sm-icon" style="background:rgba(37,211,102,0.15);color:#22c55e;"><i class="fab fa-whatsapp"></i></div>
+          <span class="sm-text">WhatsApp</span>
+        </div>
+        <div class="share-method" id="shareEmail">
+          <div class="sm-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b;"><i class="fas fa-envelope"></i></div>
+          <span class="sm-text">Email</span>
+        </div>
+      </div>
+      <button class="sm-close" id="closeShareModal">Close</button>
     </div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-      <a href="profile.html"   class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
-      <a href="skills.html"    class="nav-item"><i class="fas fa-brain"></i><span>Skills</span></a>
-      <a href="education.html" class="nav-item"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
-      <a href="projects.html"  class="nav-item"><i class="fas fa-project-diagram"></i><span>Projects</span></a>
-      <a href="templates.html" class="nav-item"><i class="fas fa-palette"></i><span>Templates</span></a>
-      <a href="preview.html"   class="nav-item active"><i class="fas fa-eye"></i><span>Preview</span></a>
-      <a href="publish.html"   class="nav-item"><i class="fas fa-globe"></i><span>Publish</span></a>
-      <a href="settings.html"  class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
-    </nav>
-  </aside>
+  </div>
 
-  <!-- Main Preview Area -->
-  <main class="preview-main" id="previewMain">
-
-    <!-- Control Bar -->
-    <div class="control-bar" id="controlBar" style="display:none;">
-
-      <!-- Template info -->
-      <div class="template-info">
-        <div class="template-dot"></div>
-        <span>Template: <strong id="templateName">–</strong></span>
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+        <span class="logo-text">Portfolio<span class="x">X</span></span>
+      </a>
+      <div class="nav-live-badge" id="navLiveBadge" style="display:none;">
+        <span class="nlb-dot"></span> Live Preview
       </div>
-
-      <!-- Viewport toggles -->
-      <div class="viewport-group">
-        <button class="vp-btn active" data-vp="desktop" title="Desktop"><i class="fas fa-desktop"></i></button>
-        <button class="vp-btn" data-vp="tablet"  title="Tablet"><i class="fas fa-tablet-alt"></i></button>
-        <button class="vp-btn" data-vp="mobile"  title="Mobile"><i class="fas fa-mobile-alt"></i></button>
+      <div class="nav-actions">
+        <a href="templates.html" class="nav-btn btn-edit"><i class="fas fa-palette"></i> Templates</a>
+        <button class="nav-btn btn-open-tab" id="openTabBtn"><i class="fas fa-external-link-alt"></i> Open Tab</button>
+        <a href="publish.html" class="nav-btn btn-publish"><i class="fas fa-rocket"></i> Publish</a>
+        <button class="nav-logout" id="logoutBtn" title="Sign Out"><i class="fas fa-power-off"></i></button>
       </div>
-
-      <!-- Read-only toggle -->
-      <div class="readonly-toggle" id="readonlyToggle" title="Toggle Read-Only mode">
-        <div class="toggle-switch"><div class="toggle-knob"></div></div>
-        <span class="toggle-label">Read-Only Mode</span>
-      </div>
-
-      <!-- Zoom -->
-      <div class="zoom-group">
-        <span class="zoom-label">Zoom</span>
-        <select class="zoom-select" id="zoomSelect">
-          <option value="1">100%</option>
-          <option value="0.85">85%</option>
-          <option value="0.75">75%</option>
-          <option value="0.5">50%</option>
-        </select>
-      </div>
-
     </div>
+  </header>
 
-    <!-- Browser Chrome + iFrame -->
-    <div class="browser-wrap" id="browserWrap" style="display:none;">
-      <div class="browser-chrome desktop" id="browserChrome">
+  <div class="app-layout">
 
-        <div class="browser-topbar">
-          <div class="browser-dots">
-            <div class="browser-dot dot-red"></div>
-            <div class="browser-dot dot-yellow"></div>
-            <div class="browser-dot dot-green"></div>
-          </div>
-          <div class="browser-url">
-            <i class="fas fa-lock"></i>
-            <span id="urlBarText">portfoliox.app/preview</span>
-          </div>
-          <div class="browser-actions">
-            <button class="browser-icon-btn" id="refreshBtn" title="Refresh"><i class="fas fa-redo"></i></button>
-            <button class="browser-icon-btn" id="copyUrlBtn" title="Copy URL"><i class="fas fa-copy"></i></button>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="sp-avatar" id="spAvatar">?</div>
+        <div>
+          <p class="sp-name" id="spName">Loading…</p>
+          <span class="sp-badge"><span class="sp-dot"></span> Active</span>
+        </div>
+      </div>
+
+      <!-- Template card in sidebar -->
+      <div class="sidebar-template-card" id="sidebarTplCard" style="display:none;">
+        <div class="stc-label">Active Template</div>
+        <div class="stc-name"><span class="stc-dot"></span><span id="stcName">–</span></div>
+        <a href="templates.html" class="stc-change"><i class="fas fa-exchange-alt"></i> Change template</a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">Main</div>
+        <a href="dashboard.html" class="nav-item"><span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span><span class="nav-label">Dashboard</span></a>
+        <a href="profile.html"   class="nav-item"><span class="nav-icon"><i class="fas fa-user"></i></span><span class="nav-label">Profile</span></a>
+        <a href="skills.html"    class="nav-item"><span class="nav-icon"><i class="fas fa-brain"></i></span><span class="nav-label">Skills</span></a>
+        <a href="education.html" class="nav-item"><span class="nav-icon"><i class="fas fa-graduation-cap"></i></span><span class="nav-label">Education</span></a>
+        <a href="projects.html"  class="nav-item"><span class="nav-icon"><i class="fas fa-project-diagram"></i></span><span class="nav-label">Projects</span></a>
+
+        <div class="nav-group-label" style="margin-top:1.2rem;">Publish</div>
+        <a href="templates.html" class="nav-item"><span class="nav-icon"><i class="fas fa-palette"></i></span><span class="nav-label">Templates</span></a>
+        <a href="preview.html"   class="nav-item active"><span class="nav-icon"><i class="fas fa-eye"></i></span><span class="nav-label">Preview</span><span class="nav-active-dot"></span></a>
+        <a href="publish.html"   class="nav-item"><span class="nav-icon"><i class="fas fa-globe"></i></span><span class="nav-label">Publish</span></a>
+        <a href="settings.html"  class="nav-item"><span class="nav-icon"><i class="fas fa-cog"></i></span><span class="nav-label">Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sf-tip"><i class="fas fa-lightbulb"></i><span>Use viewport buttons to check mobile responsiveness</span></div>
+      </div>
+    </aside>
+
+    <!-- Preview Main -->
+    <main class="preview-main" id="previewMain">
+
+      <!-- Control Bar (shown when template selected) -->
+      <div class="control-bar" id="controlBar" style="display:none;">
+
+        <!-- Viewport -->
+        <div class="vp-group">
+          <button class="vp-btn active" data-vp="desktop" title="Desktop (100%)">
+            <i class="fas fa-desktop"></i>
+            <span class="vp-tip">Desktop</span>
+          </button>
+          <button class="vp-btn" data-vp="tablet" title="Tablet (768px)">
+            <i class="fas fa-tablet-alt"></i>
+            <span class="vp-tip">Tablet</span>
+          </button>
+          <button class="vp-btn" data-vp="mobile" title="Mobile (390px)">
+            <i class="fas fa-mobile-alt"></i>
+            <span class="vp-tip">Mobile</span>
+          </button>
+        </div>
+
+        <div class="ctrl-divider"></div>
+
+        <!-- Zoom -->
+        <div class="zoom-wrap">
+          <span class="zoom-label">Zoom</span>
+          <div class="zoom-btns">
+            <button class="zoom-btn" id="zoomOut" title="Zoom out"><i class="fas fa-minus"></i></button>
+            <span class="zoom-val" id="zoomVal">100%</span>
+            <button class="zoom-btn" id="zoomIn"  title="Zoom in"><i class="fas fa-plus"></i></button>
           </div>
         </div>
 
-        <div class="iframe-wrap" id="iframeWrap">
-          <iframe id="previewIframe" class="preview-iframe" title="Live Portfolio Preview" loading="lazy"></iframe>
-          <div class="iframe-overlay" id="iframeOverlay">
-            <div class="overlay-spinner"></div>
-            <span class="overlay-text">Loading preview…</span>
-          </div>
+        <div class="ctrl-divider"></div>
+
+        <!-- Read-only toggle -->
+        <div class="ro-toggle" id="roToggle">
+          <div class="ro-switch"><div class="ro-knob"></div></div>
+          <span class="ro-label">Read-only</span>
         </div>
 
+        <!-- Refresh -->
+        <button class="ctrl-icon-btn" id="refreshBtn" title="Refresh preview">
+          <i class="fas fa-redo"></i>
+        </button>
+
+        <!-- Template pill -->
+        <div class="tpl-pill">
+          <span class="tpl-dot"></span>
+          <span>Template: </span>
+          <strong id="tplPillName">–</strong>
+        </div>
+
+        <!-- Share -->
+        <button class="share-btn" id="shareBtn">
+          <i class="fas fa-share-alt"></i>
+          <span>Share</span>
+        </button>
       </div>
-    </div>
 
-    <!-- Empty State (no template selected) -->
-    <div class="empty-state" id="emptyState" style="display:none;">
-      <div class="empty-icon"><i class="fas fa-palette"></i></div>
-      <h3>No Template Selected</h3>
-      <p>You haven't chosen a template yet. Head to the Templates page to pick a design for your portfolio.</p>
-      <a href="templates.html"><i class="fas fa-palette"></i> Choose a Template</a>
-    </div>
+      <!-- Browser + iFrame -->
+      <div class="browser-area" id="browserArea" style="display:none;">
+        <div class="browser-chrome vp-desktop" id="browserChrome">
+          <div class="browser-topbar">
+            <div class="b-dots">
+              <div class="b-dot dot-red"    title="Close"   onclick="window.history.back()"></div>
+              <div class="b-dot dot-yellow" title="Minimize"></div>
+              <div class="b-dot dot-green"  title="Fullscreen" id="fullscreenDot"></div>
+            </div>
+            <div class="b-url-bar" id="urlBar" title="Click to copy URL">
+              <i class="fas fa-lock"></i>
+              <span id="urlBarText">portfoliox.app/preview</span>
+            </div>
+            <div class="b-actions">
+              <button class="b-btn" id="backBtn"    title="Back"><i class="fas fa-arrow-left"></i></button>
+              <button class="b-btn" id="fwdBtn"     title="Forward"><i class="fas fa-arrow-right"></i></button>
+              <button class="b-btn" id="reloadBtn"  title="Reload"><i class="fas fa-redo"></i></button>
+              <button class="b-btn" id="copyUrlBtn" title="Copy URL"><i class="fas fa-copy"></i></button>
+              <button class="b-btn" id="newTabBtn"  title="Open in new tab"><i class="fas fa-external-link-alt"></i></button>
+            </div>
+          </div>
+          <div class="b-load-bar" id="loadBar"><div class="b-load-fill" id="loadFill"></div></div>
+          <div class="iframe-wrap" id="iframeWrap">
+            <iframe id="previewIframe" class="preview-iframe" title="Live Portfolio Preview"></iframe>
+            <div class="iframe-overlay" id="iframeOverlay">
+              <div class="io-scan"></div>
+              <div class="io-spinner"></div>
+              <div class="io-text" id="overlayText">Loading preview…</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  </main>
-</div>
-<script type="module" src="preview.js"></script>
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="empty-icon"><i class="fas fa-palette"></i></div>
+        <h3>No Template Selected</h3>
+        <p>You haven't chosen a template yet. Pick a design and come back to preview your full portfolio.</p>
+        <a href="templates.html" class="empty-cta"><i class="fas fa-palette"></i> Choose a Template</a>
+      </div>
+
+    </main>
+  </div>
+
+  <script type="module" src="preview.js"></script>
 </body>
 </html>

@@ -4,342 +4,708 @@
   <meta charset="UTF-8">
   <title>Settings | PortfolioX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="shortcut icon" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
   <link rel="stylesheet" href="settings.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-<!-- Toast -->
-<div class="toast success" id="toast">
-  <i class="fas fa-check-circle" id="toastIcon"></i>
-  <span id="toastMsg">Saved!</span>
-</div>
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- Navbar -->
-<header class="navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <i class="fas fa-rocket"></i>
-      Portfolio<span class="x">X</span>
-    </a>
-    <div class="nav-actions">
-      <a href="preview.html" class="nav-btn btn-preview">
-        <i class="fas fa-eye"></i><span>Preview</span>
-      </a>
-      <a href="publish.html" class="nav-btn btn-publish">
-        <i class="fas fa-rocket"></i><span>Publish</span>
-      </a>
-      <button class="nav-btn btn-logout" id="logoutBtn">
-        <i class="fas fa-power-off"></i>
-      </button>
+  <!-- Ambient orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-inner">
+      <div class="loader-logo">
+        <div class="loader-icon"><i class="fas fa-cog fa-spin"></i></div>
+        <span class="loader-brand">Portfolio<span class="x">X</span></span>
+      </div>
+      <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+      <p class="loader-text">Loading settings...</p>
     </div>
   </div>
-</header>
 
-<div class="layout">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-header"><h3>Portfolio Builder</h3></div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.html" class="nav-item"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-      <a href="profile.html"   class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
-      <a href="skills.html"    class="nav-item"><i class="fas fa-brain"></i><span>Skills</span></a>
-      <a href="education.html" class="nav-item"><i class="fas fa-graduation-cap"></i><span>Education</span></a>
-      <a href="projects.html"  class="nav-item"><i class="fas fa-project-diagram"></i><span>Projects</span></a>
-      <a href="templates.html" class="nav-item"><i class="fas fa-palette"></i><span>Templates</span></a>
-      <a href="preview.html"   class="nav-item" target="_blank"><i class="fas fa-eye"></i><span>Preview</span></a>
-      <a href="publish.html"   class="nav-item"><i class="fas fa-globe"></i><span>Publish</span></a>
-      <a href="settings.html"  class="nav-item active"><i class="fas fa-cog"></i><span>Settings</span></a>
-    </nav>
-  </aside>
-
-  <!-- Main -->
-  <main class="settings-main">
-    <div class="page-header">
-      <h2>Settings</h2>
-      <p>Manage your account, portfolio controls, and preferences.</p>
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="toast-icon-wrap" id="toastIconWrap"><i class="fas fa-check-circle" id="toastIcon"></i></div>
+    <div class="toast-body">
+      <span class="toast-title" id="toastTitle">Success</span>
+      <span class="toast-msg" id="toastMsg">Saved!</span>
     </div>
+    <button class="toast-close" id="toastClose"><i class="fas fa-times"></i></button>
+  </div>
 
-    <div class="settings-grid">
-
-      <!-- ── ACCOUNT ── -->
-      <div class="section-card">
-        <div class="section-title">
-          <div class="icon-box"><i class="fas fa-user-circle"></i></div>
-          Account
-        </div>
-
-        <div class="account-hero">
-          <div class="account-avatar" id="accountAvatar">?</div>
-          <div class="account-info">
-            <strong id="accountName">Loading…</strong>
-            <span id="accountEmail">—</span>
-            <div class="verify-badge unverified" id="verifyBadge">
-              <i class="fas fa-circle-exclamation"></i> Not Verified
-            </div>
-          </div>
-        </div>
-
-        <!-- Email (read-only) -->
-        <div class="field-row">
-          <label class="field-label">Email Address</label>
-          <div class="input-wrap">
-            <i class="fas fa-envelope input-icon"></i>
-            <input class="field-input" type="text" id="userEmail" disabled>
-          </div>
-        </div>
-
-        <!-- New password inline -->
-        <div class="field-row">
-          <label class="field-label">New Password</label>
-          <div class="input-wrap">
-            <i class="fas fa-lock input-icon"></i>
-            <input class="field-input" type="password" id="newPasswordInline" placeholder="Enter new password" autocomplete="new-password">
-            <button class="pw-toggle" id="pwToggleInline" type="button"><i class="fas fa-eye"></i></button>
-          </div>
-          <div class="pw-strength" id="pwStrength" style="display:none;">
-            <div class="pw-bar"><div class="pw-bar-fill" id="pwBarFill"></div></div>
-            <span class="pw-hint" id="pwHint"></span>
-          </div>
-        </div>
-
-        <div class="field-row">
-          <label class="field-label">Current Password (required to change)</label>
-          <div class="input-wrap">
-            <i class="fas fa-key input-icon"></i>
-            <input class="field-input" type="password" id="currentPasswordInline" placeholder="Enter current password" autocomplete="current-password">
-            <button class="pw-toggle" id="pwToggleCurrent" type="button"><i class="fas fa-eye"></i></button>
-          </div>
-        </div>
-
-        <div class="account-btns">
-          <button class="btn btn-primary" id="savePasswordBtn">
-            <div class="spinner-mini"></div>
-            <i class="fas fa-key"></i> Update Password
-          </button>
-          <button class="btn btn-ghost" id="resendVerifyBtn">
-            <i class="fas fa-envelope"></i> Resend Verification
-          </button>
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+        <span class="logo-text">Portfolio<span class="x">X</span></span>
+      </a>
+      <div class="nav-center">
+        <div class="nav-breadcrumb">
+          <span class="breadcrumb-item"><i class="fas fa-home"></i> Dashboard</span>
+          <span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
+          <span class="breadcrumb-item active"><i class="fas fa-cog"></i> Settings</span>
         </div>
       </div>
-
-      <!-- ── PORTFOLIO CONTROLS ── -->
-      <div class="section-card">
-        <div class="section-title">
-          <div class="icon-box purple"><i class="fas fa-sliders"></i></div>
-          Portfolio Controls
-        </div>
-        <div class="toggle-list">
-
-          <div class="toggle-row">
-            <div class="toggle-icon" style="background:rgba(56,189,248,0.1);color:var(--accent);">
-              <i class="fas fa-globe"></i>
-            </div>
-            <div class="toggle-text">
-              <strong>Portfolio Visibility</strong>
-              <span>Make your portfolio publicly accessible</span>
-            </div>
-            <div class="switch-wrap">
-              <label class="switch">
-                <input type="checkbox" id="visibilityToggle" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="toggle-row">
-            <div class="toggle-icon" style="background:rgba(99,102,241,0.1);color:#a5b4fc;">
-              <i class="fas fa-pen-to-square"></i>
-            </div>
-            <div class="toggle-text">
-              <strong>Allow Edits After Publishing</strong>
-              <span>Continue editing your live portfolio</span>
-            </div>
-            <div class="switch-wrap">
-              <label class="switch">
-                <input type="checkbox" id="editToggle" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="toggle-row">
-            <div class="toggle-icon" style="background:rgba(34,197,94,0.1);color:var(--accent-3);">
-              <i class="fas fa-magnifying-glass"></i>
-            </div>
-            <div class="toggle-text">
-              <strong>Search Engine Indexing (SEO)</strong>
-              <span>Allow Google to find your portfolio</span>
-            </div>
-            <div class="switch-wrap">
-              <label class="switch">
-                <input type="checkbox" id="seoToggle" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="toggle-row">
-            <div class="toggle-icon" style="background:rgba(245,158,11,0.1);color:var(--warning);">
-              <i class="fas fa-chart-bar"></i>
-            </div>
-            <div class="toggle-text">
-              <strong>Analytics Tracking</strong>
-              <span>Track portfolio views and visitor data</span>
-            </div>
-            <div class="switch-wrap">
-              <label class="switch">
-                <input type="checkbox" id="analyticsToggle">
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-        </div>
+      <div class="nav-actions">
+        <a href="preview.html" target="_blank" class="nav-btn btn-preview">
+          <i class="fas fa-eye"></i> Preview
+        </a>
+        <a href="publish.html" class="nav-btn btn-publish">
+          <i class="fas fa-rocket"></i> Publish
+        </a>
+        <button class="nav-logout" id="logoutBtn" title="Sign Out">
+          <i class="fas fa-power-off"></i>
+        </button>
       </div>
-
-      <!-- ── PREFERENCES ── -->
-      <div class="section-card">
-        <div class="section-title">
-          <div class="icon-box orange"><i class="fas fa-bell"></i></div>
-          Preferences
-        </div>
-        <div class="toggle-list">
-
-          <div class="toggle-row">
-            <div class="toggle-icon" style="background:rgba(56,189,248,0.1);color:var(--accent);">
-              <i class="fas fa-bell"></i>
-            </div>
-            <div class="toggle-text">
-              <strong>Email Notifications</strong>
-              <span>Get updates on views and messages</span>
-            </div>
-            <div class="switch-wrap">
-              <label class="switch">
-                <input type="checkbox" id="notifyToggle" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="toggle-row">
-            <div class="toggle-icon" style="background:rgba(99,102,241,0.1);color:#a5b4fc;">
-              <i class="fas fa-floppy-disk"></i>
-            </div>
-            <div class="toggle-text">
-              <strong>Auto‑save Drafts</strong>
-              <span>Automatically save your changes</span>
-            </div>
-            <div class="switch-wrap">
-              <label class="switch">
-                <input type="checkbox" id="autosaveToggle" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="toggle-row">
-            <div class="toggle-icon" style="background:rgba(148,163,184,0.1);color:var(--text-muted);">
-              <i class="fas fa-moon"></i>
-            </div>
-            <div class="toggle-text">
-              <strong>Dark Mode</strong>
-              <span>Toggle dark / light portfolio theme</span>
-            </div>
-            <div class="switch-wrap">
-              <label class="switch">
-                <input type="checkbox" id="darkToggle" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="toggle-row">
-            <div class="toggle-icon" style="background:rgba(34,197,94,0.1);color:var(--accent-3);">
-              <i class="fas fa-share-nodes"></i>
-            </div>
-            <div class="toggle-text">
-              <strong>Show Social Links</strong>
-              <span>Display social links on your portfolio</span>
-            </div>
-            <div class="switch-wrap">
-              <label class="switch">
-                <input type="checkbox" id="socialToggle" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ── DANGER ZONE ── -->
-      <div class="section-card">
-        <div class="section-title">
-          <div class="icon-box red"><i class="fas fa-triangle-exclamation"></i></div>
-          Danger Zone
-        </div>
-
-        <div class="danger-item warn-item">
-          <div class="danger-icon orange"><i class="fas fa-eye-slash"></i></div>
-          <div class="danger-text">
-            <strong>Unpublish Portfolio</strong>
-            <span>Take your portfolio offline temporarily</span>
-          </div>
-          <button class="btn btn-warning" id="unpublishBtn">
-            <i class="fas fa-eye-slash"></i> Unpublish
-          </button>
-        </div>
-
-        <div class="danger-item">
-          <div class="danger-icon red"><i class="fas fa-rotate-left"></i></div>
-          <div class="danger-text">
-            <strong>Reset All Data</strong>
-            <span>Clear all portfolio content and start fresh</span>
-          </div>
-          <button class="btn btn-danger" id="resetBtn">
-            <i class="fas fa-rotate-left"></i> Reset
-          </button>
-        </div>
-
-        <div class="danger-item">
-          <div class="danger-icon red"><i class="fas fa-trash-can"></i></div>
-          <div class="danger-text">
-            <strong>Delete Account</strong>
-            <span>Permanently remove your account and all data</span>
-          </div>
-          <button class="btn btn-danger" id="deleteBtn">
-            <i class="fas fa-trash-can"></i> Delete
-          </button>
-        </div>
-      </div>
-
-    </div><!-- /settings-grid -->
-  </main>
-</div>
-
-<!-- ══════════════ CHANGE PASSWORD MODAL ══════════════ -->
-<!-- (kept for programmatic use; inline fields are primary UX) -->
-
-<!-- ══════════════ CONFIRM MODAL ══════════════ -->
-<div class="modal-overlay" id="confirmModal">
-  <div class="modal-box">
-    <div class="confirm-icon" id="confirmIcon"><i id="confirmIconI" class="fas fa-triangle-exclamation"></i></div>
-    <div class="confirm-body">
-      <h3 id="confirmTitle">Are you sure?</h3>
-      <p  id="confirmDesc">This action cannot be undone.</p>
     </div>
-    <div class="modal-actions" style="justify-content:center; gap:0.75rem;">
-      <button class="btn btn-ghost" id="confirmCancel" style="flex:1; justify-content:center;">Cancel</button>
-      <button class="btn btn-danger" id="confirmOk" style="flex:1; justify-content:center;">
-        <div class="spinner-mini"></div>
-        <span id="confirmOkLabel">Confirm</span>
-      </button>
+  </header>
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-profile">
+        <div class="sp-avatar" id="spAvatar">?</div>
+        <div class="sp-info">
+          <p class="sp-name" id="spName">Loading...</p>
+          <span class="sp-badge"><span class="sp-dot"></span> Active</span>
+        </div>
+      </div>
+
+      <div class="sidebar-ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 80 80">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="40" cy="40" r="30"/>
+          <circle class="ring-fill" id="sidebarRing" cx="40" cy="40" r="30"
+            stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+        </svg>
+        <div class="ring-inner">
+          <span class="ring-pct" id="sidebarPct">0%</span>
+          <span class="ring-sub">done</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">Main</div>
+        <a href="dashboard.html" class="nav-item" data-page="dashboard">
+          <span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="profile.html" class="nav-item" data-page="profile">
+          <span class="nav-icon"><i class="fas fa-user"></i></span>
+          <span class="nav-label">Profile</span>
+        </a>
+        <a href="skills.html" class="nav-item" data-page="skills">
+          <span class="nav-icon"><i class="fas fa-brain"></i></span>
+          <span class="nav-label">Skills</span>
+        </a>
+        <a href="education.html" class="nav-item" data-page="education">
+          <span class="nav-icon"><i class="fas fa-graduation-cap"></i></span>
+          <span class="nav-label">Education</span>
+        </a>
+        <a href="projects.html" class="nav-item" data-page="projects">
+          <span class="nav-icon"><i class="fas fa-project-diagram"></i></span>
+          <span class="nav-label">Projects</span>
+        </a>
+        <div class="nav-group-label" style="margin-top:1.2rem;">Publish</div>
+        <a href="templates.html" class="nav-item" data-page="templates">
+          <span class="nav-icon"><i class="fas fa-palette"></i></span>
+          <span class="nav-label">Templates</span>
+        </a>
+        <a href="preview.html" class="nav-item" data-page="preview">
+          <span class="nav-icon"><i class="fas fa-eye"></i></span>
+          <span class="nav-label">Preview</span>
+        </a>
+        <a href="publish.html" class="nav-item" data-page="publish">
+          <span class="nav-icon"><i class="fas fa-globe"></i></span>
+          <span class="nav-label">Publish</span>
+        </a>
+        <a href="settings.html" class="nav-item active" data-page="settings">
+          <span class="nav-icon"><i class="fas fa-cog"></i></span>
+          <span class="nav-label">Settings</span>
+          <span class="nav-active-dot"></span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sf-tip">
+          <i class="fas fa-shield-halved"></i>
+          <span>Your data is encrypted and secure</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Page Header -->
+      <section class="page-header reveal">
+        <div class="ph-left">
+          <div class="ph-eyebrow">
+            <span class="eyebrow-dot"></span>
+            Account Management
+          </div>
+          <h1 class="ph-title">Settings <span class="ph-icon">⚙️</span></h1>
+          <p class="ph-sub">Manage your account, portfolio controls, security and preferences.</p>
+        </div>
+        <div class="ph-right">
+          <div class="last-saved-pill" id="lastSavedPill">
+            <i class="fas fa-cloud-check"></i>
+            <span id="lastSavedText">All changes saved</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Grid -->
+      <div class="settings-grid">
+
+        <!-- ── ACCOUNT SECTION ── -->
+        <section class="settings-card reveal reveal-delay-1">
+          <div class="card-header">
+            <div class="card-header-icon fi-blue"><i class="fas fa-user-circle"></i></div>
+            <div>
+              <h3 class="card-title">Account</h3>
+              <p class="card-sub">Your identity and security settings</p>
+            </div>
+          </div>
+
+          <!-- Account Hero -->
+          <div class="account-hero">
+            <div class="account-avatar-wrap">
+              <div class="account-avatar" id="accountAvatar">?</div>
+              <div class="avatar-status"></div>
+            </div>
+            <div class="account-info">
+              <strong id="accountName">Loading…</strong>
+              <span id="accountEmail">—</span>
+              <div class="verify-badge unverified" id="verifyBadge">
+                <i class="fas fa-circle-exclamation"></i> Not Verified
+              </div>
+            </div>
+            <div class="account-meta">
+              <div class="meta-pill">
+                <i class="fas fa-clock"></i>
+                <span id="memberSince">Member since —</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email (read-only) -->
+          <div class="field-row">
+            <label class="field-label">Email Address <span class="field-badge">Read Only</span></label>
+            <div class="input-wrap">
+              <i class="fas fa-envelope input-icon"></i>
+              <input class="field-input" type="text" id="userEmail" disabled>
+              <span class="input-lock"><i class="fas fa-lock"></i></span>
+            </div>
+          </div>
+
+          <!-- Display Name -->
+          <div class="field-row">
+            <label class="field-label">Display Name</label>
+            <div class="input-wrap">
+              <i class="fas fa-id-card input-icon"></i>
+              <input class="field-input" type="text" id="displayNameInput" placeholder="Your display name">
+            </div>
+          </div>
+
+          <!-- New Password -->
+          <div class="field-row">
+            <label class="field-label">New Password</label>
+            <div class="input-wrap">
+              <i class="fas fa-lock input-icon"></i>
+              <input class="field-input" type="password" id="newPasswordInline" placeholder="Enter new password" autocomplete="new-password">
+              <button class="pw-toggle" id="pwToggleInline" type="button"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="pw-strength" id="pwStrength" style="display:none;">
+              <div class="pw-bar"><div class="pw-bar-fill" id="pwBarFill"></div></div>
+              <div class="pw-checks" id="pwChecks">
+                <span class="pw-check" id="pc-len"><i class="fas fa-xmark"></i> 8+ chars</span>
+                <span class="pw-check" id="pc-upper"><i class="fas fa-xmark"></i> Uppercase</span>
+                <span class="pw-check" id="pc-lower"><i class="fas fa-xmark"></i> Lowercase</span>
+                <span class="pw-check" id="pc-num"><i class="fas fa-xmark"></i> Number</span>
+                <span class="pw-check" id="pc-sym"><i class="fas fa-xmark"></i> Symbol</span>
+              </div>
+              <span class="pw-hint" id="pwHint"></span>
+            </div>
+          </div>
+
+          <!-- Current Password -->
+          <div class="field-row">
+            <label class="field-label">Current Password <span class="field-required">Required to save</span></label>
+            <div class="input-wrap">
+              <i class="fas fa-key input-icon"></i>
+              <input class="field-input" type="password" id="currentPasswordInline" placeholder="Enter current password" autocomplete="current-password">
+              <button class="pw-toggle" id="pwToggleCurrent" type="button"><i class="fas fa-eye"></i></button>
+            </div>
+          </div>
+
+          <div class="account-btns">
+            <button class="btn btn-primary" id="savePasswordBtn">
+              <span class="spinner-mini" id="pwSpinner"></span>
+              <i class="fas fa-key btn-icon"></i>
+              <span>Update Password</span>
+            </button>
+            <button class="btn btn-secondary" id="saveDisplayNameBtn">
+              <span class="spinner-mini" id="nameSpinner"></span>
+              <i class="fas fa-save btn-icon"></i>
+              <span>Save Name</span>
+            </button>
+            <button class="btn btn-ghost" id="resendVerifyBtn">
+              <i class="fas fa-envelope btn-icon"></i>
+              <span>Resend Verification</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ── PORTFOLIO URL ── -->
+        <section class="settings-card reveal reveal-delay-1">
+          <div class="card-header">
+            <div class="card-header-icon fi-purple"><i class="fas fa-link"></i></div>
+            <div>
+              <h3 class="card-title">Portfolio URL</h3>
+              <p class="card-sub">Customize your public portfolio link</p>
+            </div>
+          </div>
+
+          <div class="url-preview-box" id="urlPreviewBox">
+            <span class="url-prefix">portfoliox.app/</span>
+            <span class="url-slug" id="urlSlugDisplay">your-username</span>
+            <button class="url-copy-btn" id="copyUrlBtn" title="Copy URL">
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+
+          <div class="field-row" style="margin-top: 1.2rem;">
+            <label class="field-label">Custom Slug</label>
+            <div class="input-wrap">
+              <i class="fas fa-at input-icon"></i>
+              <input class="field-input" type="text" id="slugInput" placeholder="your-username" maxlength="30">
+              <span class="slug-status" id="slugStatus"></span>
+            </div>
+            <p class="field-hint">Only lowercase letters, numbers, and hyphens. 3–30 characters.</p>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label">Portfolio Title</label>
+            <div class="input-wrap">
+              <i class="fas fa-heading input-icon"></i>
+              <input class="field-input" type="text" id="portfolioTitle" placeholder="e.g. John Doe – Developer">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label">Meta Description (SEO)</label>
+            <div class="input-wrap textarea-wrap">
+              <i class="fas fa-align-left input-icon" style="top:14px;"></i>
+              <textarea class="field-input field-textarea" id="metaDesc" placeholder="Briefly describe your portfolio for search engines..." maxlength="160" rows="3"></textarea>
+            </div>
+            <div class="char-count"><span id="metaCharCount">0</span>/160</div>
+          </div>
+
+          <button class="btn btn-primary full-btn" id="saveUrlBtn">
+            <span class="spinner-mini" id="urlSpinner"></span>
+            <i class="fas fa-save btn-icon"></i>
+            <span>Save URL Settings</span>
+          </button>
+        </section>
+
+        <!-- ── PORTFOLIO CONTROLS ── -->
+        <section class="settings-card reveal reveal-delay-2">
+          <div class="card-header">
+            <div class="card-header-icon fi-indigo"><i class="fas fa-sliders"></i></div>
+            <div>
+              <h3 class="card-title">Portfolio Controls</h3>
+              <p class="card-sub">Visibility and publishing settings</p>
+            </div>
+          </div>
+          <div class="toggle-list">
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(56,189,248,0.1);color:var(--accent);">
+                <i class="fas fa-globe"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Portfolio Visibility</strong>
+                <span>Make your portfolio publicly accessible</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="visibilityToggle" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(99,102,241,0.1);color:#a5b4fc;">
+                <i class="fas fa-pen-to-square"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Allow Edits After Publishing</strong>
+                <span>Continue editing your live portfolio</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="editToggle" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(34,197,94,0.1);color:var(--accent-3);">
+                <i class="fas fa-magnifying-glass"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Search Engine Indexing (SEO)</strong>
+                <span>Allow Google to find your portfolio</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="seoToggle" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(245,158,11,0.1);color:var(--yellow);">
+                <i class="fas fa-chart-bar"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Analytics Tracking</strong>
+                <span>Track portfolio views and visitor data</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="analyticsToggle"><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(236,72,153,0.1);color:#f9a8d4;">
+                <i class="fas fa-shield-halved"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Password Protect Portfolio</strong>
+                <span>Require a password to view your portfolio</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="pwProtectToggle"><span class="slider"></span></label>
+            </div>
+          </div>
+
+          <!-- Password protect input (shown conditionally) -->
+          <div class="conditional-field" id="pwProtectField" style="display:none;">
+            <div class="field-row" style="margin-top:1rem;">
+              <label class="field-label">Portfolio Password</label>
+              <div class="input-wrap">
+                <i class="fas fa-lock input-icon"></i>
+                <input class="field-input" type="password" id="portfolioPassword" placeholder="Set a password for visitors">
+              </div>
+            </div>
+            <button class="btn btn-secondary" style="margin-top:0.5rem;" id="savePortfolioPassword">
+              <i class="fas fa-save btn-icon"></i> Save Password
+            </button>
+          </div>
+        </section>
+
+        <!-- ── PREFERENCES ── -->
+        <section class="settings-card reveal reveal-delay-2">
+          <div class="card-header">
+            <div class="card-header-icon fi-green"><i class="fas fa-bell"></i></div>
+            <div>
+              <h3 class="card-title">Preferences</h3>
+              <p class="card-sub">Notifications and display preferences</p>
+            </div>
+          </div>
+          <div class="toggle-list">
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(56,189,248,0.1);color:var(--accent);">
+                <i class="fas fa-bell"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Email Notifications</strong>
+                <span>Get updates on views and messages</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="notifyToggle" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(99,102,241,0.1);color:#a5b4fc;">
+                <i class="fas fa-floppy-disk"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Auto‑save Drafts</strong>
+                <span>Automatically save your changes</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="autosaveToggle" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(245,158,11,0.1);color:var(--yellow);">
+                <i class="fas fa-moon"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Dark Mode Interface</strong>
+                <span>Toggle dark / light app theme</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="darkToggle" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(34,197,94,0.1);color:var(--accent-3);">
+                <i class="fas fa-share-nodes"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Show Social Links</strong>
+                <span>Display social links on your portfolio</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="socialToggle" checked><span class="slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon-box" style="background:rgba(56,189,248,0.1);color:var(--accent);">
+                <i class="fas fa-download"></i>
+              </div>
+              <div class="toggle-text">
+                <strong>Allow Resume Download</strong>
+                <span>Let visitors download your resume as PDF</span>
+              </div>
+              <label class="switch"><input type="checkbox" id="resumeToggle" checked><span class="slider"></span></label>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── DATA & EXPORT ── -->
+        <section class="settings-card reveal reveal-delay-3">
+          <div class="card-header">
+            <div class="card-header-icon fi-yellow"><i class="fas fa-database"></i></div>
+            <div>
+              <h3 class="card-title">Data & Export</h3>
+              <p class="card-sub">Download or manage your portfolio data</p>
+            </div>
+          </div>
+
+          <div class="export-grid">
+            <div class="export-item">
+              <div class="export-icon fi-blue"><i class="fas fa-file-code"></i></div>
+              <div class="export-text">
+                <strong>Export as JSON</strong>
+                <span>All profile, skills & project data</span>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="exportJsonBtn">
+                <i class="fas fa-download"></i> Export
+              </button>
+            </div>
+            <div class="export-item">
+              <div class="export-icon fi-green"><i class="fas fa-file-csv"></i></div>
+              <div class="export-text">
+                <strong>Export as CSV</strong>
+                <span>Skills and projects in spreadsheet format</span>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="exportCsvBtn">
+                <i class="fas fa-download"></i> Export
+              </button>
+            </div>
+            <div class="export-item">
+              <div class="export-icon fi-pink"><i class="fas fa-file-pdf"></i></div>
+              <div class="export-text">
+                <strong>Export as PDF</strong>
+                <span>Download portfolio as a PDF resume</span>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="exportPdfBtn">
+                <i class="fas fa-download"></i> Export
+              </button>
+            </div>
+          </div>
+
+          <div class="storage-info">
+            <div class="storage-header">
+              <span class="storage-label"><i class="fas fa-cloud"></i> Storage Used</span>
+              <span class="storage-val" id="storageVal">Calculating...</span>
+            </div>
+            <div class="storage-bar">
+              <div class="storage-fill" id="storageFill" style="width:0%"></div>
+            </div>
+            <span class="storage-sub" id="storageSub">of 100 MB free plan</span>
+          </div>
+        </section>
+
+        <!-- ── ACTIVE SESSIONS ── -->
+        <section class="settings-card reveal reveal-delay-3">
+          <div class="card-header">
+            <div class="card-header-icon fi-pink"><i class="fas fa-shield-halved"></i></div>
+            <div>
+              <h3 class="card-title">Active Sessions</h3>
+              <p class="card-sub">Devices currently logged into your account</p>
+            </div>
+          </div>
+
+          <div class="sessions-list" id="sessionsList">
+            <!-- populated by JS -->
+          </div>
+
+          <button class="btn btn-ghost full-btn" id="signOutAllBtn" style="margin-top:1rem;">
+            <i class="fas fa-door-open btn-icon"></i>
+            Sign Out All Other Devices
+          </button>
+        </section>
+
+        <!-- ── DANGER ZONE ── -->
+        <section class="settings-card danger-card reveal reveal-delay-3">
+          <div class="card-header">
+            <div class="card-header-icon fi-red"><i class="fas fa-triangle-exclamation"></i></div>
+            <div>
+              <h3 class="card-title">Danger Zone</h3>
+              <p class="card-sub">Irreversible and destructive actions</p>
+            </div>
+          </div>
+
+          <div class="danger-list">
+            <div class="danger-item warn-item">
+              <div class="danger-item-icon orange"><i class="fas fa-eye-slash"></i></div>
+              <div class="danger-item-text">
+                <strong>Unpublish Portfolio</strong>
+                <span>Take your portfolio offline temporarily. You can republish any time.</span>
+              </div>
+              <button class="btn btn-warning" id="unpublishBtn">
+                <i class="fas fa-eye-slash"></i> Unpublish
+              </button>
+            </div>
+            <div class="danger-item">
+              <div class="danger-item-icon red"><i class="fas fa-rotate-left"></i></div>
+              <div class="danger-item-text">
+                <strong>Reset All Portfolio Data</strong>
+                <span>Clear all skills, projects, and education content. Keeps your account.</span>
+              </div>
+              <button class="btn btn-danger" id="resetBtn">
+                <i class="fas fa-rotate-left"></i> Reset
+              </button>
+            </div>
+            <div class="danger-item">
+              <div class="danger-item-icon red"><i class="fas fa-trash-can"></i></div>
+              <div class="danger-item-text">
+                <strong>Delete Account Permanently</strong>
+                <span>Removes your account and all data forever. This cannot be undone.</span>
+              </div>
+              <button class="btn btn-danger" id="deleteBtn">
+                <i class="fas fa-trash-can"></i> Delete Account
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /settings-grid -->
+    </main>
+  </div>
+
+  <!-- ══════ CONFIRM MODAL ══════ -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-box">
+      <div class="confirm-icon-wrap" id="confirmIconWrap">
+        <i id="confirmIconI" class="fas fa-triangle-exclamation"></i>
+      </div>
+      <div class="confirm-body">
+        <h3 id="confirmTitle">Are you sure?</h3>
+        <p id="confirmDesc">This action cannot be undone.</p>
+      </div>
+      <!-- Type-to-confirm input for destructive actions -->
+      <div class="confirm-type-wrap" id="confirmTypeWrap" style="display:none;">
+        <p class="confirm-type-hint">Type <strong id="confirmTypeWord">DELETE</strong> to confirm</p>
+        <input type="text" class="field-input" id="confirmTypeInput" placeholder="Type here...">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost modal-cancel" id="confirmCancel">Cancel</button>
+        <button class="btn btn-danger modal-ok" id="confirmOk">
+          <span class="spinner-mini" id="confirmSpinner"></span>
+          <span id="confirmOkLabel">Confirm</span>
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
-<script type="module" src="settings.js"></script>
+  <!-- ══════ REAUTHENTICATE MODAL ══════ -->
+  <div class="modal-overlay" id="reAuthModal">
+    <div class="modal-box">
+      <div class="modal-top-row">
+        <div class="modal-title-row">
+          <div class="modal-title-icon fi-blue"><i class="fas fa-lock"></i></div>
+          <h3 class="modal-title">Confirm Your Identity</h3>
+        </div>
+        <button class="modal-close-btn" id="reAuthClose"><i class="fas fa-times"></i></button>
+      </div>
+      <p class="modal-sub">For your security, please enter your current password to proceed.</p>
+      <div class="field-row" style="margin-top:1.2rem;">
+        <label class="field-label">Current Password</label>
+        <div class="input-wrap">
+          <i class="fas fa-key input-icon"></i>
+          <input class="field-input" type="password" id="reAuthPassword" placeholder="Enter your password" autocomplete="current-password">
+          <button class="pw-toggle" id="reAuthPwToggle" type="button"><i class="fas fa-eye"></i></button>
+        </div>
+        <p class="field-error" id="reAuthError" style="display:none;"></p>
+      </div>
+      <div class="modal-actions" style="margin-top:1.2rem;">
+        <button class="btn btn-ghost modal-cancel" id="reAuthCancel">Cancel</button>
+        <button class="btn btn-primary modal-ok" id="reAuthConfirm">
+          <span class="spinner-mini" id="reAuthSpinner"></span>
+          <i class="fas fa-unlock btn-icon"></i>
+          <span>Verify & Proceed</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="settings.js"></script>
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursorRing');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+      ring.style.left   = e.clientX + 'px'; ring.style.top   = e.clientY + 'px';
+    });
+    // Navbar scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+    // Reveal on scroll
+    const revealEls = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.05 });
+    revealEls.forEach(el => obs.observe(el));
+    // Toast close
+    document.getElementById('toastClose').addEventListener('click', () => {
+      document.getElementById('toast').classList.remove('show');
+    });
+    // Meta description char count
+    const metaDesc = document.getElementById('metaDesc');
+    if (metaDesc) {
+      metaDesc.addEventListener('input', () => {
+        document.getElementById('metaCharCount').textContent = metaDesc.value.length;
+      });
+    }
+    // Slug live preview
+    const slugInput = document.getElementById('slugInput');
+    if (slugInput) {
+      slugInput.addEventListener('input', () => {
+        const val = slugInput.value.toLowerCase().replace(/[^a-z0-9-]/g,'');
+        slugInput.value = val;
+        document.getElementById('urlSlugDisplay').textContent = val || 'your-username';
+        const status = document.getElementById('slugStatus');
+        if (val.length >= 3 && val.length <= 30) {
+          status.innerHTML = '<i class="fas fa-check-circle" style="color:var(--accent-3)"></i>';
+        } else if (val.length > 0) {
+          status.innerHTML = '<i class="fas fa-times-circle" style="color:var(--danger)"></i>';
+        } else {
+          status.innerHTML = '';
+        }
+      });
+    }
+    // Portfolio password toggle visibility
+    document.getElementById('pwProtectToggle').addEventListener('change', e => {
+      document.getElementById('pwProtectField').style.display = e.target.checked ? 'block' : 'none';
+    });
+    // Copy URL
+    document.getElementById('copyUrlBtn').addEventListener('click', () => {
+      const slug = document.getElementById('urlSlugDisplay').textContent;
+      navigator.clipboard.writeText('https://portfoliox.app/' + slug).then(() => {
+        const btn = document.getElementById('copyUrlBtn');
+        btn.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i>', 2000);
+      });
+    });
+  </script>
 </body>
 </html>
