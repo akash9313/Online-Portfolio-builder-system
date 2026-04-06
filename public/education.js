@@ -11,63 +11,106 @@ const firebaseConfig = {
   appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
 };
 
-const app = initializeApp(firebaseConfig);
+const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db   = getFirestore(app);
 
 let currentUser = null;
 
-/* ───────────────── Toast ───────────────── */
+/* ─────────────────────────────────────────
+   TOAST
+───────────────────────────────────────── */
 function showToast(msg, isError = false) {
-  const t = document.getElementById('toast');
+  const t  = document.getElementById('toast');
   const tm = document.getElementById('toastMsg');
   const ti = document.getElementById('toastIcon');
-
   tm.textContent = msg;
-  ti.className = isError ? 'fas fa-times-circle' : 'fas fa-check-circle';
-  t.className = 'toast' + (isError ? ' error' : '');
+  ti.className   = isError ? 'fas fa-times-circle' : 'fas fa-check-circle';
+  t.className    = 'toast' + (isError ? ' error' : '');
   t.classList.add('show');
-
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-/* ───────────────── Filled Input Highlight ───────────────── */
+/* ─────────────────────────────────────────
+   SAFE VALUE HELPER
+   Reads a string field safely — never treats
+   a valid "0" or other falsy string as missing.
+───────────────────────────────────────── */
+function safeStr(val) {
+  // Only fall back to '' if truly undefined or null
+  return (val !== undefined && val !== null) ? String(val) : '';
+}
+
+/* ─────────────────────────────────────────
+   TRACK FILLED INPUTS  (run once only)
+───────────────────────────────────────── */
 function trackFilled() {
   document.querySelectorAll('.field-input').forEach(inp => {
-    const update = () => {
-      inp.classList.toggle('filled', inp.value.trim().length > 0);
-    };
+    // Guard: skip if already tracked to prevent duplicate listeners
+    if (inp.dataset.tracked) return;
+    inp.dataset.tracked = 'true';
+
+    const update = () => inp.classList.toggle('filled', inp.value.trim().length > 0);
     inp.addEventListener('input', update);
-    update();
+    update(); // run immediately to reflect pre-filled values
   });
 }
 
-/* ───────────────── Render Timeline ───────────────── */
+/* ─────────────────────────────────────────
+   POPULATE INPUTS
+───────────────────────────────────────── */
+function populateInputs(data) {
+  // Use empty object fallbacks so safeStr handles undefined fields
+  const u = (data && data.university) ? data.university : {};
+  const s = (data && data.school)     ? data.school     : {};
+
+  // University fields
+  document.getElementById('uniDegree').value   = safeStr(u.degree);
+  document.getElementById('uniName').value     = safeStr(u.name);
+  document.getElementById('uniYear').value     = safeStr(u.year);
+  document.getElementById('uniGrade').value    = safeStr(u.grade);
+  document.getElementById('uniLocation').value = safeStr(u.location);
+
+  // School fields
+  document.getElementById('schoolName').value     = safeStr(s.name);
+  document.getElementById('schoolBoard').value    = safeStr(s.board);
+  document.getElementById('schoolLocation').value = safeStr(s.location);
+  document.getElementById('schoolYear').value     = safeStr(s.year);
+  document.getElementById('schoolGrade').value    = safeStr(s.grade);
+
+  // Update filled-state classes after values are set
+  trackFilled();
+}
+
+/* ─────────────────────────────────────────
+   RENDER TIMELINE
+───────────────────────────────────────── */
 function renderTimeline(data) {
-  const timeline = document.getElementById('eduTimeline');
+  const timeline   = document.getElementById('eduTimeline');
   const emptyState = document.getElementById('emptyState');
-  const badge = document.getElementById('timelineBadge');
-  const countEl = document.getElementById('timelineCount');
+  const badge      = document.getElementById('timelineBadge');
+  const countEl    = document.getElementById('timelineCount');
 
-  const u = data?.university || {};
-  const s = data?.school || {};
+  const u = (data && data.university) ? data.university : {};
+  const s = (data && data.school)     ? data.school     : {};
 
-  const hasUni = !!(u.degree || u.name || u.year || u.grade || u.location);
-  const hasSchool = !!(s.name || s.board || s.location || s.year || s.grade);
-  const count = (hasUni ? 1 : 0) + (hasSchool ? 1 : 0);
+  // A section has data if at least ONE field is a non-empty string
+  const hasUni    = Object.values(u).some(v => String(v).trim() !== '');
+  const hasSchool = Object.values(s).some(v => String(v).trim() !== '');
+  const count     = (hasUni ? 1 : 0) + (hasSchool ? 1 : 0);
 
   timeline.innerHTML = '';
 
   if (!hasUni && !hasSchool) {
     emptyState.style.display = 'block';
-    badge.style.display = 'none';
-    countEl.textContent = 'No records yet';
+    badge.style.display      = 'none';
+    countEl.textContent      = 'No records yet';
     return;
   }
 
   emptyState.style.display = 'none';
-  badge.style.display = 'inline-flex';
-  countEl.textContent = `${count} record${count > 1 ? 's' : ''} saved`;
+  badge.style.display      = 'inline-flex';
+  countEl.textContent      = `${count} record${count !== 1 ? 's' : ''} saved`;
 
   if (hasUni) {
     const item = document.createElement('div');
@@ -79,12 +122,11 @@ function renderTimeline(data) {
         <div class="tl-title">${u.degree || '—'}</div>
         <div class="tl-sub">${u.name || ''}</div>
         <div class="tl-meta">
-          ${u.year ? `<span class="meta-chip"><i class="fas fa-calendar"></i>${u.year}</span>` : ''}
-          ${u.grade ? `<span class="meta-chip grade-chip"><i class="fas fa-star"></i>${u.grade}</span>` : ''}
+          ${u.year     ? `<span class="meta-chip"><i class="fas fa-calendar"></i>${u.year}</span>` : ''}
+          ${u.grade    ? `<span class="meta-chip grade-chip"><i class="fas fa-star"></i>${u.grade}</span>` : ''}
           ${u.location ? `<span class="meta-chip"><i class="fas fa-map-marker-alt"></i>${u.location}</span>` : ''}
         </div>
-      </div>
-    `;
+      </div>`;
     timeline.appendChild(item);
   }
 
@@ -98,58 +140,53 @@ function renderTimeline(data) {
         <div class="tl-title">${s.name || '—'}</div>
         <div class="tl-sub">${s.board || ''}</div>
         <div class="tl-meta">
-          ${s.year ? `<span class="meta-chip school-chip"><i class="fas fa-calendar-check"></i>Passed ${s.year}</span>` : ''}
-          ${s.grade ? `<span class="meta-chip grade-chip"><i class="fas fa-percent"></i>${s.grade}</span>` : ''}
+          ${s.year     ? `<span class="meta-chip school-chip"><i class="fas fa-calendar-check"></i>Passed ${s.year}</span>` : ''}
+          ${s.grade    ? `<span class="meta-chip grade-chip"><i class="fas fa-percent"></i>${s.grade}</span>` : ''}
           ${s.location ? `<span class="meta-chip school-chip"><i class="fas fa-map-marker-alt"></i>${s.location}</span>` : ''}
         </div>
-      </div>
-    `;
+      </div>`;
     timeline.appendChild(item);
   }
 }
 
-/* ───────────────── Populate Inputs ───────────────── */
-function populateInputs(data) {
-  const u = data?.university || {};
-  const s = data?.school || {};
-
-  document.getElementById('uniDegree').value = u.degree || '';
-  document.getElementById('uniName').value = u.name || '';
-  document.getElementById('uniYear').value = u.year || '';
-  document.getElementById('uniGrade').value = u.grade || '';
-  document.getElementById('uniLocation').value = u.location || '';
-
-  document.getElementById('schoolName').value = s.name || '';
-  document.getElementById('schoolBoard').value = s.board || '';
-  document.getElementById('schoolLocation').value = s.location || '';
-  document.getElementById('schoolYear').value = s.year || '';
-  document.getElementById('schoolGrade').value = s.grade || '';
-
-  trackFilled();
-}
-
-/* ───────────────── Load Education ───────────────── */
+/* ─────────────────────────────────────────
+   LOAD EDUCATION FROM FIRESTORE
+───────────────────────────────────────── */
 async function loadEducation() {
+  if (!currentUser) return; // guard: never call without authenticated user
+
   try {
-    const snap = await getDoc(doc(db, 'users', currentUser.uid, 'education', 'main'));
+    const ref  = doc(db, 'users', currentUser.uid, 'education', 'main');
+    const snap = await getDoc(ref);
 
     if (!snap.exists()) {
+      // No saved data yet — clear inputs and show empty state
       populateInputs(null);
       renderTimeline(null);
       return;
     }
 
-    const data = snap.data() || {};
-    populateInputs(data);
-    renderTimeline(data);
+    // snap.data() is guaranteed non-null when snap.exists() is true
+    const data = snap.data();
+
+    // Defensive: ensure top-level keys are objects even if saved as undefined
+    const safeData = {
+      university: (data.university && typeof data.university === 'object') ? data.university : {},
+      school:     (data.school     && typeof data.school     === 'object') ? data.school     : {},
+    };
+
+    populateInputs(safeData);
+    renderTimeline(safeData);
 
   } catch (err) {
-    console.error('Load education error:', err);
-    showToast('Failed to load education data', true);
+    console.error('loadEducation error:', err);
+    showToast('Failed to load education data. Check your connection.', true);
   }
 }
 
-/* ───────────────── Auth ───────────────── */
+/* ─────────────────────────────────────────
+   AUTH STATE
+───────────────────────────────────────── */
 onAuthStateChanged(auth, async user => {
   if (!user) {
     window.location.href = 'loginpage.html';
@@ -158,101 +195,120 @@ onAuthStateChanged(auth, async user => {
 
   currentUser = user;
 
+  // Sidebar
   const name = user.displayName || user.email || 'User';
-  const avatar = document.getElementById('spAvatar');
-  const spName = document.getElementById('spName');
+  const avatarEl = document.getElementById('spAvatar');
+  const nameEl   = document.getElementById('spName');
+  if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
+  if (nameEl)   nameEl.textContent   = name.split(' ')[0] || name;
 
-  if (avatar) avatar.textContent = name.charAt(0).toUpperCase();
-  if (spName) spName.textContent = name.split(' ')[0] || name;
-
+  // Load data — await so inputs are populated before hiding overlay
   await loadEducation();
-  trackFilled();
 
+  // Hide loading overlay
   const ol = document.getElementById('loadingOverlay');
   if (ol) {
     ol.style.opacity = '0';
-    setTimeout(() => ol.style.display = 'none', 400);
+    setTimeout(() => { ol.style.display = 'none'; }, 400);
   }
 });
 
-/* ───────────────── Save Education ───────────────── */
+/* ─────────────────────────────────────────
+   SAVE EDUCATION
+───────────────────────────────────────── */
 document.getElementById('saveBtn').addEventListener('click', async () => {
-  if (!currentUser) return;
+  if (!currentUser) {
+    showToast('You must be signed in to save.', true);
+    return;
+  }
 
-  const btn = document.getElementById('saveBtn');
+  const btn  = document.getElementById('saveBtn');
   const spin = document.getElementById('saveSpin');
   const icon = document.getElementById('saveIcon');
-  const txt = document.getElementById('saveTxt');
+  const txt  = document.getElementById('saveTxt');
 
+  // Loading state
   btn.classList.add('loading');
   spin.style.display = 'block';
   icon.style.display = 'none';
-  txt.textContent = 'Saving...';
+  txt.textContent    = 'Saving…';
 
+  // Collect ALL field values — never skip optional fields so we always
+  // overwrite stale/partial data with a complete snapshot
   const educationData = {
     university: {
-      degree: document.getElementById('uniDegree').value.trim(),
-      name: document.getElementById('uniName').value.trim(),
-      year: document.getElementById('uniYear').value.trim(),
-      grade: document.getElementById('uniGrade').value.trim(),
-      location: document.getElementById('uniLocation').value.trim()
+      degree:   document.getElementById('uniDegree').value.trim(),
+      name:     document.getElementById('uniName').value.trim(),
+      year:     document.getElementById('uniYear').value.trim(),
+      grade:    document.getElementById('uniGrade').value.trim(),
+      location: document.getElementById('uniLocation').value.trim(),
     },
     school: {
-      name: document.getElementById('schoolName').value.trim(),
-      board: document.getElementById('schoolBoard').value.trim(),
+      name:     document.getElementById('schoolName').value.trim(),
+      board:    document.getElementById('schoolBoard').value.trim(),
       location: document.getElementById('schoolLocation').value.trim(),
-      year: document.getElementById('schoolYear').value.trim(),
-      grade: document.getElementById('schoolGrade').value.trim()
-    }
+      year:     document.getElementById('schoolYear').value.trim(),
+      grade:    document.getElementById('schoolGrade').value.trim(),
+    },
+    // Timestamp helps debug stale-read issues
+    savedAt: new Date().toISOString(),
   };
 
   try {
-    await setDoc(doc(db, 'users', currentUser.uid, 'education', 'main'), educationData, { merge: true });
+    // Use setDoc WITHOUT merge so we always write a complete, clean document.
+    // merge:true on nested objects in Firestore does a shallow top-level merge
+    // which can leave orphaned fields from previous saves.
+    const ref = doc(db, 'users', currentUser.uid, 'education', 'main');
+    await setDoc(ref, educationData);
 
     renderTimeline(educationData);
     showToast('Education saved successfully! 🎓');
 
   } catch (err) {
-    console.error(err);
-    showToast('Failed to save. Please try again.', true);
+    console.error('saveEducation error:', err);
+    showToast('Failed to save. Please check your connection and try again.', true);
 
   } finally {
     btn.classList.remove('loading');
     spin.style.display = 'none';
     icon.style.display = 'inline';
-    txt.textContent = 'Save Education';
+    txt.textContent    = 'Save Education';
   }
 });
 
-/* ───────────────── Logout ───────────────── */
+/* ─────────────────────────────────────────
+   LOGOUT
+───────────────────────────────────────── */
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   await signOut(auth);
   localStorage.clear();
   window.location.href = 'loginpage.html';
 });
 
-/* ───────────────── Cursor ───────────────── */
+/* ─────────────────────────────────────────
+   CURSOR
+───────────────────────────────────────── */
 const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursorRing');
-
+const ring   = document.getElementById('cursorRing');
 document.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
-  cursor.style.top = e.clientY + 'px';
-  ring.style.left = e.clientX + 'px';
-  ring.style.top = e.clientY + 'px';
+  cursor.style.top  = e.clientY + 'px';
+  ring.style.left   = e.clientX + 'px';
+  ring.style.top    = e.clientY + 'px';
 });
 
-/* ───────────────── Navbar Scroll ───────────────── */
+/* ─────────────────────────────────────────
+   NAVBAR SCROLL
+───────────────────────────────────────── */
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
 });
 
-/* ───────────────── Reveal Animation ───────────────── */
+/* ─────────────────────────────────────────
+   REVEAL ON SCROLL
+───────────────────────────────────────── */
 const revealEls = document.querySelectorAll('.reveal');
 const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) e.target.classList.add('visible');
-  });
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.08 });
-
 revealEls.forEach(el => obs.observe(el));
