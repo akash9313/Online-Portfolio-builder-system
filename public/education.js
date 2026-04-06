@@ -3,12 +3,12 @@ import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/fi
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_MSG_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787",
+  storageBucket: "portfoliox-2e787.firebasestorage.app",
+  messagingSenderId: "562709786891",
+  appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
 };
 
 const app = initializeApp(firebaseConfig);
