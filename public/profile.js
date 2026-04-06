@@ -3,8 +3,6 @@ import { getAuth, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL }
-  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 /* ─── Firebase init ──────────────────────────────────────────────────────── */
 const firebaseConfig = {
@@ -18,12 +16,11 @@ const firebaseConfig = {
 const app     = initializeApp(firebaseConfig);
 const auth    = getAuth(app);
 const db      = getFirestore(app);
-const storage = getStorage(app);
 
 /* ─── State (declared first so all functions below can reference them) ────── */
 let isDirty              = false;
 let savedData            = {};
-let pendingAvatarFile    = null;
+let pendingAvatarBase64  = null; // Changed from pendingAvatarFile
 
 /* ─── DOM shortcuts ──────────────────────────────────────────────────────── */
 const aboutEl = document.getElementById('about');
@@ -169,24 +166,20 @@ async function saveProfile() {
   spinner.style.display = 'block';
 
   try {
-    // 1. Upload avatar to Firebase Storage if a new one was chosen this session
+    // 1. Handle avatar (store as base64 in Firestore instead of Firebase Storage)
     let avatarUrl = savedData.avatarUrl || null;
-    if (pendingAvatarFile) {
-      showToast('Uploading avatar...', false);
+    if (pendingAvatarBase64) {
+      showToast('Processing avatar...', false);
       try {
-        const storageRef = ref(storage, `avatars/${user.uid}/${Date.now()}.jpg`);
-        const uploadPromise = uploadBytes(storageRef, pendingAvatarFile);
-        const uploadTimeout = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Upload timeout - please try again')), 20000)
-        );
-        const uploadTask = await Promise.race([uploadPromise, uploadTimeout]);
-        avatarUrl = await getDownloadURL(uploadTask.ref);
-        pendingAvatarFile = null;
-        console.log('[saveProfile] Avatar uploaded successfully:', avatarUrl);
-      } catch (uploadErr) {
-        console.error('[saveProfile] Avatar upload failed:', uploadErr);
-        showToast('Avatar upload failed: ' + uploadErr.message, true);
-        throw uploadErr;
+        // Store the base64 directly in Firestore (no Firebase Storage needed)
+        avatarUrl = pendingAvatarBase64;
+        pendingAvatarBase64 = null;
+        console.log('[saveProfile] Avatar processed successfully, base64 length:', avatarUrl.length);
+        showToast('Avatar processed successfully!', false);
+      } catch (avatarErr) {
+        console.error('[saveProfile] Avatar processing failed:', avatarErr);
+        showToast('Avatar processing failed: ' + avatarErr.message, true);
+        throw avatarErr;
       }
     }
 
@@ -256,7 +249,7 @@ function discardChanges() {
   } else {
     resetAvatarToLetter(auth.currentUser?.email?.charAt(0).toUpperCase() || '?');
   }
-  pendingAvatarFile = null;
+  pendingAvatarBase64 = null;
 
   // Field statuses & URL previews
   ['fullName','phone','location','role','website',
@@ -292,6 +285,12 @@ document.getElementById('avatarInput').addEventListener('change', e => {
   const file = e.target.files[0];
   if (!file) return;
 
+  // Check file size (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    showToast('Image file is too large (max 10MB)', true);
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = ev => {
     const img  = new Image();
@@ -303,15 +302,19 @@ document.getElementById('avatarInput').addEventListener('change', e => {
       canvas.height = Math.round(img.height * ratio);
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      // Convert canvas to blob for upload (compressed)
-      canvas.toBlob(blob => {
-        pendingAvatarFile = blob;
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-        applyAvatar(dataUrl);
-        markDirty();
-      }, 'image/jpeg', 0.82);
+      // Store as base64 for Firestore storage (no Firebase Storage needed)
+      pendingAvatarBase64 = canvas.toDataURL('image/jpeg', 0.82);
+      applyAvatar(pendingAvatarBase64);
+      markDirty();
+      console.log('[avatar] Processed image, base64 length:', pendingAvatarBase64.length);
+    };
+    img.onerror = () => {
+      showToast('Invalid image file - please select a valid image', true);
     };
     img.src = ev.target.result;
+  };
+  reader.onerror = () => {
+    showToast('Failed to read image file', true);
   };
   reader.readAsDataURL(file);
 });
