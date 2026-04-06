@@ -215,173 +215,180 @@
   <iframe id="portfolioFrame" title="Portfolio"></iframe>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = {
+  const firebaseConfig = {
     apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
     authDomain: "portfoliox-2e787.firebaseapp.com",
     projectId: "portfoliox-2e787",
     storageBucket: "portfoliox-2e787.firebasestorage.app",
     messagingSenderId: "562709786891",
     appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
-    };
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-    const loadingEl = document.getElementById("loadingScreen");
-    const notFoundEl = document.getElementById("notFound");
-    const privateEl = document.getElementById("privateScreen");
-    const frameEl = document.getElementById("portfolioFrame");
+  const loadingEl = document.getElementById("loadingScreen");
+  const notFoundEl = document.getElementById("notFound");
+  const privateEl = document.getElementById("privateScreen");
+  const frameEl = document.getElementById("portfolioFrame");
 
-    function showScreen(screen) {
-      notFoundEl.style.display = "none";
-      privateEl.style.display = "none";
-      frameEl.style.display = "none";
+  /* ───────────────── UI Helpers ───────────────── */
+  function showScreen(screen) {
+    notFoundEl.style.display = "none";
+    privateEl.style.display = "none";
+    frameEl.style.display = "none";
 
-      if (screen) {
-        screen.style.display = "flex";
-      }
+    if (screen) {
+      screen.style.display = "flex";
     }
+  }
 
-    function hideLoader() {
+  function hideLoader() {
+    setTimeout(() => {
+      loadingEl.classList.add("fade");
       setTimeout(() => {
-        loadingEl.classList.add("fade");
-        setTimeout(() => {
-          loadingEl.style.display = "none";
-        }, 500);
-      }, 600);
+        loadingEl.style.display = "none";
+      }, 500);
+    }, 500);
+  }
+
+  /* ───────────────── Strict Username Parser ───────────────── */
+  function getUsernameFromURL() {
+    const path = window.location.pathname;
+    const parts = path.split("/").filter(Boolean);
+
+    // ONLY allow /p/username
+    if (parts.length >= 2 && parts[0] === "p" && parts[1]) {
+      return decodeURIComponent(parts[1]).trim().toLowerCase();
     }
 
-    function getUsernameFromURL() {
-      const params = new URLSearchParams(window.location.search);
+    return null;
+  }
 
-      // Fallback support: /portfolio.html?u=akash
-      const queryUsername = params.get("u");
-      if (queryUsername && queryUsername.trim()) {
-        return queryUsername.trim().toLowerCase();
-      }
+  /* ───────────────── Main Loader ───────────────── */
+  async function loadPortfolio() {
+    const username = getUsernameFromURL();
 
-      const path = window.location.pathname;
-      const parts = path.split("/").filter(Boolean);
-
-      // Recommended route: /p/akash
-      if (parts.length >= 2 && parts[0] === "p" && parts[1]) {
-        return decodeURIComponent(parts[1]).trim().toLowerCase();
-      }
-
-      // Optional support: /u/akash
-      if (parts.length >= 2 && parts[0] === "u" && parts[1]) {
-        return decodeURIComponent(parts[1]).trim().toLowerCase();
-      }
-
-      // Optional fallback: /akash
-      if (parts.length === 1 && parts[0] !== "portfolio.html" && !parts[0].includes(".")) {
-        return decodeURIComponent(parts[0]).trim().toLowerCase();
-      }
-
-      return null;
+    // Safety check
+    if (!username || username === "templates" || username === "portfolio.html") {
+      console.warn("Invalid or missing username:", username);
+      showScreen(notFoundEl);
+      hideLoader();
+      return;
     }
 
-    async function loadPortfolio() {
-      const username = getUsernameFromURL();
+    try {
+      console.log("Looking up username:", username);
 
-      if (!username) {
+      // Step 1: username -> uid
+      const usernameRef = doc(db, "usernames", username);
+      const usernameSnap = await getDoc(usernameRef);
+
+      if (!usernameSnap.exists()) {
+        console.warn("Username not found:", username);
         showScreen(notFoundEl);
         hideLoader();
         return;
       }
 
-      try {
-        // Step 1: Lookup username -> uid
-        const usernameRef = doc(db, "usernames", username);
-        const usernameSnap = await getDoc(usernameRef);
+      const usernameData = usernameSnap.data();
+      const uid = usernameData.uid;
 
-        if (!usernameSnap.exists()) {
-          console.warn("Username not found:", username);
-          showScreen(notFoundEl);
-          hideLoader();
-          return;
-        }
-
-        const usernameData = usernameSnap.data();
-        const uid = usernameData.uid;
-
-        if (!uid) {
-          console.warn("UID missing in usernames collection");
-          showScreen(notFoundEl);
-          hideLoader();
-          return;
-        }
-
-        // Step 2: Fetch actual user document
-        const userRef = doc(db, "users", uid);
-        const userSnap = await getDoc(userRef);
-
-        if (!userSnap.exists()) {
-          console.warn("User document not found for UID:", uid);
-          showScreen(notFoundEl);
-          hideLoader();
-          return;
-        }
-
-        const userData = userSnap.data();
-
-        // Step 3: Visibility checks
-        if (userData.visibility === "private") {
-          showScreen(privateEl);
-          hideLoader();
-          return;
-        }
-
-        if (!userData.published) {
-          showScreen(notFoundEl);
-          hideLoader();
-          return;
-        }
-
-        // Step 4: Choose template
-        const templateFile = userData.templateFile || "templates/classic.html";
-
-        // Security check: only allow local templates
-        if (
-          templateFile.startsWith("http://") ||
-          templateFile.startsWith("https://") ||
-          templateFile.startsWith("//")
-        ) {
-          console.error("External template URLs are not allowed");
-          showScreen(notFoundEl);
-          hideLoader();
-          return;
-        }
-
-        // Step 5: Set page title
-        const displayName = userData.fullName || userData.name || username;
-        document.title = `${displayName} | PortfolioX`;
-
-        // Step 6: Load template in iframe
-        frameEl.src = `${templateFile}?uid=${encodeURIComponent(uid)}&readonly=true`;
-        frameEl.style.display = "block";
-
-        frameEl.onload = () => {
-          hideLoader();
-        };
-
-        frameEl.onerror = () => {
-          console.error("Template failed to load");
-          showScreen(notFoundEl);
-          hideLoader();
-        };
-
-      } catch (error) {
-        console.error("Portfolio load error:", error);
+      if (!uid) {
+        console.warn("UID missing in usernames collection for:", username);
         showScreen(notFoundEl);
         hideLoader();
+        return;
       }
-    }
 
-    loadPortfolio();
-  </script>
+      console.log("Username matched UID:", uid);
+
+      // Step 2: Fetch user doc
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        console.warn("User document not found for UID:", uid);
+        showScreen(notFoundEl);
+        hideLoader();
+        return;
+      }
+
+      const userData = userSnap.data();
+
+      console.log("Loaded user data:", userData);
+
+      // Step 3: Visibility check
+      if (userData.visibility === "private") {
+        console.warn("Portfolio is private");
+        showScreen(privateEl);
+        hideLoader();
+        return;
+      }
+
+      if (!userData.published) {
+        console.warn("Portfolio is not published");
+        showScreen(notFoundEl);
+        hideLoader();
+        return;
+      }
+
+      // Step 4: Template file
+      const templateFile = userData.templateFile || "templates/classic.html";
+
+      // Security: block external template URLs
+      if (
+        templateFile.startsWith("http://") ||
+        templateFile.startsWith("https://") ||
+        templateFile.startsWith("//")
+      ) {
+        console.error("External template URLs are not allowed:", templateFile);
+        showScreen(notFoundEl);
+        hideLoader();
+        return;
+      }
+
+      // Extra protection: ensure template is inside templates folder
+      if (!templateFile.startsWith("templates/")) {
+        console.error("Invalid template path:", templateFile);
+        showScreen(notFoundEl);
+        hideLoader();
+        return;
+      }
+
+      // Step 5: Set page title
+      const displayName = userData.fullName || userData.name || username;
+      document.title = `${displayName} | PortfolioX`;
+
+      // Step 6: Load template in iframe
+      const iframeURL = `${templateFile}?uid=${encodeURIComponent(uid)}&readonly=true`;
+      console.log("Loading template iframe:", iframeURL);
+
+      frameEl.src = iframeURL;
+      frameEl.style.display = "block";
+
+      frameEl.onload = () => {
+        console.log("Template loaded successfully");
+        hideLoader();
+      };
+
+      frameEl.onerror = () => {
+        console.error("Template failed to load");
+        showScreen(notFoundEl);
+        hideLoader();
+      };
+
+    } catch (error) {
+      console.error("Portfolio load error:", error);
+      showScreen(notFoundEl);
+      hideLoader();
+    }
+  }
+
+  loadPortfolio();
+</script>
 </body>
 </html>
