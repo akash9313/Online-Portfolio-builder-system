@@ -272,7 +272,6 @@
   async function loadPortfolio() {
     const username = getUsernameFromURL();
 
-    // Safety check
     if (!username || username === "templates" || username === "portfolio.html") {
       console.warn("Invalid or missing username:", username);
       showScreen(notFoundEl);
@@ -283,30 +282,26 @@
     try {
       console.log("Looking up username:", username);
 
-      // Step 1: username -> uid
       const usernameRef = doc(db, "usernames", username);
       const usernameSnap = await getDoc(usernameRef);
 
       if (!usernameSnap.exists()) {
-        console.warn("Username not found:", username);
+        console.warn("Username doc not found:", username);
         showScreen(notFoundEl);
         hideLoader();
         return;
       }
 
-      const usernameData = usernameSnap.data();
-      const uid = usernameData.uid;
+      const uid = usernameSnap.data().uid;
+      console.log("Mapped UID:", uid);
 
       if (!uid) {
-        console.warn("UID missing in usernames collection for:", username);
+        console.warn("UID missing inside usernames doc");
         showScreen(notFoundEl);
         hideLoader();
         return;
       }
 
-      console.log("Username matched UID:", uid);
-
-      // Step 2: Fetch user doc
       const userRef = doc(db, "users", uid);
       const userSnap = await getDoc(userRef);
 
@@ -318,10 +313,8 @@
       }
 
       const userData = userSnap.data();
+      console.log("User document loaded:", userData);
 
-      console.log("Loaded user data:", userData);
-
-      // Step 3: Visibility check
       if (userData.visibility === "private") {
         console.warn("Portfolio is private");
         showScreen(privateEl);
@@ -329,49 +322,31 @@
         return;
       }
 
-      if (!userData.published) {
+      if (userData.published !== true) {
         console.warn("Portfolio is not published");
         showScreen(notFoundEl);
         hideLoader();
         return;
       }
 
-      // Step 4: Template file
       const templateFile = userData.templateFile || "templates/classic.html";
+      console.log("Template file:", templateFile);
 
-      // Security: block external template URLs
-      if (
-        templateFile.startsWith("http://") ||
-        templateFile.startsWith("https://") ||
-        templateFile.startsWith("//")
-      ) {
-        console.error("External template URLs are not allowed:", templateFile);
-        showScreen(notFoundEl);
-        hideLoader();
-        return;
-      }
-
-      // Extra protection: ensure template is inside templates folder
       if (!templateFile.startsWith("templates/")) {
-        console.error("Invalid template path:", templateFile);
+        console.warn("Invalid template path:", templateFile);
         showScreen(notFoundEl);
         hideLoader();
         return;
       }
 
-      // Step 5: Set page title
       const displayName = userData.fullName || userData.name || username;
       document.title = `${displayName} | PortfolioX`;
 
-      // Step 6: Load template in iframe
-      const iframeURL = `${templateFile}?uid=${encodeURIComponent(uid)}&readonly=true`;
-      console.log("Loading template iframe:", iframeURL);
-
-      frameEl.src = iframeURL;
+      frameEl.src = `${templateFile}?uid=${encodeURIComponent(uid)}&readonly=true`;
       frameEl.style.display = "block";
 
       frameEl.onload = () => {
-        console.log("Template loaded successfully");
+        console.log("Iframe template loaded successfully");
         hideLoader();
       };
 
