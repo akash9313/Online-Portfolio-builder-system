@@ -12,7 +12,7 @@
         "destination": "/index.html"
       },
       {
-        "source": "/:username",
+        "source": "/p/**",
         "destination": "/portfolio.html"
       }
     ],

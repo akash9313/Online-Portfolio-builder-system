@@ -1,188 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Portfolio | PortfolioX</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     :root {
-      --bg: #0a0e1a; --accent: #38bdf8; --accent-2: #6366f1; --accent-3: #22c55e;
-      --text: #f1f5f9; --muted: #94a3b8; --danger: #ef4444;
+      --bg: #0a0e1a;
+      --accent: #38bdf8;
+      --accent-2: #6366f1;
+      --accent-3: #22c55e;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --danger: #ef4444;
+      --warning: #f59e0b;
       --gradient: linear-gradient(135deg, #38bdf8, #6366f1);
     }
-    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; margin:0; }
 
-    /* ── Loading ── */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    /* ───────── Loading Screen ───────── */
     #loadingScreen {
-      position:fixed; inset:0; background:var(--bg);
-      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2rem;
-      z-index:9999; transition:opacity 0.5s ease;
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
     }
-    #loadingScreen.fade { opacity:0; pointer-events:none; }
-    .load-logo { font-size:1.4rem; font-weight:800; }
-    .load-logo .x { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .load-bar { width:220px; height:3px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
-    .load-fill { height:100%; background:var(--gradient); border-radius:2px; animation:loadIn 1.4s ease forwards; }
-    .load-text { font-size:0.85rem; color:var(--muted); }
-    @keyframes loadIn { from{width:0} to{width:100%} }
 
-    /* ── Not found ── */
-    #notFound {
-      display:none; min-height:100vh;
-      flex-direction:column; align-items:center; justify-content:center; gap:1.2rem;
-      text-align:center; padding:2rem;
+    #loadingScreen.fade {
+      opacity: 0;
+      pointer-events: none;
     }
-    #notFound .nf-icon { font-size:3rem; color:var(--danger); margin-bottom:0.5rem; }
-    #notFound h2 { font-size:1.6rem; font-weight:800; }
-    #notFound p  { color:var(--muted); max-width:360px; line-height:1.6; }
-    #notFound a  { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:12px; background:var(--gradient); color:white; text-decoration:none; font-weight:600; margin-top:0.5rem; transition:all 0.3s; }
-    #notFound a:hover { transform:translateY(-2px); }
 
-    /* ── Private ── */
-    #privateScreen {
-      display:none; min-height:100vh;
-      flex-direction:column; align-items:center; justify-content:center; gap:1.2rem;
-      text-align:center; padding:2rem;
+    .load-logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
     }
-    #privateScreen .priv-icon { width:72px; height:72px; border-radius:20px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:#f59e0b; margin:0 auto; }
-    #privateScreen h2 { font-size:1.5rem; font-weight:800; }
-    #privateScreen p  { color:var(--muted); max-width:340px; line-height:1.6; }
 
-    /* ── Template iframe ── */
+    .load-logo .x {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .load-bar {
+      width: 240px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .load-fill {
+      height: 100%;
+      width: 0;
+      background: var(--gradient);
+      border-radius: 999px;
+      animation: loadIn 1.4s ease forwards;
+    }
+
+    .load-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    @keyframes loadIn {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    /* ───────── Shared State Screens ───────── */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .icon-box {
+      width: 80px;
+      height: 80px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    #notFound .icon-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: var(--danger);
+    }
+
+    #privateScreen .icon-box {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: var(--warning);
+    }
+
+    .screen h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+
+    .screen p {
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.7;
+      font-size: 0.98rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .screen a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 14px;
+      background: var(--gradient);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.18);
+    }
+
+    .screen a:hover {
+      transform: translateY(-2px);
+    }
+
+    /* ───────── Portfolio Frame ───────── */
     #portfolioFrame {
-      display:none; width:100%; height:100vh; border:none;
+      display: none;
+      width: 100%;
+      height: 100vh;
+      border: none;
+      background: #fff;
     }
   </style>
 </head>
 <body>
 
-<!-- Loading -->
-<div id="loadingScreen">
-  <div class="load-logo">Portfolio<span class="x">X</span></div>
-  <div class="load-bar"><div class="load-fill"></div></div>
-  <div class="load-text">Loading portfolio…</div>
-</div>
+  <!-- Loading -->
+  <div id="loadingScreen">
+    <div class="load-logo">Portfolio<span class="x">X</span></div>
+    <div class="load-bar">
+      <div class="load-fill"></div>
+    </div>
+    <div class="load-text">Loading portfolio...</div>
+  </div>
 
-<!-- Not found -->
-<div id="notFound" style="display:flex;">
-  <div class="nf-icon"><i class="fas fa-face-frown"></i></div>
-  <h2>Portfolio Not Found</h2>
-  <p>The portfolio you're looking for doesn't exist or hasn't been published yet.</p>
-  <a href="loginpage.html"><i class="fas fa-rocket"></i> Create Your Portfolio</a>
-</div>
+  <!-- Not Found -->
+  <div id="notFound" class="screen">
+    <div class="icon-box">
+      <i class="fas fa-face-frown"></i>
+    </div>
+    <h2>Portfolio Not Found</h2>
+    <p>
+      The portfolio you're looking for does not exist, has not been published yet,
+      or the username is invalid.
+    </p>
+    <a href="/loginpage.html">
+      <i class="fas fa-rocket"></i> Create Your Portfolio
+    </a>
+  </div>
 
-<!-- Private -->
-<div id="privateScreen">
-  <div class="priv-icon"><i class="fas fa-lock"></i></div>
-  <h2>This Portfolio is Private</h2>
-  <p>The owner has set this portfolio to private. Only they can view it.</p>
-</div>
+  <!-- Private -->
+  <div id="privateScreen" class="screen">
+    <div class="icon-box">
+      <i class="fas fa-lock"></i>
+    </div>
+    <h2>This Portfolio is Private</h2>
+    <p>
+      The owner has set this portfolio to private. Only the owner can access it.
+    </p>
+    <a href="/">
+      <i class="fas fa-house"></i> Go Home
+    </a>
+  </div>
 
-<!--
-  The actual portfolio renders inside an iframe pointing to the chosen template file.
-  The template file reads the userId from the URL param and fetches data itself.
--->
-<iframe id="portfolioFrame" title="Portfolio"></iframe>
+  <!-- Portfolio Template Frame -->
+  <iframe id="portfolioFrame" title="Portfolio"></iframe>
 
-<script type="module">
-  import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, query, where, getDocs }
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  const firebaseConfig = {
+    const firebaseConfig = {
     apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
     authDomain: "portfoliox-2e787.firebaseapp.com",
     projectId: "portfoliox-2e787",
     storageBucket: "portfoliox-2e787.firebasestorage.app",
     messagingSenderId: "562709786891",
     appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
-  };
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  /* ── Parse username from URL
-     Supports:
-       /u/username            → path-based (Firebase Hosting rewrites)
-       /portfolio.html?u=username → query param fallback
-  ── */
-  function getUsername() {
-    // Query param: ?u=username  (works without hosting rewrites)
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('u')) return params.get('u').trim().toLowerCase();
+    const loadingEl = document.getElementById("loadingScreen");
+    const notFoundEl = document.getElementById("notFound");
+    const privateEl = document.getElementById("privateScreen");
+    const frameEl = document.getElementById("portfolioFrame");
 
-    // Path: /u/username
-    const parts = window.location.pathname.split('/').filter(Boolean);
-    const uIdx  = parts.indexOf('u');
-    if (uIdx !== -1 && parts[uIdx+1]) return parts[uIdx+1].trim().toLowerCase();
+    function showScreen(screen) {
+      notFoundEl.style.display = "none";
+      privateEl.style.display = "none";
+      frameEl.style.display = "none";
 
-    // Fallback: last path segment
-    const last = parts[parts.length - 1];
-    if (last && last !== 'portfolio.html') return last.toLowerCase();
-
-    return null;
-  }
-
-  const username = getUsername();
-
-  const loadingEl  = document.getElementById('loadingScreen');
-  const notFoundEl = document.getElementById('notFound');
-  const privateEl  = document.getElementById('privateScreen');
-  const frameEl    = document.getElementById('portfolioFrame');
-
-  function hideLoader() {
-    setTimeout(() => {
-      loadingEl.classList.add('fade');
-      setTimeout(() => loadingEl.style.display = 'none', 500);
-    }, 900);
-  }
-
-  async function loadPortfolio() {
-    if (!username) { notFoundEl.style.display = 'flex'; hideLoader(); return; }
-
-    try {
-      // Query Firestore for user with this username
-      const q    = query(collection(db,'users'), where('username','==',username));
-      const snap = await getDocs(q);
-
-      if (snap.empty) { notFoundEl.style.display = 'flex'; hideLoader(); return; }
-
-      const userDoc  = snap.docs[0];
-      const userId   = userDoc.id;
-      const userData = userDoc.data();
-
-      // Check visibility
-      if (userData.visibility === 'private') {
-        privateEl.style.display = 'flex'; hideLoader(); return;
+      if (screen) {
+        screen.style.display = "flex";
       }
-
-      // Not published
-      if (!userData.published) {
-        notFoundEl.style.display = 'flex'; hideLoader(); return;
-      }
-
-      // ✅ Load the template file in the iframe, passing userId as a query param
-      // The template file will use userId to fetch all user data from Firestore
-      const templateFile = userData.templateFile || 'templates/classic.html';
-      frameEl.src        = `${templateFile}?uid=${userId}&readonly=true`;
-      frameEl.style.display = 'block';
-
-      // Update page title with user's name
-      if (userData.fullName) document.title = `${userData.fullName} | PortfolioX`;
-
-      frameEl.onload = hideLoader;
-
-    } catch (err) {
-      console.error('Portfolio load error:', err);
-      notFoundEl.style.display = 'flex';
-      hideLoader();
     }
-  }
 
-  loadPortfolio();
-</script>
+    function hideLoader() {
+      setTimeout(() => {
+        loadingEl.classList.add("fade");
+        setTimeout(() => {
+          loadingEl.style.display = "none";
+        }, 500);
+      }, 600);
+    }
+
+    function getUsernameFromURL() {
+      const params = new URLSearchParams(window.location.search);
+
+      // Fallback support: /portfolio.html?u=akash
+      const queryUsername = params.get("u");
+      if (queryUsername && queryUsername.trim()) {
+        return queryUsername.trim().toLowerCase();
+      }
+
+      const path = window.location.pathname;
+      const parts = path.split("/").filter(Boolean);
+
+      // Recommended route: /p/akash
+      if (parts.length >= 2 && parts[0] === "p" && parts[1]) {
+        return decodeURIComponent(parts[1]).trim().toLowerCase();
+      }
+
+      // Optional support: /u/akash
+      if (parts.length >= 2 && parts[0] === "u" && parts[1]) {
+        return decodeURIComponent(parts[1]).trim().toLowerCase();
+      }
+
+      // Optional fallback: /akash
+      if (parts.length === 1 && parts[0] !== "portfolio.html" && !parts[0].includes(".")) {
+        return decodeURIComponent(parts[0]).trim().toLowerCase();
+      }
+
+      return null;
+    }
+
+    async function loadPortfolio() {
+      const username = getUsernameFromURL();
+
+      if (!username) {
+        showScreen(notFoundEl);
+        hideLoader();
+        return;
+      }
+
+      try {
+        // Step 1: Lookup username -> uid
+        const usernameRef = doc(db, "usernames", username);
+        const usernameSnap = await getDoc(usernameRef);
+
+        if (!usernameSnap.exists()) {
+          console.warn("Username not found:", username);
+          showScreen(notFoundEl);
+          hideLoader();
+          return;
+        }
+
+        const usernameData = usernameSnap.data();
+        const uid = usernameData.uid;
+
+        if (!uid) {
+          console.warn("UID missing in usernames collection");
+          showScreen(notFoundEl);
+          hideLoader();
+          return;
+        }
+
+        // Step 2: Fetch actual user document
+        const userRef = doc(db, "users", uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+          console.warn("User document not found for UID:", uid);
+          showScreen(notFoundEl);
+          hideLoader();
+          return;
+        }
+
+        const userData = userSnap.data();
+
+        // Step 3: Visibility checks
+        if (userData.visibility === "private") {
+          showScreen(privateEl);
+          hideLoader();
+          return;
+        }
+
+        if (!userData.published) {
+          showScreen(notFoundEl);
+          hideLoader();
+          return;
+        }
+
+        // Step 4: Choose template
+        const templateFile = userData.templateFile || "templates/classic.html";
+
+        // Security check: only allow local templates
+        if (
+          templateFile.startsWith("http://") ||
+          templateFile.startsWith("https://") ||
+          templateFile.startsWith("//")
+        ) {
+          console.error("External template URLs are not allowed");
+          showScreen(notFoundEl);
+          hideLoader();
+          return;
+        }
+
+        // Step 5: Set page title
+        const displayName = userData.fullName || userData.name || username;
+        document.title = `${displayName} | PortfolioX`;
+
+        // Step 6: Load template in iframe
+        frameEl.src = `${templateFile}?uid=${encodeURIComponent(uid)}&readonly=true`;
+        frameEl.style.display = "block";
+
+        frameEl.onload = () => {
+          hideLoader();
+        };
+
+        frameEl.onerror = () => {
+          console.error("Template failed to load");
+          showScreen(notFoundEl);
+          hideLoader();
+        };
+
+      } catch (error) {
+        console.error("Portfolio load error:", error);
+        showScreen(notFoundEl);
+        hideLoader();
+      }
+    }
+
+    loadPortfolio();
+  </script>
 </body>
 </html>
