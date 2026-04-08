@@ -260,8 +260,8 @@
     const path = window.location.pathname;
     const parts = path.split("/").filter(Boolean);
 
-    // ONLY allow /p/username
-    if (parts.length >= 2 && parts[0] === "p" && parts[1]) {
+    // Allow published portfolio routes at /u/username or legacy /p/username
+    if (parts.length >= 2 && (parts[0] === "u" || parts[0] === "p") && parts[1]) {
       return decodeURIComponent(parts[1]).trim().toLowerCase();
     }
 

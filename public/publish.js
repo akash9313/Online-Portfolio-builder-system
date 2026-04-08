@@ -88,7 +88,7 @@ function normalizeSlug(slug) {
 }
 
 function getLiveUrl(slug) {
-  return `${window.location.origin}/p/${slug}`;
+  return `${window.location.origin}/u/${slug}`;
 }
 
 function getSelectedVisibility() {
