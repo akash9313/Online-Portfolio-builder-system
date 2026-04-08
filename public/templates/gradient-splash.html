@@ -983,55 +983,111 @@
 
     /* ── EDUCATION ── */
     const educationContainer = document.getElementById('educationContainer');
-    const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
-    const eduCount = eduSnap.size;
-
-    document.getElementById('statEdu').textContent      = eduCount;
-    document.getElementById('aboutEduCount').textContent = eduCount || '—';
-
-    if (eduSnap.empty) {
-      educationContainer.innerHTML = `<p style="color:var(--text-muted);font-style:italic;">No education added yet.</p>`;
-    }
-
     let eduIdx = 0;
-    eduSnap.forEach(docSnap => {
-      const e         = docSnap.data();
-      const degree    = e.degree    || e.name             || e.university?.degree || e.school?.name  || 'Degree';
-      const institute = e.institute || e.university?.name || e.school?.board      || 'Institution';
-      const year      = e.year      || e.university?.year || e.school?.year       || 'Year';
-      const grade     = e.grade     || e.university?.grade|| e.school?.grade      || '';
-      const ac        = eduAccents[eduIdx % eduAccents.length];
-      eduIdx++;
+    
+    try {
+      const eduSnap = await getDoc(doc(db, "users", user.uid, "education", "main"));
+      if (!eduSnap.exists()) {
+        educationContainer.innerHTML = `<p style="color:var(--text-muted);font-style:italic;">No education added yet.</p>`;
+      } else {
+        const data = eduSnap.data();
+        const hasData = (obj) => obj && Object.values(obj).some(v => String(v).trim() !== '');
+        let eduCount = 0;
+        
+        if (hasData(data.university)) eduCount++;
+        if (hasData(data.school)) eduCount++;
+        
+        document.getElementById('statEdu').textContent      = eduCount;
+        document.getElementById('aboutEduCount').textContent = eduCount || '—';
+        
+        if (eduCount === 0) {
+          educationContainer.innerHTML = `<p style="color:var(--text-muted);font-style:italic;">No education added yet.</p>`;
+        } else {
+          // University
+          if (hasData(data.university)) {
+            const u = data.university;
+            const degree    = u.degree    || 'Degree';
+            const institute = u.name      || 'Institution';
+            const year      = u.year      || 'Year';
+            const grade     = u.grade     || '';
+            const ac        = eduAccents[eduIdx % eduAccents.length];
+            eduIdx++;
 
-      educationContainer.innerHTML += `
-        <div class="edu-card">
-          <div class="edu-card-accent" style="background:${ac.bar};"></div>
-          <div class="edu-icon-wrap" style="background:${ac.iconBg}22;font-size:1.4rem;">
-            ${ac.icon}
-          </div>
-          <h3 class="edu-degree" contenteditable="true"
-            data-collection="education" data-docid="${docSnap.id}" data-field="degree">
-            ${degree}
-          </h3>
-          <p class="edu-institute" contenteditable="true"
-            data-collection="education" data-docid="${docSnap.id}" data-field="institute">
-            ${institute}
-          </p>
-          <div class="edu-meta-row">
-            <span class="edu-badge">
-              <i class="fas fa-calendar-alt" style="font-size:.65rem;"></i>
-              <span contenteditable="true"
-                data-collection="education" data-docid="${docSnap.id}" data-field="year">
-                ${year}
-              </span>
-            </span>
-            ${grade ? `<span class="edu-grade-badge" contenteditable="true"
-              data-collection="education" data-docid="${docSnap.id}" data-field="grade">
-              ✦ ${grade}
-            </span>` : ''}
-          </div>
-        </div>`;
-    });
+            educationContainer.innerHTML += `
+              <div class="edu-card">
+                <div class="edu-card-accent" style="background:${ac.bar};"></div>
+                <div class="edu-icon-wrap" style="background:${ac.iconBg}22;font-size:1.4rem;">
+                  ${ac.icon}
+                </div>
+                <h3 class="edu-degree" contenteditable="true"
+                  data-collection="education" data-docid="main" data-field="university.degree">
+                  ${degree}
+                </h3>
+                <p class="edu-institute" contenteditable="true"
+                  data-collection="education" data-docid="main" data-field="university.name">
+                  ${institute}
+                </p>
+                <div class="edu-meta-row">
+                  <span class="edu-badge">
+                    <i class="fas fa-calendar-alt" style="font-size:.65rem;"></i>
+                    <span contenteditable="true"
+                      data-collection="education" data-docid="main" data-field="university.year">
+                      ${year}
+                    </span>
+                  </span>
+                  ${grade ? `<span class="edu-grade-badge" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="university.grade">
+                    ✦ ${grade}
+                  </span>` : ''}
+                </div>
+              </div>`;
+          }
+          
+          // School
+          if (hasData(data.school)) {
+            const s = data.school;
+            const degree    = s.name      || 'Degree';
+            const institute = s.board     || 'Institution';
+            const year      = s.year      || 'Year';
+            const grade     = s.grade     || '';
+            const ac        = eduAccents[eduIdx % eduAccents.length];
+            eduIdx++;
+
+            educationContainer.innerHTML += `
+              <div class="edu-card">
+                <div class="edu-card-accent" style="background:${ac.bar};"></div>
+                <div class="edu-icon-wrap" style="background:${ac.iconBg}22;font-size:1.4rem;">
+                  ${ac.icon}
+                </div>
+                <h3 class="edu-degree" contenteditable="true"
+                  data-collection="education" data-docid="main" data-field="school.name">
+                  ${degree}
+                </h3>
+                <p class="edu-institute" contenteditable="true"
+                  data-collection="education" data-docid="main" data-field="school.board">
+                  ${institute}
+                </p>
+                <div class="edu-meta-row">
+                  <span class="edu-badge">
+                    <i class="fas fa-calendar-alt" style="font-size:.65rem;"></i>
+                    <span contenteditable="true"
+                      data-collection="education" data-docid="main" data-field="school.year">
+                      ${year}
+                    </span>
+                  </span>
+                  ${grade ? `<span class="edu-grade-badge" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="school.grade">
+                    ✦ ${grade}
+                  </span>` : ''}
+                </div>
+              </div>`;
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error loading education:', err);
+      educationContainer.innerHTML = `<p style="color:var(--text-muted);font-style:italic;">Error loading education.</p>`;
+    }
 
     /* ── READ-ONLY MODE ── */
     const urlParams  = new URLSearchParams(window.location.search);

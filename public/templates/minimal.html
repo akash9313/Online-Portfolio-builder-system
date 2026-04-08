@@ -697,34 +697,69 @@
       }
 
       /* EDUCATION */
-      const eduSnap = await getDocs(collection(db, 'users', user.uid, 'education'));
-      const edus = [];
-      eduSnap.forEach(e => edus.push({ id: e.id, ...e.data() }));
-      document.getElementById('statEdu').textContent = edus.length;
-
       const timeline = document.getElementById('eduTimeline');
-      if (edus.length === 0) {
-        timeline.innerHTML = `<div style="color:var(--text-3); font-family:'JetBrains Mono',monospace; font-size:0.9rem;">// No education records added yet</div>`;
-      } else {
-        edus.forEach(e => {
-          const degree    = e.degree    || e.name              || 'Degree';
-          const institute = e.institute || e.university?.name  || e.school?.name || 'Institution';
-          const year      = e.year      || e.university?.year  || e.school?.year || '';
-          const grade     = e.grade     || e.university?.grade || e.school?.grade || '';
-
-          const item = document.createElement('div');
-          item.className = 'edu-item reveal';
-          item.innerHTML = `
-            <div class="edu-card">
-              <div class="edu-top">
-                <div class="edu-degree">${degree}</div>
-                ${year ? `<div class="edu-year">${year}</div>` : ''}
-              </div>
-              <div class="edu-institute">${institute}</div>
-              ${grade ? `<div class="edu-grade">GPA / Grade: ${grade}</div>` : ''}
-            </div>`;
-          timeline.appendChild(item);
-        });
+      let eduCount = 0;
+      
+      try {
+        const eduSnap = await getDoc(doc(db, 'users', user.uid, 'education', 'main'));
+        if (eduSnap.exists()) {
+          const data = eduSnap.data();
+          const hasData = (obj) => obj && Object.values(obj).some(v => String(v).trim() !== '');
+          
+          // University
+          if (hasData(data.university)) {
+            eduCount++;
+            const u = data.university;
+            const degree    = u.degree    || 'Degree';
+            const institute = u.name      || 'Institution';
+            const year      = u.year      || '';
+            const grade     = u.grade     || '';
+            
+            const item = document.createElement('div');
+            item.className = 'edu-item reveal';
+            item.innerHTML = `
+              <div class="edu-card">
+                <div class="edu-top">
+                  <div class="edu-degree">${degree}</div>
+                  ${year ? `<div class="edu-year">${year}</div>` : ''}
+                </div>
+                <div class="edu-institute">${institute}</div>
+                ${grade ? `<div class="edu-grade">GPA / Grade: ${grade}</div>` : ''}
+              </div>`;
+            timeline.appendChild(item);
+          }
+          
+          // School
+          if (hasData(data.school)) {
+            eduCount++;
+            const s = data.school;
+            const degree    = s.name      || 'Degree';
+            const institute = s.board     || 'Institution';
+            const year      = s.year      || '';
+            const grade     = s.grade     || '';
+            
+            const item = document.createElement('div');
+            item.className = 'edu-item reveal';
+            item.innerHTML = `
+              <div class="edu-card">
+                <div class="edu-top">
+                  <div class="edu-degree">${degree}</div>
+                  ${year ? `<div class="edu-year">${year}</div>` : ''}
+                </div>
+                <div class="edu-institute">${institute}</div>
+                ${grade ? `<div class="edu-grade">GPA / Grade: ${grade}</div>` : ''}
+              </div>`;
+            timeline.appendChild(item);
+          }
+        }
+        
+        if (eduCount === 0) {
+          timeline.innerHTML = `<div style="color:var(--text-3); font-family:'JetBrains Mono',monospace; font-size:0.9rem;">// No education records added yet</div>`;
+        }
+        document.getElementById('statEdu').textContent = eduCount;
+      } catch (err) {
+        console.error('Error loading education:', err);
+        timeline.innerHTML = `<div style="color:var(--text-3); font-family:'JetBrains Mono',monospace; font-size:0.9rem;">// Error loading education</div>`;
       }
 
     } catch (err) {

@@ -701,48 +701,65 @@
 
     /* ── EDUCATION ── */
     const educationContainer = document.getElementById('educationContainer');
-    const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
+    try {
+      const eduSnap = await getDoc(doc(db, "users", user.uid, "education", "main"));
+      if (!eduSnap.exists()) {
+        educationContainer.innerHTML = `<p style="color:rgba(255,255,255,0.3);font-size:.9rem;font-style:italic;">No education added yet.</p>`;
+      } else {
+        const data = eduSnap.data();
+        const hasData = (obj) => obj && Object.values(obj).some(v => String(v).trim() !== '');
+        const eduDocs = [];
+        
+        if (hasData(data.university)) {
+          eduDocs.push({ type: 'university', ...data.university });
+        }
+        if (hasData(data.school)) {
+          eduDocs.push({ type: 'school', ...data.school });
+        }
+        
+        if (eduDocs.length === 0) {
+          educationContainer.innerHTML = `<p style="color:rgba(255,255,255,0.3);font-size:.9rem;font-style:italic;">No education added yet.</p>`;
+        } else {
+          eduDocs.forEach((e, i) => {
+            const degree    = e.type === 'university' ? (e.degree || 'Degree') : (e.name || 'Degree');
+            const institute = e.type === 'university' ? (e.name || 'Institution') : (e.board || 'Institution');
+            const year      = e.year      || 'Year';
+            const grade     = e.grade     || '';
+            const isLast    = i === eduDocs.length - 1;
+            const docid     = e.type;
 
-    if (eduSnap.empty) {
-      educationContainer.innerHTML = `<p style="color:rgba(255,255,255,0.3);font-size:.9rem;font-style:italic;">No education added yet.</p>`;
+            educationContainer.innerHTML += `
+              <div class="timeline-item">
+                <div class="timeline-left">
+                  <div class="tl-dot"></div>
+                  ${!isLast ? '<div class="tl-line"></div>' : ''}
+                </div>
+                <div class="timeline-content">
+                  <h3 class="edu-degree" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="${e.type}.degree">
+                    ${degree}
+                  </h3>
+                  <p class="edu-institute" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="${e.type}.${e.type === 'university' ? 'name' : 'board'}">
+                    ${institute}
+                  </p>
+                  <p class="edu-meta" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="${e.type}.year">
+                    ${year}
+                  </p>
+                  ${grade ? `<span class="edu-grade-badge" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="${e.type}.grade">
+                    ${grade}
+                  </span>` : ''}
+                </div>
+              </div>`;
+          });
+        }
+      }
+    } catch (err) {
+      console.error('Error loading education:', err);
+      educationContainer.innerHTML = `<p style="color:rgba(255,255,255,0.3);font-size:.9rem;font-style:italic;">Error loading education.</p>`;
     }
-
-    const eduDocs = [];
-    eduSnap.forEach(d => eduDocs.push({ id: d.id, ...d.data() }));
-
-    eduDocs.forEach((e, i) => {
-      const degree    = e.degree    || e.name             || e.university?.degree || e.school?.name  || 'Degree';
-      const institute = e.institute || e.university?.name || e.school?.board      || 'Institution';
-      const year      = e.year      || e.university?.year || e.school?.year       || 'Year';
-      const grade     = e.grade     || e.university?.grade|| e.school?.grade      || '';
-      const isLast    = i === eduDocs.length - 1;
-
-      educationContainer.innerHTML += `
-        <div class="timeline-item">
-          <div class="timeline-left">
-            <div class="tl-dot"></div>
-            ${!isLast ? '<div class="tl-line"></div>' : ''}
-          </div>
-          <div class="timeline-content">
-            <h3 class="edu-degree" contenteditable="true"
-              data-collection="education" data-docid="${e.id}" data-field="degree">
-              ${degree}
-            </h3>
-            <p class="edu-institute" contenteditable="true"
-              data-collection="education" data-docid="${e.id}" data-field="institute">
-              ${institute}
-            </p>
-            <p class="edu-meta" contenteditable="true"
-              data-collection="education" data-docid="${e.id}" data-field="year">
-              ${year}
-            </p>
-            ${grade ? `<span class="edu-grade-badge" contenteditable="true"
-              data-collection="education" data-docid="${e.id}" data-field="grade">
-              ${grade}
-            </span>` : ''}
-          </div>
-        </div>`;
-    });
 
     /* ── READ-ONLY MODE ── */
     const urlParams  = new URLSearchParams(window.location.search);

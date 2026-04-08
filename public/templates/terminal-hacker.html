@@ -823,46 +823,97 @@
 
     /* ── EDUCATION ── */
     const educationContainer = document.getElementById('educationContainer');
-    const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
+    try {
+      const eduSnap = await getDoc(doc(db, "users", user.uid, "education", "main"));
+      if (!eduSnap.exists()) {
+        educationContainer.innerHTML = `<span style="color:var(--muted);font-size:.8rem;">// No education records found</span>`;
+      } else {
+        const data = eduSnap.data();
+        const hasData = (obj) => obj && Object.values(obj).some(v => String(v).trim() !== '');
+        
+        let eduIdx = 0;
+        let hasEdu = false;
+        
+        // University
+        if (hasData(data.university)) {
+          hasEdu = true;
+          const u = data.university;
+          const degree    = u.degree    || 'Degree';
+          const institute = u.name      || 'Institution';
+          const year      = u.year      || 'Year';
+          const grade     = u.grade     || '';
+          const num       = String(++eduIdx).padStart(2, '0');
 
-    if (eduSnap.empty) {
-      educationContainer.innerHTML = `<span style="color:var(--muted);font-size:.8rem;">// No education records found</span>`;
+          educationContainer.innerHTML += `
+            <div class="edu-item">
+              <div class="edu-num">[${num}]</div>
+              <div>
+                <div class="edu-degree" contenteditable="true"
+                  data-collection="education" data-docid="main" data-field="university.degree">
+                  ${degree}
+                </div>
+                <div class="edu-institute" contenteditable="true"
+                  data-collection="education" data-docid="main" data-field="university.name">
+                  ${institute}
+                </div>
+                <div class="edu-meta">
+                  <span contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="university.year">
+                    ${year}
+                  </span>
+                  ${grade ? `<span class="edu-grade" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="university.grade">
+                    | grade: ${grade}
+                  </span>` : ''}
+                </div>
+              </div>
+            </div>`;
+        }
+        
+        // School
+        if (hasData(data.school)) {
+          hasEdu = true;
+          const s = data.school;
+          const degree    = s.name      || 'Degree';
+          const institute = s.board     || 'Institution';
+          const year      = s.year      || 'Year';
+          const grade     = s.grade     || '';
+          const num       = String(++eduIdx).padStart(2, '0');
+
+          educationContainer.innerHTML += `
+            <div class="edu-item">
+              <div class="edu-num">[${num}]</div>
+              <div>
+                <div class="edu-degree" contenteditable="true"
+                  data-collection="education" data-docid="main" data-field="school.name">
+                  ${degree}
+                </div>
+                <div class="edu-institute" contenteditable="true"
+                  data-collection="education" data-docid="main" data-field="school.board">
+                  ${institute}
+                </div>
+                <div class="edu-meta">
+                  <span contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="school.year">
+                    ${year}
+                  </span>
+                  ${grade ? `<span class="edu-grade" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="school.grade">
+                    | grade: ${grade}
+                  </span>` : ''}
+                </div>
+              </div>
+            </div>`;
+        }
+        
+        if (!hasEdu) {
+          educationContainer.innerHTML = `<span style="color:var(--muted);font-size:.8rem;">// No education records found</span>`;
+        }
+      }
+    } catch (err) {
+      console.error('Error loading education:', err);
+      educationContainer.innerHTML = `<span style="color:var(--muted);font-size:.8rem;">// Error loading education</span>`;
     }
-
-    let eduIdx = 0;
-    eduSnap.forEach(docSnap => {
-      const e         = docSnap.data();
-      const degree    = e.degree    || e.name             || e.university?.degree || e.school?.name  || 'Degree';
-      const institute = e.institute || e.university?.name || e.school?.board      || 'Institution';
-      const year      = e.year      || e.university?.year || e.school?.year       || 'Year';
-      const grade     = e.grade     || e.university?.grade|| e.school?.grade      || '';
-      const num       = String(++eduIdx).padStart(2, '0');
-
-      educationContainer.innerHTML += `
-        <div class="edu-item">
-          <div class="edu-num">[${num}]</div>
-          <div>
-            <div class="edu-degree" contenteditable="true"
-              data-collection="education" data-docid="${docSnap.id}" data-field="degree">
-              ${degree}
-            </div>
-            <div class="edu-institute" contenteditable="true"
-              data-collection="education" data-docid="${docSnap.id}" data-field="institute">
-              ${institute}
-            </div>
-            <div class="edu-meta">
-              <span contenteditable="true"
-                data-collection="education" data-docid="${docSnap.id}" data-field="year">
-                ${year}
-              </span>
-              ${grade ? `<span class="edu-grade" contenteditable="true"
-                data-collection="education" data-docid="${docSnap.id}" data-field="grade">
-                | grade: ${grade}
-              </span>` : ''}
-            </div>
-          </div>
-        </div>`;
-    });
 
     /* ── READ-ONLY MODE ── */
     const urlParams  = new URLSearchParams(window.location.search);

@@ -680,38 +680,81 @@
       projCount.textContent = pc;
 
       /* — Education — */
-      const eduSnap = await getDocs(collection(db, "users", user.uid, "education"));
-      eduSnap.forEach(docSnap => {
-        const e = docSnap.data();
-        const degree    = e.degree    || e.name || e.university?.degree || "Degree";
-        const institute = e.institute || e.university?.name || e.school?.board || "Institution";
-        const year      = e.year      || e.university?.year || e.school?.year  || "Year";
-        const grade     = e.grade     || e.university?.grade || e.school?.grade || "";
-
-        educationEl.innerHTML += `
-          <div class="edu-card">
-            <p class="edu-year"
-               contenteditable="true"
-               data-collection="education"
-               data-docid="${docSnap.id}"
-               data-field="year">${year}</p>
-            <h3 class="edu-degree"
-                contenteditable="true"
-                data-collection="education"
-                data-docid="${docSnap.id}"
-                data-field="degree">${degree}</h3>
-            <p class="edu-institute"
-               contenteditable="true"
-               data-collection="education"
-               data-docid="${docSnap.id}"
-               data-field="institute">${institute}</p>
-            <p class="edu-grade"
-               contenteditable="true"
-               data-collection="education"
-               data-docid="${docSnap.id}"
-               data-field="grade">${grade}</p>
-          </div>`;
-      });
+      try {
+        const eduSnap = await getDoc(doc(db, "users", user.uid, "education", "main"));
+        if (eduSnap.exists()) {
+          const data = eduSnap.data();
+          const hasData = (obj) => obj && Object.values(obj).some(v => String(v).trim() !== '');
+          
+          // University
+          if (hasData(data.university)) {
+            const u = data.university;
+            const degree    = u.degree    || "Degree";
+            const institute = u.name      || "Institution";
+            const year      = u.year      || "Year";
+            const grade     = u.grade     || "";
+            
+            educationEl.innerHTML += `
+              <div class="edu-card">
+                <p class="edu-year"
+                   contenteditable="true"
+                   data-collection="education"
+                   data-docid="main"
+                   data-field="university.year">${year}</p>
+                <h3 class="edu-degree"
+                    contenteditable="true"
+                    data-collection="education"
+                    data-docid="main"
+                    data-field="university.degree">${degree}</h3>
+                <p class="edu-institute"
+                   contenteditable="true"
+                   data-collection="education"
+                   data-docid="main"
+                   data-field="university.name">${institute}</p>
+                <p class="edu-grade"
+                   contenteditable="true"
+                   data-collection="education"
+                   data-docid="main"
+                   data-field="university.grade">${grade}</p>
+              </div>`;
+          }
+          
+          // School
+          if (hasData(data.school)) {
+            const s = data.school;
+            const degree    = s.name      || "Degree";
+            const institute = s.board     || "Institution";
+            const year      = s.year      || "Year";
+            const grade     = s.grade     || "";
+            
+            educationEl.innerHTML += `
+              <div class="edu-card">
+                <p class="edu-year"
+                   contenteditable="true"
+                   data-collection="education"
+                   data-docid="main"
+                   data-field="school.year">${year}</p>
+                <h3 class="edu-degree"
+                    contenteditable="true"
+                    data-collection="education"
+                    data-docid="main"
+                    data-field="school.name">${degree}</h3>
+                <p class="edu-institute"
+                   contenteditable="true"
+                   data-collection="education"
+                   data-docid="main"
+                   data-field="school.board">${institute}</p>
+                <p class="edu-grade"
+                   contenteditable="true"
+                   data-collection="education"
+                   data-docid="main"
+                   data-field="school.grade">${grade}</p>
+              </div>`;
+          }
+        }
+      } catch (err) {
+        console.error('Error loading education:', err);
+      }
 
       /* — Read-only mode — */
       const isReadOnly = new URLSearchParams(window.location.search).get("mode") === "readonly";

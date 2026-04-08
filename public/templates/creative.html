@@ -844,37 +844,79 @@ onAuthStateChanged(auth,async(user)=>{
   observeCounter('stat-proj',pc);
 
   /* Education */
-  const eduSnap=await getDocs(collection(db,"users",user.uid,"education"));
   const eduEl=document.getElementById('education');
   let ec=0;
-  eduSnap.forEach(ds=>{
-    const e=ds.data();ec++;
-    const degree   =e.degree   ||e.name||e.university?.degree||'Degree';
-    const institute=e.institute||e.university?.name||e.school?.board||'Institution';
-    const year     =e.year     ||e.university?.year||e.school?.year||'Year';
-    const grade    =e.grade    ||e.university?.grade||e.school?.grade||'—';
-    eduEl.innerHTML+=`
-      <div class="edu-card-wrap reveal">
-        <div class="edu-card-inner">
-          <div class="edu-face edu-face-front">
-            <div class="edu-front-deco">α</div>
-            <p class="edu-front-year" contenteditable="true"
-               data-collection="education" data-docid="${ds.id}" data-field="year">${year}</p>
-            <h3 class="edu-front-degree" contenteditable="true"
-                data-collection="education" data-docid="${ds.id}" data-field="degree">${degree}</h3>
-            <p class="edu-front-institute" contenteditable="true"
-               data-collection="education" data-docid="${ds.id}" data-field="institute">${institute}</p>
-          </div>
-          <div class="edu-face edu-face-back">
-            <p class="edu-back-title">Grade / Score</p>
-            <p class="edu-back-val" contenteditable="true"
-               data-collection="education" data-docid="${ds.id}" data-field="grade">${grade}</p>
-            <p class="edu-back-title" style="margin-top:16px">Institution</p>
-            <p class="edu-back-val" style="font-size:1rem">${institute}</p>
-          </div>
-        </div>
-      </div>`;
-  });
+  try {
+    const eduSnap=await getDoc(doc(db,"users",user.uid,"education","main"));
+    if (eduSnap.exists()) {
+      const data = eduSnap.data();
+      const hasData = (obj) => obj && Object.values(obj).some(v => String(v).trim() !== '');
+      
+      // University
+      if (hasData(data.university)) {
+        ec++;
+        const u = data.university;
+        const degree   = u.degree   || 'Degree';
+        const institute= u.name     || 'Institution';
+        const year     = u.year     || 'Year';
+        const grade    = u.grade    || '—';
+        eduEl.innerHTML+=`
+          <div class="edu-card-wrap reveal">
+            <div class="edu-card-inner">
+              <div class="edu-face edu-face-front">
+                <div class="edu-front-deco">α</div>
+                <p class="edu-front-year" contenteditable="true"
+                   data-collection="education" data-docid="main" data-field="university.year">${year}</p>
+                <h3 class="edu-front-degree" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="university.degree">${degree}</h3>
+                <p class="edu-front-institute" contenteditable="true"
+                   data-collection="education" data-docid="main" data-field="university.name">${institute}</p>
+              </div>
+              <div class="edu-face edu-face-back">
+                <p class="edu-back-title">Grade / Score</p>
+                <p class="edu-back-val" contenteditable="true"
+                   data-collection="education" data-docid="main" data-field="university.grade">${grade}</p>
+                <p class="edu-back-title" style="margin-top:16px">Institution</p>
+                <p class="edu-back-val" style="font-size:1rem">${institute}</p>
+              </div>
+            </div>
+          </div>`;
+      }
+      
+      // School
+      if (hasData(data.school)) {
+        ec++;
+        const s = data.school;
+        const degree   = s.name     || 'Degree';
+        const institute= s.board    || 'Institution';
+        const year     = s.year     || 'Year';
+        const grade    = s.grade    || '—';
+        eduEl.innerHTML+=`
+          <div class="edu-card-wrap reveal">
+            <div class="edu-card-inner">
+              <div class="edu-face edu-face-front">
+                <div class="edu-front-deco">α</div>
+                <p class="edu-front-year" contenteditable="true"
+                   data-collection="education" data-docid="main" data-field="school.year">${year}</p>
+                <h3 class="edu-front-degree" contenteditable="true"
+                    data-collection="education" data-docid="main" data-field="school.name">${degree}</h3>
+                <p class="edu-front-institute" contenteditable="true"
+                   data-collection="education" data-docid="main" data-field="school.board">${institute}</p>
+              </div>
+              <div class="edu-face edu-face-back">
+                <p class="edu-back-title">Grade / Score</p>
+                <p class="edu-back-val" contenteditable="true"
+                   data-collection="education" data-docid="main" data-field="school.grade">${grade}</p>
+                <p class="edu-back-title" style="margin-top:16px">Institution</p>
+                <p class="edu-back-val" style="font-size:1rem">${institute}</p>
+              </div>
+            </div>
+          </div>`;
+      }
+    }
+  } catch (err) {
+    console.error('Error loading education:', err);
+  }
   observeCounter('stat-edu',ec);
 
   /* Re-observe newly injected reveal elements */
