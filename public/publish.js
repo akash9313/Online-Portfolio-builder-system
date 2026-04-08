@@ -461,23 +461,31 @@ onAuthStateChanged(auth, async user => {
 
     slugInput.value = slug;
 
-    const [sk, pr, ed] = await Promise.all([
+    const [sk, pr, ed, mainEdu] = await Promise.all([
       getDocs(collection(db, 'users', user.uid, 'skills')),
       getDocs(collection(db, 'users', user.uid, 'projects')),
-      getDocs(collection(db, 'users', user.uid, 'education'))
+      getDocs(collection(db, 'users', user.uid, 'education')),
+      getDoc(doc(db, 'users', user.uid, 'education', 'main'))
     ]);
 
     skillsCount = sk.size;
     projCount = pr.size;
-    eduCount = ed.size;
+    
+    const hasMainEdu = mainEdu.exists() && (() => {
+      const data = mainEdu.data();
+      const hasValues = obj => obj && Object.values(obj).some(v => String(v).trim() !== '');
+      return hasValues(data.university) || hasValues(data.school);
+    })();
+
+    eduCount = ed.size > 0 ? ed.size : (hasMainEdu ? 1 : 0);
 
     checkStatus.skills = sk.size > 0;
     checkStatus.projects = pr.size > 0;
-    checkStatus.education = ed.size > 0;
+    checkStatus.education = eduCount > 0;
 
     document.getElementById('statSkills').textContent = sk.size;
     document.getElementById('statProjects').textContent = pr.size;
-    document.getElementById('statEdu').textContent = ed.size;
+    document.getElementById('statEdu').textContent = eduCount;
 
     const tplDisplay = getTemplateDisplayName();
     const tplFile = getTemplateFile();
