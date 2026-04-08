@@ -1,3 +1,33 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
+  authDomain: "portfoliox-2e787.firebaseapp.com",
+  projectId: "portfoliox-2e787",
+  storageBucket: "portfoliox-2e787.firebasestorage.app",
+  messagingSenderId: "562709786891",
+  appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+async function saveTemplateSelection(name) {
+  if (!currentUser) return;
+  try {
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      template: name,
+      templateFile: getTemplateFileByName(name)
+    }, { merge: true });
+  } catch (err) {
+    console.error('Failed to save template selection:', err);
+  }
+}
+
 /* ── Cursor ── */
     const cursor = document.getElementById('cursor');
     const ring   = document.getElementById('cursorRing');
@@ -66,12 +96,36 @@
       banner.classList.remove('hidden');
       banner.classList.add('visible'); // trigger reveal
 
+      if (currentUser) {
+        saveTemplateSelection(name);
+      }
+
       if (toast) showToast(`"${name}" template selected ✅`);
     }
 
     /* ── Restore saved selection ── */
     const saved = localStorage.getItem('finalTemplate');
     if (saved) applySelection(saved, false);
+
+    /* ── Load current user template if authenticated ── */
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+      if (!user) return;
+      try {
+        const profileSnap = await getDoc(doc(db, 'users', user.uid));
+        if (!profileSnap.exists()) return;
+        const data = profileSnap.data();
+        if (data.template) {
+          localStorage.setItem('finalTemplate', data.template);
+          applySelection(data.template, false);
+        }
+        if (data.templateFile) {
+          localStorage.setItem('finalTemplateFile', data.templateFile);
+        }
+      } catch (err) {
+        console.error('Failed to load saved template:', err);
+      }
+    });
 
     /* ── Select buttons ── */
     document.querySelectorAll('.btn-select').forEach(btn => {
