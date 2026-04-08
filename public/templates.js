@@ -15,6 +15,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 let currentUser = null;
+let selectedTemplate = '';
 
 async function saveTemplateSelection(name) {
   if (!currentUser) return;
@@ -75,8 +76,7 @@ async function saveTemplateSelection(name) {
 
     /* ── Apply selection ── */
     function applySelection(name, toast) {
-      localStorage.setItem('finalTemplate', name);
-      localStorage.setItem('finalTemplateFile', getTemplateFileByName(name));
+      selectedTemplate = name;
 
       document.querySelectorAll('.template-card').forEach(card => {
         const isThis = card.dataset.template === name;
@@ -103,10 +103,6 @@ async function saveTemplateSelection(name) {
       if (toast) showToast(`"${name}" template selected ✅`);
     }
 
-    /* ── Restore saved selection ── */
-    const saved = localStorage.getItem('finalTemplate');
-    if (saved) applySelection(saved, false);
-
     /* ── Load current user template if authenticated ── */
     onAuthStateChanged(auth, async user => {
       currentUser = user;
@@ -116,11 +112,13 @@ async function saveTemplateSelection(name) {
         if (!profileSnap.exists()) return;
         const data = profileSnap.data();
         if (data.template) {
-          localStorage.setItem('finalTemplate', data.template);
           applySelection(data.template, false);
         }
-        if (data.templateFile) {
-          localStorage.setItem('finalTemplateFile', data.templateFile);
+        if (data.fullName) {
+          const avatar = document.getElementById('spAvatar');
+          const nameEl = document.getElementById('spName');
+          if (avatar) avatar.textContent = data.fullName.charAt(0).toUpperCase();
+          if (nameEl) nameEl.textContent = data.fullName.split(' ')[0];
         }
       } catch (err) {
         console.error('Failed to load saved template:', err);
@@ -163,16 +161,7 @@ async function saveTemplateSelection(name) {
     });
 
     /* ── Logout ── */
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      localStorage.clear();
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
       window.location.href = 'loginpage.html';
     });
-
-    /* ── Sidebar avatar from localStorage ── */
-    const userName = localStorage.getItem('userName') || localStorage.getItem('displayName') || '';
-    if (userName) {
-      const av = document.getElementById('spAvatar');
-      const sn = document.getElementById('spName');
-      if (av) av.textContent = userName.charAt(0).toUpperCase();
-      if (sn) sn.textContent = userName.split(' ')[0];
-    }

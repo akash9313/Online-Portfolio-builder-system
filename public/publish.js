@@ -96,16 +96,12 @@ function getSelectedVisibility() {
 }
 
 function getTemplateFile() {
-  const localFile = localStorage.getItem('finalTemplateFile');
-  if (localFile) return localFile;
   if (currentUserData?.templateFile) return currentUserData.templateFile;
   return 'templates/classic.html';
 }
 
 function getTemplateDisplayName() {
-  const localName = localStorage.getItem('finalTemplate');
-  if (localName) return localName;
-  return currentUserData?.template || 'Classic Developer';
+  return currentUserData?.template || '';
 }
 
 /* ───────────────── Slug Status ───────────────── */
@@ -368,9 +364,6 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
       published: true
     };
 
-    localStorage.setItem('portfolioStatus', 'published');
-    localStorage.setItem('portfolioSlug', slug);
-
     launchConfetti();
     showLiveCard(slug);
     showToast('🎉 Your portfolio is now live!');
@@ -394,8 +387,6 @@ document.getElementById('unpublishBtn').addEventListener('click', async () => {
       published: false,
       updatedAt: serverTimestamp()
     }, { merge: true });
-
-    localStorage.removeItem('portfolioStatus');
 
     document.getElementById('liveCard').classList.remove('show');
 
@@ -445,16 +436,9 @@ onAuthStateChanged(auth, async user => {
       if (d.username) slug = d.username;
       if (d.template) {
         document.getElementById('tplNameEl').textContent = d.template;
-        localStorage.setItem('finalTemplate', d.template);
       } else {
-        localStorage.removeItem('finalTemplate');
+        document.getElementById('tplNameEl').textContent = '';
       }
-      if (d.templateFile) {
-        localStorage.setItem('finalTemplateFile', d.templateFile);
-      } else {
-        localStorage.removeItem('finalTemplateFile');
-      }
-
       document.getElementById('spName').textContent = d.fullName || user.email.split('@')[0];
       document.getElementById('spAvatar').textContent = (d.fullName || user.email).charAt(0).toUpperCase();
 
@@ -503,10 +487,12 @@ onAuthStateChanged(auth, async user => {
     const tplDisplay = getTemplateDisplayName();
     const tplFile = getTemplateFile();
 
-    checkStatus.template = !!tplFile;
+    checkStatus.template = !!currentUserData?.template;
 
     if (tplDisplay) {
       document.getElementById('tplNameEl').textContent = tplDisplay;
+    } else {
+      document.getElementById('tplNameEl').textContent = 'No template selected';
     }
 
     renderChecklist();
@@ -524,7 +510,6 @@ onAuthStateChanged(auth, async user => {
 /* ───────────────── Logout ───────────────── */
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   await signOut(auth);
-  localStorage.clear();
   window.location.href = 'loginpage.html';
 });
 

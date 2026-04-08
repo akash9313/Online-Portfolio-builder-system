@@ -42,7 +42,7 @@ import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/fireb
     let isReadOnly     = false;
     let currentSrc     = '';
     let currentVp      = 'desktop';
-    let selectedTpl    = localStorage.getItem('finalTemplate') || '';
+    let selectedTpl    = '';
     let portfolioUrl   = '';
 
     /* ── Toast ── */
@@ -118,6 +118,11 @@ import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/fireb
       document.getElementById('shareEmail').onclick    = () => window.location.href = `mailto:?subject=My+Portfolio&body=https://${portfolioUrl}`;
 
       // Check template
+      if (snap.exists()) {
+        const d = snap.data();
+        selectedTpl = d.template || '';
+      }
+
       if (!selectedTpl) {
         emptyState.style.display = 'flex';
       } else {
@@ -240,7 +245,6 @@ import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/fireb
     /* ── Logout ── */
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await signOut(auth);
-      localStorage.clear();
       window.location.href = 'loginpage.html';
     });
   
