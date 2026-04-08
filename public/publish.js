@@ -96,13 +96,16 @@ function getSelectedVisibility() {
 }
 
 function getTemplateFile() {
-  // IMPORTANT:
-  // Save actual template FILE path, not display name
-  return localStorage.getItem('finalTemplateFile') || 'templates/classic.html';
+  const localFile = localStorage.getItem('finalTemplateFile');
+  if (localFile) return localFile;
+  if (currentUserData?.templateFile) return currentUserData.templateFile;
+  return 'templates/classic.html';
 }
 
 function getTemplateDisplayName() {
-  return localStorage.getItem('finalTemplate') || 'Classic Developer';
+  const localName = localStorage.getItem('finalTemplate');
+  if (localName) return localName;
+  return currentUserData?.template || 'Classic Developer';
 }
 
 /* ───────────────── Slug Status ───────────────── */
@@ -440,7 +443,17 @@ onAuthStateChanged(auth, async user => {
       checkStatus.profile = !!(d.fullName && d.role && d.about);
 
       if (d.username) slug = d.username;
-      if (d.template) document.getElementById('tplNameEl').textContent = d.template;
+      if (d.template) {
+        document.getElementById('tplNameEl').textContent = d.template;
+        localStorage.setItem('finalTemplate', d.template);
+      } else {
+        localStorage.removeItem('finalTemplate');
+      }
+      if (d.templateFile) {
+        localStorage.setItem('finalTemplateFile', d.templateFile);
+      } else {
+        localStorage.removeItem('finalTemplateFile');
+      }
 
       document.getElementById('spName').textContent = d.fullName || user.email.split('@')[0];
       document.getElementById('spAvatar').textContent = (d.fullName || user.email).charAt(0).toUpperCase();

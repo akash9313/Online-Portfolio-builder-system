@@ -26,9 +26,27 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
+    const templateFileMap = {
+      'Classic Developer': 'templates/classic.html',
+      'Modern Professional': 'templates/modern.html',
+      'Creative Designer': 'templates/creative.html',
+      'Minimal Resume': 'templates/minimal.html',
+      'Neon Dark': 'templates/neon-dark.html',
+      'Glass Morph': 'templates/glass-morph.html',
+      'Terminal Hacker': 'templates/terminal-hacker.html',
+      'Gradient Splash': 'templates/gradient-splash.html',
+      'Executive Pro': 'templates/executive-pro.html',
+      'Bento Grid': 'templates/bento-grid.html'
+    };
+
+    function getTemplateFileByName(name) {
+      return templateFileMap[name] || 'templates/classic.html';
+    }
+
     /* ── Apply selection ── */
     function applySelection(name, toast) {
       localStorage.setItem('finalTemplate', name);
+      localStorage.setItem('finalTemplateFile', getTemplateFileByName(name));
 
       document.querySelectorAll('.template-card').forEach(card => {
         const isThis = card.dataset.template === name;
