@@ -344,11 +344,8 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
       }
     }
 
-    // 3) Save user publish data
     await setDoc(doc(db, 'users', currentUser.uid), {
       username: slug,
-      template: templateDisplayName,
-      templateFile: templateFile,
       visibility: visibility,
       published: true,
       publishedAt: serverTimestamp(),

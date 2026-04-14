@@ -780,7 +780,9 @@ function buildSkillRow(rowEl,arr){
 }
 
 onAuthStateChanged(auth,async(user)=>{
-  if(!user){hideLoader();return}
+  const _pubUid = new URLSearchParams(window.location.search).get("uid");
+  if (_pubUid) user = { uid: _pubUid };
+  if (!user){hideLoader();return}
   currentUser=user;
 
   /* Profile */

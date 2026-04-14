@@ -718,7 +718,9 @@ document.querySelectorAll(".card").forEach(card=>{
 
 /* ── auth + data load ─────────────────────────────── */
 onAuthStateChanged(auth, async user=>{
-  if(!user){
+  const _pubUid = new URLSearchParams(window.location.search).get("uid");
+  if (_pubUid) user = { uid: _pubUid };
+  if (!user){
     document.getElementById("loader").classList.add("gone");
     document.getElementById("heroName").textContent = "Please log in";
     return;

@@ -603,7 +603,9 @@
   let currentUser = null;
 
   onAuthStateChanged(auth, async (user) => {
-    if (!user) return;
+    const _pubUid = new URLSearchParams(window.location.search).get("uid");
+  if (_pubUid) user = { uid: _pubUid };
+  if (!user) return;
     currentUser = user;
 
     /* ── PROFILE ── */

@@ -648,7 +648,9 @@
 
   /* ── Populate DOM ─────────────────────────────────── */
   onAuthStateChanged(auth, async (user) => {
-    if (!user) {
+    const _pubUid = new URLSearchParams(window.location.search).get("uid");
+  if (_pubUid) user = { uid: _pubUid };
+  if (!user) {
       document.getElementById("loading-overlay").classList.add("hidden");
       document.getElementById("heroName").textContent = "Please log in";
       return;

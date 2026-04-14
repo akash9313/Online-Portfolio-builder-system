@@ -605,7 +605,9 @@
 
     /* ── Auth & Data Load ────────────────────────────────── */
     onAuthStateChanged(auth, async (user) => {
-      if (!user) { loader.classList.add("hide"); return; }
+      const _pubUid = new URLSearchParams(window.location.search).get("uid");
+  if (_pubUid) user = { uid: _pubUid };
+  if (!user) { loader.classList.add("hide"); return; }
       currentUser = user;
 
       /* — Profile — */

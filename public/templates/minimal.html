@@ -583,7 +583,9 @@
 
   /* ── Main load ── */
   onAuthStateChanged(auth, async user => {
-    if (!user) {
+    const _pubUid = new URLSearchParams(window.location.search).get("uid");
+  if (_pubUid) user = { uid: _pubUid };
+  if (!user) {
       // Guest / preview mode — show placeholder data
       hideLoader(); return;
     }
