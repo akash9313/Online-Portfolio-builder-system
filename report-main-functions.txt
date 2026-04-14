@@ -1,0 +1,372 @@
+Portfolio Builder - Main Modules for Report Submission
+======================================================
+
+Module: public/usersignup.html
+------------------------------
+Route: public/usersignup.html
+This module handles user registration and Google signup.
+
+```js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  GoogleAuthProvider,
+  signInWithPopup
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+function isStrongPassword(pw) {
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{8,}$/.test(pw);
+}
+
+document.getElementById("signupForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!isStrongPassword(password.value))
+    return alert("Password not strong enough");
+
+  if (password.value !== confirmPassword.value)
+    return alert("Passwords do not match");
+
+  const cred = await createUserWithEmailAndPassword(
+    auth,
+    email.value,
+    password.value
+  );
+
+  await sendEmailVerification(cred.user);
+  alert("📧 Verification email sent (check Spam).");
+  window.location.href = "loginpage.html";
+});
+
+document.getElementById("googleSignup").onclick = async () => {
+  const provider = new GoogleAuthProvider();
+  await signInWithPopup(auth, provider);
+  window.location.href = "dashboard.html";
+};
+```
+
+Module: public/loginpage.js
+--------------------------
+Route: public/loginpage.html
+This module handles user login, password reset, Google login, and automatic redirect when already authenticated.
+
+```js
+onAuthStateChanged(auth, user => {
+  if (user && user.emailVerified) window.location.replace('dashboard.html');
+});
+
+document.getElementById('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  hideAlert();
+
+  const email = document.getElementById('email').value.trim();
+  const pwd   = document.getElementById('password').value;
+  const btn   = document.getElementById('loginBtn');
+
+  if (!email || !pwd) {
+    showAlert('Please fill in both fields.', 'warn');
+    return;
+  }
+
+  btn.classList.add('loading'); btn.disabled = true;
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pwd);
+    if (!cred.user.emailVerified) {
+      showAlert('Your email is not verified. Please check your Inbox, Spam, or Promotions folder.', 'warn');
+      btn.classList.remove('loading'); btn.disabled = false;
+      return;
+    }
+    showToast('Signing you in…');
+    setTimeout(() => window.location.replace('dashboard.html'), 800);
+  } catch (err) {
+    showAlert(friendlyError(err.code), 'error');
+    document.getElementById('password').classList.add('error');
+    setTimeout(() => document.getElementById('password').classList.remove('error'), 2500);
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+});
+
+document.getElementById('forgotPassword').addEventListener('click', async e => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  if (!email) {
+    showAlert('Enter your email above first, then click Forgot Password.', 'warn');
+    document.getElementById('email').focus();
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showToast('Reset email sent! Check your inbox & spam.', 'success');
+  } catch (err) {
+    showAlert(friendlyError(err.code), 'error');
+  }
+});
+
+document.getElementById('googleBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('googleBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+    showToast('Signed in with Google!');
+    setTimeout(() => window.location.replace('dashboard.html'), 700);
+  } catch (err) {
+    if (err.code !== 'auth/popup-closed-by-user') {
+      showAlert(friendlyError(err.code), 'error');
+    }
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+});
+```
+
+Module: public/profile.js
+-------------------------
+Route: public/profile.html
+This module saves the user profile data schema to Firestore.
+
+```js
+async function saveProfile() {
+  const user = auth.currentUser;
+  if (!user) { showToast('Not signed in — please refresh the page.', true); return; }
+
+  const saveBtn = document.getElementById('saveBtn');
+  const spinner = document.getElementById('saveSpinner');
+  const originalText = saveBtn.textContent;
+
+  saveBtn.disabled      = true;
+  saveBtn.textContent    = 'Saving...';
+  spinner.style.display = 'block';
+
+  try {
+    let avatarUrl = savedData.avatarUrl || null;
+    if (pendingAvatarBase64) {
+      avatarUrl = pendingAvatarBase64;
+      pendingAvatarBase64 = null;
+    }
+
+    const data = {
+      fullName:  document.getElementById('fullName').value.trim(),
+      email:     user.email,
+      phone:     document.getElementById('phone').value.trim(),
+      about:     document.getElementById('about').value.trim(),
+      location:  document.getElementById('location').value.trim(),
+      role:      document.getElementById('role').value.trim(),
+      github:    document.getElementById('github').value.trim(),
+      linkedin:  document.getElementById('linkedin').value.trim(),
+      twitter:   document.getElementById('twitter').value.trim(),
+      dribbble:  document.getElementById('dribbble').value.trim(),
+      website:   document.getElementById('website').value.trim(),
+      avatarUrl: avatarUrl,
+      updatedAt: new Date().toISOString(),
+    };
+
+    const savePromise = setDoc(doc(db, 'users', user.uid), data, { merge: true });
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Save timeout - please try again')), 30000)
+    );
+    await Promise.race([savePromise, timeoutPromise]);
+
+    savedData = { ...data };
+    clearDirty();
+    showToast('Profile saved successfully! ✅');
+
+  } catch (err) {
+    showToast('Save failed: ' + (err.message || 'Unknown error'), true);
+  } finally {
+    saveBtn.disabled      = false;
+    saveBtn.textContent    = originalText;
+    spinner.style.display = 'none';
+  }
+}
+```
+
+Module: public/skills.js
+------------------------
+Route: public/skills.html
+This module manages the skills data collection.
+
+```js
+async function loadSkills() {
+  const snap = await getDocs(collection(db,'users',currentUser.uid,'skills'));
+  allSkills = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  renderSkills();
+}
+
+async function addSkill() {
+  const name = document.getElementById('skillName').value.trim();
+  if (!name)         { showToast('Please enter a skill name.', true); return; }
+  if (!currentLevel) { showToast('Please select a proficiency level.', true); return; }
+  if (allSkills.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+    showToast(`"${name}" is already in your skills.`, true); return;
+  }
+
+  const btn = document.getElementById('addSkillBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding…';
+
+  try {
+    const ref = await addDoc(collection(db,'users',currentUser.uid,'skills'), {
+      name, level: currentLevel, createdAt: new Date()
+    });
+    allSkills.push({ id: ref.id, name, level: currentLevel });
+    renderSkills();
+    document.getElementById('skillName').value = '';
+    currentLevel = '';
+    showToast(`"${name}" added! 🎉`);
+  } catch {
+    showToast('Failed to add skill. Try again.', true);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-plus"></i> Add Skill';
+  }
+}
+```
+
+Module: public/education.js
+---------------------------
+Route: public/education.html
+This module loads and saves the nested education schema.
+
+```js
+async function loadEducation() {
+  if (!currentUser) return;
+  const ref  = doc(db, 'users', currentUser.uid, 'education', 'main');
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+  const safeData = {
+    university: (data.university && typeof data.university === 'object') ? data.university : {},
+    school:     (data.school     && typeof data.school     === 'object') ? data.school     : {},
+  };
+  populateInputs(safeData);
+  renderTimeline(safeData);
+}
+
+async function saveEducation() {
+  if (!currentUser) { showToast('You must be signed in to save.', true); return; }
+
+  const educationData = {
+    university: {
+      degree:   document.getElementById('uniDegree').value.trim(),
+      name:     document.getElementById('uniName').value.trim(),
+      year:     document.getElementById('uniYear').value.trim(),
+      grade:    document.getElementById('uniGrade').value.trim(),
+      location: document.getElementById('uniLocation').value.trim(),
+    },
+    school: {
+      name:     document.getElementById('schoolName').value.trim(),
+      board:    document.getElementById('schoolBoard').value.trim(),
+      location: document.getElementById('schoolLocation').value.trim(),
+      year:     document.getElementById('schoolYear').value.trim(),
+      grade:    document.getElementById('schoolGrade').value.trim(),
+    },
+    savedAt: new Date().toISOString(),
+  };
+
+  const ref = doc(db, 'users', currentUser.uid, 'education', 'main');
+  await setDoc(ref, educationData);
+  renderTimeline(educationData);
+  showToast('Education saved successfully! 🎓');
+}
+```
+
+Module: public/projects.js
+-------------------------
+Route: public/projects.html
+This module loads and saves project entries.
+
+```js
+async function loadProjects() {
+  const snap  = await getDocs(collection(db, 'users', currentUser.uid, 'projects'));
+  allProjects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  allProjects.sort((a,b) => {
+    const ta = a.createdAt?.toDate?.() || new Date(0);
+    const tb = b.createdAt?.toDate?.() || new Date(0);
+    return tb - ta;
+  });
+  renderProjects();
+}
+
+document.getElementById('addProjectBtn').addEventListener('click', async () => {
+  const title = document.getElementById('projTitle').value.trim();
+  const tech  = document.getElementById('projTech').value.trim();
+  const link  = document.getElementById('projLink').value.trim();
+  const desc  = document.getElementById('projDesc').value.trim();
+
+  if (!title) { showToast('Please enter a project title.', true); return; }
+  if (!tech)  { showToast('Please enter technologies used.', true); return; }
+  if (!desc)  { showToast('Please enter a project description.', true); return; }
+
+  try {
+    const ref = await addDoc(collection(db, 'users', currentUser.uid, 'projects'), {
+      title, tech, link, description: desc, createdAt: serverTimestamp()
+    });
+    allProjects.unshift({ id: ref.id, title, tech, link, description: desc, createdAt: { toDate: () => new Date() } });
+    renderProjects();
+    showToast(`"${title}" added successfully! 🚀`);
+  } catch (err) {
+    showToast('Failed to add project. Try again.', true);
+  }
+});
+```
+
+Module: public/settings.js
+--------------------------
+Route: public/settings.html
+This module exports the user data for the report.
+
+```js
+async function fetchAllData(uid) {
+  const [profileSnap, skillsSnap, eduSnap, projSnap] = await Promise.all([
+    getDoc(doc(db,'users',uid)),
+    getDoc(doc(db,'users',uid,'skills','data')),
+    getDoc(doc(db,'users',uid,'education','data')),
+    getDoc(doc(db,'users',uid,'projects','data')),
+  ]);
+
+  return {
+    profile:   profileSnap.exists()  ? profileSnap.data()  : {},
+    skills:    skillsSnap.exists()   ? skillsSnap.data()   : {},
+    education: eduSnap.exists()      ? eduSnap.data()      : {},
+    projects:  projSnap.exists()     ? projSnap.data()     : {},
+    exportedAt: new Date().toISOString(),
+  };
+}
+
+function exportJson(data) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  downloadBlob(blob, `portfolio-report-${Date.now()}.json`);
+}
+
+function exportCsv(data) {
+  let csv = 'Section,Key,Value\n';
+  Object.entries(data.profile).forEach(([k, v]) => {
+    csv += `Profile,${escapeCsv(k)},${escapeCsv(String(v))}\n`;
+  });
+  const skills = data.skills.list || data.skills.items || [];
+  if (Array.isArray(skills)) {
+    skills.forEach(s => {
+      csv += `Skills,${escapeCsv(s.name || '')},${escapeCsv(s.level || '')}\n`;
+    });
+  }
+  const projects = data.projects.list || data.projects.items || [];
+  if (Array.isArray(projects)) {
+    projects.forEach(p => {
+      csv += `Projects,${escapeCsv(p.title || p.name || '')},${escapeCsv(p.description || '')}\n`;
+    });
+  }
+  const blob = new Blob([csv], { type: 'text/csv' });
+  downloadBlob(blob, `portfolio-report-${Date.now()}.csv`);
+}
+```
+
+Notes:
+- The listed modules are the main functional pieces of the system.
+- Helper/UI helpers and small utility functions were intentionally omitted.
+- This file is designed for use in your project report submission.

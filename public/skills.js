@@ -3,6 +3,7 @@ import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.7.1/fir
       from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc }
       from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { aiService } from "./aiService.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
@@ -206,6 +207,58 @@ import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.7.1/fir
       if (e.key === 'Enter') addSkill();
     });
 
+    /* AI Skill Suggestions */
+    async function fetchAiSuggestions() {
+      const btn = document.getElementById('getAiSkills');
+      const box = document.getElementById('aiSkillsBox');
+      const row = document.getElementById('aiSuggestRow');
+      const refreshBtn = document.getElementById('refreshAiSkills');
+
+      // Get user role from profile if possible
+      let role = "Software Developer";
+      try {
+        const profileSnap = await getDoc(doc(db, 'users', currentUser.uid));
+        if (profileSnap.exists()) {
+          role = profileSnap.data().role || role;
+        }
+      } catch (e) {}
+
+      const currentSkillNames = allSkills.map(s => s.name);
+
+      btn.style.display = 'none';
+      box.style.display = 'block';
+      refreshBtn.disabled = true;
+      refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Thinking...';
+      row.innerHTML = '<div style="width:100%; text-align:center; padding:10px; color:var(--muted); font-size:0.8rem;">AI is analyzing your profile...</div>';
+
+      try {
+        const suggestions = await aiService.suggestSkills(role, currentSkillNames);
+        row.innerHTML = '';
+        suggestions.forEach((skill, i) => {
+          const chip = document.createElement('span');
+          chip.className = 'suggest-chip ai-chip';
+          chip.dataset.name = skill;
+          chip.style.animationDelay = (i * 0.05) + 's';
+          chip.innerHTML = `<i class="fas fa-plus-circle" style="font-size:0.7rem; opacity:0.6;"></i> ${skill}`;
+          chip.addEventListener('click', () => {
+            document.getElementById('skillName').value = skill;
+            document.getElementById('skillName').focus();
+          });
+          row.appendChild(chip);
+        });
+      } catch (err) {
+        showToast(err.message, true);
+        box.style.display = 'none';
+        btn.style.display = 'flex';
+      } finally {
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
+      }
+    }
+
+    document.getElementById('getAiSkills').addEventListener('click', fetchAiSuggestions);
+    document.getElementById('refreshAiSkills').addEventListener('click', fetchAiSuggestions);
+
     /* ── Delete ── */
     document.getElementById('modalCancel').addEventListener('click', () => {
       document.getElementById('deleteModal').classList.remove('open');
@@ -302,10 +355,16 @@ import { initializeApp }     from "https://www.gstatic.com/firebasejs/10.7.1/fir
     /* Cursor */
     const cursor = document.getElementById('cursor');
     const ring   = document.getElementById('cursorRing');
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX+'px'; cursor.style.top = e.clientY+'px';
-      ring.style.left   = e.clientX+'px'; ring.style.top   = e.clientY+'px';
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove', e=>{
+      mx=e.clientX; my=e.clientY;
+      cursor.style.left=mx+'px'; cursor.style.top=my+'px';
     });
+    (function animRing(){
+      rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+      ring.style.left=rx+'px'; ring.style.top=ry+'px';
+      requestAnimationFrame(animRing);
+    })();
     /* Navbar scroll */
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);

@@ -3,6 +3,7 @@ import { getAuth, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs }
   from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { aiService } from "./aiService.js";
 
 /* ─── Firebase init ──────────────────────────────────────────────────────── */
 const firebaseConfig = {
@@ -319,6 +320,44 @@ document.getElementById('avatarInput').addEventListener('change', e => {
   reader.readAsDataURL(file);
 });
 
+/* AI Bio Generator */
+document.getElementById('generateBioBtn').addEventListener('click', async () => {
+  const name = document.getElementById('fullName').value.trim();
+  const role = document.getElementById('role').value.trim();
+  const loc  = document.getElementById('location').value.trim();
+  
+  // Get skills for more context
+  let skills = [];
+  try {
+    const user = auth.currentUser;
+    const skSnap = await getDocs(collection(db, 'users', user.uid, 'skills'));
+    skills = skSnap.docs.map(d => d.data().name);
+  } catch(e) {}
+
+  if (!role) {
+    showToast('Please enter your Role/Title first so AI can write a relevant bio.', true);
+    return;
+  }
+
+  const btn = document.getElementById('generateBioBtn');
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Writing...';
+
+  try {
+    const bio = await aiService.generateBio(name || 'Professional', role, skills, loc || 'Global');
+    aboutEl.value = bio;
+    // Trigger input event to update char count and dirty state
+    aboutEl.dispatchEvent(new Event('input'));
+    showToast('AI bio generated! ✨');
+  } catch (err) {
+    showToast(err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+  }
+});
+
 /* About char count */
 aboutEl.addEventListener('input', () => {
   const len = aboutEl.value.length;
@@ -442,14 +481,18 @@ onAuthStateChanged(auth, async user => {
    ════════════════════════════════════════════════════════════════════════════ */
 
 /* Custom cursor */
-const cursorEl = document.getElementById('cursor');
-const ringEl   = document.getElementById('cursorRing');
-document.addEventListener('mousemove', e => {
-  cursorEl.style.left = e.clientX + 'px';
-  cursorEl.style.top  = e.clientY + 'px';
-  ringEl.style.left   = e.clientX + 'px';
-  ringEl.style.top    = e.clientY + 'px';
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
 });
+(function animRing(){
+  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
 
 /* Navbar shadow on scroll */
 window.addEventListener('scroll', () =>

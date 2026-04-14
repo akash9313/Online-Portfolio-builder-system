@@ -1,6 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import {
+  getFirestore, doc, getDoc, collection, getDocs, setDoc, addDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { aiService } from "./aiService.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
@@ -96,6 +99,136 @@ async function loadDashboard(uid) {
     console.error("Dashboard load error:", err);
   }
 }
+
+/* AI Portfolio Scoring */
+async function runPortfolioAudit() {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const btn = document.getElementById('analyzePortfolioBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Auditing...';
+
+  try {
+    // Collect data for audit
+    const [profile, skills, edu, proj] = await Promise.all([
+      getDoc(doc(db, 'users', user.uid)),
+      getDocs(collection(db, 'users', user.uid, 'skills')),
+      getDocs(collection(db, 'users', user.uid, 'education')),
+      getDocs(collection(db, 'users', user.uid, 'projects'))
+    ]);
+
+    const auditData = {
+      profile: profile.exists() ? profile.data() : {},
+      skillsCount: skills.size,
+      eduCount: edu.size,
+      projectsCount: proj.size,
+      projects: proj.docs.map(d => ({ title: d.data().title, desc: d.data().desc }))
+    };
+
+    const analysis = await aiService.analyzePortfolioScore(auditData);
+    
+    // Update UI
+    const scoreVal = document.getElementById('aiScoreVal');
+    const scoreFill = document.getElementById('aiScoreFill');
+    const rankEl = document.getElementById('aiScoreRank');
+    const feedbackEl = document.getElementById('aiScoreFeedback');
+    const tipsContainer = document.getElementById('aiTipsContainer');
+
+    scoreVal.textContent = analysis.score;
+    const offset = 282.7 - (282.7 * analysis.score / 100);
+    scoreFill.style.strokeDashoffset = offset;
+    
+    rankEl.textContent = analysis.score > 80 ? 'Exceptional' : analysis.score > 60 ? 'Professional' : 'Needs Improvement';
+    rankEl.style.color = analysis.score > 80 ? 'var(--accent-3)' : analysis.score > 60 ? 'var(--accent)' : 'var(--yellow)';
+    
+    feedbackEl.textContent = analysis.feedback;
+
+    tipsContainer.innerHTML = analysis.tips.map(tip => `
+      <div class="ai-tip">
+        <i class="fas fa-lightbulb"></i>
+        <span>${tip}</span>
+      </div>
+    `).join('');
+
+    // Save score to Firestore for persistence
+    await setDoc(doc(db, 'users', user.uid, 'settings', 'ai_score'), {
+      score: analysis.score,
+      analysis,
+      updatedAt: new Date().toISOString()
+    });
+
+  } catch (err) {
+    console.error(err);
+    alert('AI Audit failed: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-magnifying-glass-chart"></i> Run Fresh Audit';
+  }
+}
+
+document.getElementById('analyzePortfolioBtn').addEventListener('click', runPortfolioAudit);
+
+/* Resume Parsing */
+document.getElementById('parseResumeBtn').addEventListener('click', async () => {
+  const text = document.getElementById('resumeText').value.trim();
+  if (!text) {
+    alert('Please paste some resume text first!');
+    return;
+  }
+
+  const btn = document.getElementById('parseResumeBtn');
+  const status = document.getElementById('parseStatus');
+  
+  btn.disabled = true;
+  status.style.display = 'flex';
+
+  try {
+    const data = await aiService.parseResume(text);
+    const user = auth.currentUser;
+
+    // 1. Profile
+    if (data.FullName || data.Role || data.Summary) {
+      await setDoc(doc(db, 'users', user.uid), {
+        fullName: data.FullName || '',
+        role: data.Role || '',
+        bio: data.Summary || ''
+      }, { merge: true });
+    }
+
+    // 2. Skills
+    if (data.Skills && Array.isArray(data.Skills)) {
+      for (const s of data.Skills) {
+        await addDoc(collection(db, 'users', user.uid, 'skills'), {
+          name: s,
+          level: 'Beginner', // Default
+          category: 'Core'
+        });
+      }
+    }
+
+    // 3. Projects
+    if (data.Projects && Array.isArray(data.Projects)) {
+      for (const p of data.Projects) {
+        await addDoc(collection(db, 'users', user.uid, 'projects'), {
+          title: p.title || p.name || 'Untitled Project',
+          desc: p.description || p.desc || '',
+          tech: p.technologies || p.tech || [],
+          date: new Date().toISOString()
+        });
+      }
+    }
+
+    alert('Resume parsed and data imported! Recalculating your dashboard...');
+    window.location.reload();
+
+  } catch (err) {
+    alert('Parsing failed: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    status.style.display = 'none';
+  }
+});
 
 /* ── Animate all progress elements ── */
 function animateProgress(total, pProfile, pSkills, pEdu, pProj) {

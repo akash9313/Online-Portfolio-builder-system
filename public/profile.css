@@ -611,3 +611,33 @@
       .unsaved-bar { width:calc(100% - 2rem); left:1rem; transform:translateY(80px); }
       .unsaved-bar.show { transform:translateY(0); }
     }
+
+    /* AI Button */
+    .btn-ai-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      background: rgba(168, 85, 247, 0.1);
+      color: #a855f7;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-ai-mini:hover {
+      background: rgba(168, 85, 247, 0.2);
+      border-color: rgba(168, 85, 247, 0.5);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+    }
+    .btn-ai-mini:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+    .btn-ai-mini i {
+      font-size: 0.75rem;
+    }

@@ -313,3 +313,27 @@
     @media(max-width:1024px) { :root{--sidebar-w:230px;} .main-content{padding:2rem 1.5rem 3rem;} }
     @media(max-width:768px) { :root{--sidebar-w:0px;} .sidebar{display:none;} .main-content{padding:1.5rem 1rem 3rem;} body{cursor:auto;} .cursor,.cursor-ring{display:none;} .form-grid{grid-template-columns:1fr;} .stats-row{grid-template-columns:1fr 1fr;} }
     @media(max-width:480px) { .stats-row{grid-template-columns:1fr;} .form-card,.list-card{padding:1.4rem;} .nav-btn{padding:8px 12px;font-size:0.78rem;} }
+
+    /* AI Button */
+    .btn-ai-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      background: rgba(168, 85, 247, 0.1);
+      color: #a855f7;
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-ai-mini:hover:not(:disabled) {
+      background: rgba(168, 85, 247, 0.2);
+      transform: translateY(-1px);
+    }
+    .btn-ai-mini:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }

@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../chatbot.css">
 
   <style>
 /* ─── TOKENS ──────────────────────────────────────── */
@@ -864,6 +866,17 @@ onAuthStateChanged(auth, async user=>{
 
   /* hide loader */
   document.getElementById("loader").classList.add("gone");
+
+  /* — AI Chatbot Init — */
+  if (typeof window.initPortfolioChatbot === 'function') {
+    const fullData = {
+      profile: d,
+      skills: Array.from(skillSnap.docs).map(ds => ds.data()),
+      projects: Array.from(projSnap.docs).map(ds => ds.data()),
+      education: d.education
+    };
+    window.initPortfolioChatbot(fullData);
+  }
 });
 
 /* ── save on blur ─────────────────────────────────── */
@@ -889,5 +902,6 @@ document.addEventListener("blur", async e=>{
   }
 }, true);
 </script>
+<script src="../chatbot.js"></script>
 </body>
 </html>

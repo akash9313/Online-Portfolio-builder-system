@@ -3,6 +3,7 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp }
       from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { aiService } from "./aiService.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
@@ -48,6 +49,36 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       const el  = document.getElementById('descCount');
       el.textContent = `${len} / 400`;
       el.className   = 'char-count' + (len > 380 ? ' over' : len > 320 ? ' warn' : '');
+    });
+
+    /* AI Description Improver */
+    document.getElementById('improveDescBtn').addEventListener('click', async () => {
+      const title = document.getElementById('projTitle').value.trim();
+      const tech  = document.getElementById('projTech').value.trim();
+      const desc  = document.getElementById('projDesc').value.trim();
+
+      if (!title || !desc) {
+        showToast('Please enter at least a Title and some Basic Description first.', true);
+        return;
+      }
+
+      const btn = document.getElementById('improveDescBtn');
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refining...';
+
+      try {
+        const improved = await aiService.improveProjectDesc(title, tech || 'Various technologies', desc);
+        document.getElementById('projDesc').value = improved;
+        // Trigger input to update char count
+        document.getElementById('projDesc').dispatchEvent(new Event('input'));
+        showToast('Project description professionalized! ✨');
+      } catch (err) {
+        showToast(err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
     });
 
     /* ── View toggle ── */
@@ -269,10 +300,17 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
     // Cursor
     const cursor = document.getElementById('cursor');
     const ring   = document.getElementById('cursorRing');
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
-      ring.style.left   = e.clientX + 'px'; ring.style.top   = e.clientY + 'px';
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove', e=>{
+      mx=e.clientX; my=e.clientY;
+      cursor.style.left=mx+'px'; cursor.style.top=my+'px';
     });
+    (function animRing(){
+      rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+      ring.style.left=rx+'px'; ring.style.top=ry+'px';
+      requestAnimationFrame(animRing);
+    })();
+
     // Navbar scroll
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);

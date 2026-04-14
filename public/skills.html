@@ -260,6 +260,21 @@
             </button>
           </div>
         </div>
+
+        <!-- AI Component -->
+        <button class="btn-ai-mini" id="getAiSkills" style="margin-top:1.5rem; width:100%; justify-content:center;">
+          <i class="fas fa-magic"></i> AI Smart Suggest Skills
+        </button>
+
+        <div class="ai-suggestions-box" id="aiSkillsBox" style="display:none; margin-top:1.5rem;">
+          <div class="ai-box-header">
+            <div class="aib-title"><i class="fas fa-sparkles"></i> AI Expert Suggestions</div>
+            <button class="btn-ai-refresh" id="refreshAiSkills"><i class="fas fa-sync-alt"></i> Refresh</button>
+          </div>
+          <div class="ai-chips-container" id="aiSuggestRow">
+            <!-- AI chips will be injected here -->
+          </div>
+        </div>
       </div>
 
       <!-- Skills List Card -->
@@ -308,6 +323,6 @@
 
     </main>
   </div>
-  <script type = "module" src="skills.js"></script>
+  <script type="module" src="skills.js"></script>
 </body>
 </html>

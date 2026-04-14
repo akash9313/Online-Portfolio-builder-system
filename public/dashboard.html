@@ -346,6 +346,67 @@
             </a>
           </div>
         </section>
+
+        <!-- AI Insights & Portfolio Audit -->
+        <section class="ai-audit-card reveal reveal-delay-3">
+          <div class="pc-header">
+            <div>
+              <h3 class="pc-title"><i class="fas fa-brain"></i> AI Portfolio Insights</h3>
+              <p class="pc-sub">Professional readiness analysis</p>
+            </div>
+            <button class="btn-ai-audit" id="analyzePortfolioBtn">
+              <i class="fas fa-magnifying-glass-chart"></i> Run Fresh Audit
+            </button>
+          </div>
+
+          <div class="ai-audit-content">
+            <div class="ai-score-donut">
+              <svg viewBox="0 0 100 100">
+                <circle class="donut-track" cx="50" cy="50" r="45"/>
+                <circle class="donut-fill" id="aiScoreFill" cx="50" cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="282.7"/>
+              </svg>
+              <div class="donut-text">
+                <span class="donut-val" id="aiScoreVal">?</span>
+                <span class="donut-label">Score</span>
+              </div>
+            </div>
+
+            <div class="ai-audit-info">
+              <div class="ai-rank-wrap">
+                <span class="ai-rank-label">Current Ranking:</span>
+                <span class="ai-rank-val" id="aiScoreRank">Run audit to see</span>
+              </div>
+              <p class="ai-feedback" id="aiScoreFeedback">AI will analyze your profile, skills, and projects to provide actionable feedback for recruiter readiness.</p>
+              
+              <div class="ai-tips-grid" id="aiTipsContainer">
+                <div class="ai-tip-placeholder">Audit results will appear here...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Resume Smart Import -->
+        <section class="resume-import-card reveal reveal-delay-3">
+          <div class="pc-header">
+            <div>
+              <h3 class="pc-title"><i class="fas fa-file-import"></i> Resume Smart Import</h3>
+              <p class="pc-sub">AI-powered portfolio auto-fill</p>
+            </div>
+          </div>
+          <div class="resume-import-body">
+            <p class="ri-hint">Paste your resume text below and let AI extract your profile, skills, and projects automatically.</p>
+            <textarea id="resumeText" placeholder="Paste resume text here..." class="ri-textarea"></textarea>
+            <div class="ri-actions">
+              <button class="btn-ai-action" id="parseResumeBtn">
+                <i class="fas fa-wand-magic-sparkles"></i> Start Smart Import
+              </button>
+              <div class="ri-status" id="parseStatus" style="display:none;">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>AI is analyzing your resume...</span>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
       <!-- Activity Feed -->
@@ -388,12 +449,18 @@
   <script type="module" src="dashboard.js"></script>
   <script>
     // Cursor
-    const cursor = document.getElementById('cursor');
+     const cursor = document.getElementById('cursor');
     const ring   = document.getElementById('cursorRing');
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
-      ring.style.left   = e.clientX + 'px'; ring.style.top   = e.clientY + 'px';
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove', e=>{
+      mx=e.clientX; my=e.clientY;
+      cursor.style.left=mx+'px'; cursor.style.top=my+'px';
     });
+    (function animRing(){
+      rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+      ring.style.left=rx+'px'; ring.style.top=ry+'px';
+      requestAnimationFrame(animRing);
+    })();
     // Navbar scroll
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);

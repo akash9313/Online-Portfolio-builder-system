@@ -378,6 +378,7 @@ onAuthStateChanged(auth, async user => {
   // Load sessions
   renderSessions(user);
 
+
   // Load storage info
   estimateStorage(user.uid);
 
@@ -600,6 +601,7 @@ document.getElementById('savePortfolioPassword').addEventListener('click', async
     showToast(err.message, 'error');
   }
 });
+
 
 /* ─────────────────────────────────────────
    SIGN OUT ALL OTHER DEVICES

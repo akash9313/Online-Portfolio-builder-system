@@ -1,0 +1,601 @@
+Portfolio Builder - Main Modules Summary
+========================================
+
+Module: public/dashboard.js
+Route: public/dashboard.html
+
+```js
+onAuthStateChanged(auth, async (user) => {
+  if (!user) { window.location.href = "index.html"; return; }
+
+  loadingOverlay.style.opacity = "0";
+  setTimeout(() => { loadingOverlay.style.display = "none"; }, 400);
+
+  const username = user.email.split("@")[0];
+  const initial  = username.charAt(0).toUpperCase();
+  welcomeText.innerHTML = `Welcome back, <span style="background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${username}</span> 👋`;
+  spAvatar.textContent = initial;
+  spName.textContent   = username;
+
+  await loadDashboard(user.uid);
+});
+
+async function loadDashboard(uid) {
+  try {
+    const [skillsSnap, eduSnap, projSnap, profileDoc] = await Promise.all([
+      getDocs(collection(db, "users", uid, "skills")),
+      getDocs(collection(db, "users", uid, "education")),
+      getDocs(collection(db, "users", uid, "projects")),
+      getDoc(doc(db, "users", uid))
+    ]);
+
+    const numSkills = skillsSnap.size;
+    const numEdu    = eduSnap.size;
+    const numProj   = projSnap.size;
+    const profileOk = profileDoc.exists();
+
+    profileStatus.textContent  = profileOk ? "✅ Completed" : "⚠️ Incomplete";
+    skillsCount.textContent    = numSkills;
+    educationCount.textContent = numEdu;
+    projectsCount.textContent  = numProj;
+
+    const pProfile = profileOk ? 100 : 0;
+    const pSkills  = numSkills > 0 ? 100 : 0;
+    const pEdu     = numEdu > 0 ? 100 : 0;
+    const pProj    = numProj > 0 ? 100 : 0;
+    const total    = Math.round((pProfile + pSkills + pEdu + pProj) / 4);
+
+    setTimeout(() => animateProgress(total, pProfile, pSkills, pEdu, pProj), 350);
+
+    appendActivity(profileOk, numSkills, numEdu, numProj);
+  } catch (err) {
+    console.error("Dashboard load error:", err);
+  }
+}
+
+function animateProgress(total, pProfile, pSkills, pEdu, pProj) {
+  progressFill.style.width    = total + "%";
+  progressPercent.textContent = total + "%";
+  navProgressFill.style.width = total + "%";
+  navProgressText.textContent = total + "%";
+  sidebarRing.style.strokeDashoffset = 188.5 - (188.5 * total / 100);
+  sidebarPct.textContent = total + "%";
+  heroArc.style.strokeDashoffset = 408.41 - (408.41 * total / 100);
+  heroPct.textContent = total + "%";
+  setBar(profileBar, profileVal, pProfile);
+  setBar(skillsBar, skillsVal, pSkills);
+  setBar(educationBar, educationVal, pEdu);
+  setBar(projectsBar, projectsVal, pProj);
+}
+
+function setBar(barEl, valEl, pct) {
+  barEl.style.width = pct + "%";
+  valEl.textContent = pct + "%";
+}
+
+function appendActivity(profileOk, skills, edu, proj) {
+  const list = document.getElementById("activityList");
+  if (!list) return;
+
+  const items = [];
+  if (!profileOk) items.push({ cls: "act-warn", fa: "fa-user", text: "Profile incomplete — fill your details to continue", time: "Action needed", tag: "tag-yellow", label: "Required" });
+  if (skills > 0) items.push({ cls: "act-success", fa: "fa-brain", text: `${skills} skill${skills > 1 ? "s" : ""} added to your portfolio`, time: "Updated", tag: "tag-green", label: "Done" });
+  if (edu > 0)    items.push({ cls: "act-success", fa: "fa-graduation-cap", text: `${edu} education record${edu > 1 ? "s" : ""} saved`, time: "Updated", tag: "tag-green", label: "Done" });
+  if (proj > 0)   items.push({ cls: "act-success", fa: "fa-project-diagram", text: `${proj} project${proj > 1 ? "s" : ""} in your portfolio`, time: "Updated", tag: "tag-green", label: "Done" });
+
+  items.forEach(item => {
+    const el = document.createElement("div");
+    el.className = "activity-item";
+    el.innerHTML = `
+      <div class="act-icon ${item.cls}"><i class="fas ${item.fa}"></i></div>
+      <div class="act-body">
+        <span class="act-text">${item.text}</span>
+        <span class="act-time">${item.time}</span>
+      </div>
+      <span class="act-tag ${item.tag}">${item.label}</span>`;
+    list.appendChild(el);
+  });
+}
+
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+  localStorage.clear();
+  window.location.href = "index.html";
+});
+```
+
+Module: public/education.js
+Route: public/education.html
+
+```js
+async function loadEducation() {
+  if (!currentUser) return;
+
+  try {
+    const ref  = doc(db, 'users', currentUser.uid, 'education', 'main');
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+      populateInputs(null);
+      renderTimeline(null);
+      return;
+    }
+
+    const data = snap.data();
+    const safeData = {
+      university: (data.university && typeof data.university === 'object') ? data.university : {},
+      school:     (data.school     && typeof data.school     === 'object') ? data.school     : {},
+    };
+
+    populateInputs(safeData);
+    renderTimeline(safeData);
+  } catch (err) {
+    console.error('loadEducation error:', err);
+    showToast('Failed to load education data. Check your connection.', true);
+  }
+}
+
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    window.location.href = 'loginpage.html';
+    return;
+  }
+
+  currentUser = user;
+  await loadEducation();
+  const ol = document.getElementById('loadingOverlay');
+  if (ol) {
+    ol.style.opacity = '0';
+    setTimeout(() => { ol.style.display = 'none'; }, 400);
+  }
+});
+
+async function saveEducation() {
+  if (!currentUser) {
+    showToast('You must be signed in to save.', true);
+    return;
+  }
+
+  const educationData = {
+    university: {
+      degree:   document.getElementById('uniDegree').value.trim(),
+      name:     document.getElementById('uniName').value.trim(),
+      year:     document.getElementById('uniYear').value.trim(),
+      grade:    document.getElementById('uniGrade').value.trim(),
+      location: document.getElementById('uniLocation').value.trim(),
+    },
+    school: {
+      name:     document.getElementById('schoolName').value.trim(),
+      board:    document.getElementById('schoolBoard').value.trim(),
+      location: document.getElementById('schoolLocation').value.trim(),
+      year:     document.getElementById('schoolYear').value.trim(),
+      grade:    document.getElementById('schoolGrade').value.trim(),
+    },
+    savedAt: new Date().toISOString(),
+  };
+
+  try {
+    const ref = doc(db, 'users', currentUser.uid, 'education', 'main');
+    await setDoc(ref, educationData);
+    renderTimeline(educationData);
+    showToast('Education saved successfully! 🎓');
+  } catch (err) {
+    console.error('saveEducation error:', err);
+    showToast('Failed to save. Please check your connection and try again.', true);
+  }
+}
+
+logoutBtn.addEventListener('click', async () => {
+  await signOut(auth);
+  localStorage.clear();
+  window.location.href = 'loginpage.html';
+});
+```
+
+Module: public/homepage.js
+Route: public/homepage.html
+
+```js
+onAuthStateChanged(auth, user => {
+  if (user) {
+    loginBtn.style.display  = 'none';
+    signupBtn.style.display = 'none';
+    profilePill.style.display = 'flex';
+    profileAv.textContent   = (user.displayName || user.email).charAt(0).toUpperCase();
+    profileEm.textContent   = user.displayName || user.email;
+  } else {
+    loginBtn.style.display  = 'flex';
+    signupBtn.style.display = 'flex';
+    profilePill.style.display = 'none';
+  }
+});
+
+function handleCTA() {
+  const user = auth.currentUser;
+  window.location.href = user ? 'dashboard.html' : 'usersignup.html';
+}
+
+document.getElementById('getStartedBtn').addEventListener('click', handleCTA);
+document.getElementById('ctaBtn').addEventListener('click', handleCTA);
+```
+
+Module: public/loginpage.js
+Route: public/loginpage.html
+
+```js
+onAuthStateChanged(auth, user => {
+  if (user && user.emailVerified) window.location.replace('dashboard.html');
+});
+
+document.getElementById('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  hideAlert();
+
+  const email = document.getElementById('email').value.trim();
+  const pwd   = document.getElementById('password').value;
+  const btn   = document.getElementById('loginBtn');
+
+  if (!email || !pwd) {
+    showAlert('Please fill in both fields.', 'warn');
+    return;
+  }
+
+  btn.classList.add('loading'); btn.disabled = true;
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pwd);
+    if (!cred.user.emailVerified) {
+      showAlert('Your email is not verified. Please check your Inbox, Spam, or Promotions folder.', 'warn');
+      btn.classList.remove('loading'); btn.disabled = false;
+      return;
+    }
+    showToast('Signing you in…');
+    setTimeout(() => window.location.replace('dashboard.html'), 800);
+  } catch (err) {
+    showAlert(friendlyError(err.code), 'error');
+    document.getElementById('password').classList.add('error');
+    setTimeout(() => document.getElementById('password').classList.remove('error'), 2500);
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+});
+
+document.getElementById('forgotPassword').addEventListener('click', async e => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  if (!email) {
+    showAlert('Enter your email above first, then click Forgot Password.', 'warn');
+    document.getElementById('email').focus();
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showToast('Reset email sent! Check your inbox & spam.', 'success');
+  } catch (err) {
+    showAlert(friendlyError(err.code), 'error');
+  }
+});
+
+document.getElementById('googleBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('googleBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+    showToast('Signed in with Google!');
+    setTimeout(() => window.location.replace('dashboard.html'), 700);
+  } catch (err) {
+    if (err.code !== 'auth/popup-closed-by-user') {
+      showAlert(friendlyError(err.code), 'error');
+    }
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+});
+```
+
+Module: public/preview.js
+Route: public/preview.html
+
+```js
+function loadIframe(src) {
+  currentSrc = src;
+  overlay.classList.remove('hidden');
+  document.getElementById('overlayText').textContent = 'Loading preview…';
+  loadBar.classList.add('loading');
+  iframe.src = src;
+  iframe.onload = () => {
+    setTimeout(() => {
+      overlay.classList.add('hidden');
+      loadBar.classList.remove('loading');
+      document.getElementById('loadFill').style.width = '100%';
+      setTimeout(() => document.getElementById('loadFill').style.width = '0%', 600);
+    }, 450);
+  };
+}
+
+function applyZoom(z) {
+  currentZoom = Math.max(0.4, Math.min(1.5, z));
+  document.getElementById('zoomVal').textContent = Math.round(currentZoom * 100) + '%';
+  if (currentZoom < 1) {
+    iframe.style.transform       = `scale(${currentZoom})`;
+    iframe.style.width           = `${100 / currentZoom}%`;
+    iframe.style.height          = `${100 / currentZoom}%`;
+    iframe.style.transformOrigin = 'top left';
+  } else {
+    iframe.style.transform = `scale(${currentZoom})`;
+    iframe.style.width     = '100%';
+    iframe.style.height    = '100%';
+    iframe.style.transformOrigin = 'top left';
+  }
+}
+
+function stepZoom(dir) {
+  const idx  = ZOOM_STEPS.findIndex(z => Math.abs(z - currentZoom) < 0.01);
+  const next = dir === 'in' ? ZOOM_STEPS[Math.min(idx+1, ZOOM_STEPS.length-1)] : ZOOM_STEPS[Math.max(idx-1, 0)];
+  applyZoom(next);
+}
+
+function doRefresh() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  setTimeout(() => btn.classList.remove('spinning'), 650);
+  overlay.classList.remove('hidden');
+  loadBar.classList.add('loading');
+  iframe.src = iframe.src;
+  iframe.onload = () => setTimeout(() => { overlay.classList.add('hidden'); loadBar.classList.remove('loading'); }, 450);
+  showToast('Preview refreshed');
+}
+
+function copyUrl() {
+  navigator.clipboard.writeText('https://' + portfolioUrl).catch(() => {});
+  showToast('URL copied to clipboard!');
+}
+
+document.getElementById('openTabBtn').addEventListener('click', () => {
+  if (currentSrc) window.open(currentSrc, '_blank');
+  else showToast('Select a template first', 'warn');
+});
+
+onAuthStateChanged(auth, async user => {
+  if (!user) { window.location.href = 'loginpage.html'; return; }
+  const snap = await getDoc(doc(db, 'users', user.uid));
+  let userName = user.email.split('@')[0];
+  if (snap.exists()) {
+    const d = snap.data();
+    if (d.fullName) userName = d.fullName;
+  }
+  document.getElementById('spName').textContent   = userName;
+  document.getElementById('spAvatar').textContent = userName.charAt(0).toUpperCase();
+  const slug = userName.toLowerCase().replace(/\s+/g, '-');
+  portfolioUrl = `portfoliox.app/u/${slug}`;
+  document.getElementById('urlBarText').textContent  = portfolioUrl;
+  document.getElementById('shareUrlText').textContent = portfolioUrl;
+  const file = templateMap[selectedTpl] || 'templates/classic.html';
+  loadIframe(file);
+});
+```
+
+Module: public/templates.js
+Route: public/templates.html
+
+```js
+async function saveTemplateSelection(name) {
+  if (!currentUser) return;
+  try {
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      template: name,
+      templateFile: getTemplateFileByName(name)
+    }, { merge: true });
+  } catch (err) {
+    console.error('Failed to save template selection:', err);
+  }
+}
+
+function applySelection(name, toast) {
+  selectedTemplate = name;
+  document.querySelectorAll('.template-card').forEach(card => {
+    const isThis = card.dataset.template === name;
+    card.classList.toggle('selected', isThis);
+    const btn = card.querySelector('.btn-select');
+    if (isThis) {
+      btn.innerHTML = '<i class="fas fa-check"></i> Selected';
+      btn.classList.add('selected-btn');
+    } else {
+      btn.innerHTML = '<i class="fas fa-check"></i> Select Template';
+      btn.classList.remove('selected-btn');
+    }
+  });
+  document.getElementById('bannerTemplateName').textContent = name;
+  if (currentUser) saveTemplateSelection(name);
+  if (toast) showToast(`"${name}" template selected ✅`);
+}
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (!user) return;
+  const profileSnap = await getDoc(doc(db, 'users', user.uid));
+  if (!profileSnap.exists()) return;
+  const data = profileSnap.data();
+  if (data.template) applySelection(data.template, false);
+});
+```
+
+Module: public/publish.js
+Route: public/publish.html
+
+```js
+async function checkSlug(slug) {
+  if (!currentUser) return false;
+  const cleanSlug = normalizeSlug(slug);
+  if (!cleanSlug || cleanSlug.length < 3) {
+    setSlugStatus('taken', 'Slug must be at least 3 characters');
+    return false;
+  }
+  const usernameRef = doc(db, 'usernames', cleanSlug);
+  const usernameSnap = await getDoc(usernameRef);
+  if (!usernameSnap.exists()) {
+    setSlugStatus('avail', `"${cleanSlug}" is available!");
+    return true;
+  }
+  const data = usernameSnap.data();
+  if (data.uid === currentUser.uid) {
+    setSlugStatus('avail', `"${cleanSlug}" is your current username");
+    return true;
+  }
+  setSlugStatus('taken', `"${cleanSlug}" is already taken");
+  return false;
+}
+
+function renderChecklist() {
+  const done = Object.values(checkStatus).filter(Boolean).length;
+  document.getElementById('checkBadge').textContent = `${done} / ${checks.length}`;
+  document.getElementById('checklist').innerHTML = checks.map(c => {
+    const ok = checkStatus[c.key];
+    return `...`;
+  }).join('');
+  updateScore();
+}
+
+function updateScore() {
+  const done = Object.values(checkStatus).filter(Boolean).length;
+  const total = checks.length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('scorePct').textContent = pct + '%';
+  const btn = document.getElementById('publishBtn');
+  const note = document.getElementById('publishNote');
+  if (pct === 100) {
+    btn.disabled = false;
+    note.innerHTML = '<i class="fas fa-check-circle"></i> All checks passed. Ready to go live!';
+    note.className = 'publish-note good';
+  } else {
+    btn.disabled = true;
+    const rem = total - done;
+    note.innerHTML = `<i class="fas fa-shield-alt"></i> Complete ${rem} more item${rem > 1 ? 's' : ''} to publish.`;
+    note.className = 'publish-note';
+  }
+}
+
+async function showLiveCard(slug) {
+  const url = getLiveUrl(slug);
+  document.getElementById('linkInput').value = url;
+  document.getElementById('liveCard').classList.add('show');
+  document.getElementById('lsSkills').textContent = skillsCount;
+  document.getElementById('lsProjects').textContent = projCount;
+  document.getElementById('lsEdu').textContent = eduCount;
+}
+
+document.getElementById('publishBtn').addEventListener('click', async () => {
+  if (!currentUser) return;
+  const slug = normalizeSlug(slugInput.value.trim());
+  if (!slug || slug.length < 3) {
+    showToast('Slug must be at least 3 characters', 'error');
+    return;
+  }
+  const slugAvailable = await checkSlug(slug);
+  if (!slugAvailable) {
+    showToast(`"${slug}" is already taken. Choose another.`, 'error');
+    return;
+  }
+  const btn = document.getElementById('publishBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  try {
+    const visibility = getSelectedVisibility();
+    const templateDisplayName = getTemplateDisplayName();
+    const templateFile = getTemplateFile();
+    await setDoc(doc(db, 'usernames', slug), { uid: currentUser.uid, updatedAt: serverTimestamp() }, { merge: true });
+    await setDoc(doc(db, 'users', currentUser.uid), {
+      username: slug,
+      template: templateDisplayName,
+      templateFile: templateFile,
+      visibility: visibility,
+      published: true,
+      publishedAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    launchConfetti();
+    showLiveCard(slug);
+    showToast('🎉 Your portfolio is now live!');
+  } catch (err) {
+    console.error('Publish failed:', err);
+    showToast('Publish failed: ' + err.message, 'error');
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+});
+```
+
+Module: public/projects.js
+Route: public/projects.html
+
+```js
+function renderProjects() {
+  const grid   = document.getElementById('projectsGrid');
+  const empty  = document.getElementById('emptyState');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+
+  const filtered = allProjects.filter(p =>
+    p.title.toLowerCase().includes(search) ||
+    p.tech.toLowerCase().includes(search) ||
+    p.description.toLowerCase().includes(search)
+  );
+
+  document.getElementById('statTotal').textContent = allProjects.length;
+  document.getElementById('statLive').textContent  = allProjects.filter(p => p.link).length;
+  const allTech = allProjects.flatMap(p => p.tech.split(',').map(s => s.trim()).filter(Boolean));
+  document.getElementById('statTech').textContent  = new Set(allTech).size;
+  grid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    empty.style.display = 'flex';
+    return;
+  }
+
+  filtered.forEach((proj, i) => {
+    const tags = proj.tech.split(',').map(s => s.trim()).filter(Boolean);
+    const card = document.createElement('div');
+    card.className = 'proj-card';
+    card.innerHTML = `...`;
+    card.querySelector('.proj-del-btn').addEventListener('click', () => {
+      pendingDeleteId   = proj.id;
+      pendingDeleteName = proj.title;
+      document.getElementById('deleteProjectName').textContent = proj.title;
+      document.getElementById('deleteModal').classList.add('open');
+    });
+    grid.appendChild(card);
+  });
+}
+
+async function loadProjects() {
+  const snap = await getDocs(collection(db, 'users', currentUser.uid, 'projects'));
+  allProjects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  allProjects.sort((a, b) => {
+    const ta = a.createdAt?.toDate?.() || new Date(0);
+    const tb = b.createdAt?.toDate?.() || new Date(0);
+    return tb - ta;
+  });
+  renderProjects();
+}
+
+document.getElementById('addProjectBtn').addEventListener('click', async () => {
+  const title = document.getElementById('projTitle').value.trim();
+  const tech  = document.getElementById('projTech').value.trim();
+  const link  = document.getElementById('projLink').value.trim();
+  const desc  = document.getElementById('projDesc').value.trim();
+
+  if (!title || !tech || !desc) {
+    showToast('Please fill all project fields.', true);
+    return;
+  }
+
+  try {
+    const ref = await addDoc(collection(db, 'users', currentUser.uid, 'projects'), {
+      title, tech, link, description: desc, createdAt: serverTimestamp()
+    });
+    allProjects.unshift({ id: ref.id, title, tech, link, description: desc, createdAt: { toDate: () => new Date() } });
+    renderProjects();
+    showToast(`"${title}" added successfully! 🚀`);
+  } catch (err) {
+    console.error(err);
+    showToast('Failed to add project. Try again.', true);
+  }
+});
+```
