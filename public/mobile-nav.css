@@ -107,6 +107,8 @@
     display: block !important;
     width: 100% !important;
     overflow-x: hidden !important;
+    position: static !important;
+    z-index: auto !important;
   }
   
   body {
