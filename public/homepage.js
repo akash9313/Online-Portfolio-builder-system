@@ -108,3 +108,46 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
     const el=document.getElementById(c.id);
     if(el) cIO.observe(el);
   });
+// Mobile Nav Logic
+const homeMobileBtn = document.getElementById('homeMobileBtn');
+const navLinks = document.querySelector('.nav-links');
+const navActions = document.querySelector('.nav-actions');
+const overlay = document.getElementById('homeMobileOverlay');
+
+if (homeMobileBtn) {
+  const t = () => {
+    navLinks.classList.toggle('open');
+    navActions.classList.toggle('mobile-view');
+    overlay.classList.toggle('open');
+    
+    // Copy nav actions inside navLinks if not there
+    if (!navLinks.querySelector('.nav-actions')) {
+      const clone = navActions.cloneNode(true);
+      clone.classList.remove('nav-actions');
+      clone.classList.add('mobile-view-actions');
+      clone.style.display = 'flex';
+      clone.style.flexDirection = 'column';
+      clone.style.gap = '1rem';
+      clone.style.marginTop = '2rem';
+      clone.style.width = '100%';
+      navLinks.appendChild(clone);
+      
+      // Fix logout button in cloned nav
+      const clonedLogout = clone.querySelector('#logoutBtn');
+      if (clonedLogout) {
+          clonedLogout.removeAttribute('id');
+          clonedLogout.addEventListener('click', async () => {
+              if (window.signOut && window.auth) {
+                  await window.signOut(window.auth);
+                  window.location.reload();
+              }
+          });
+      }
+    }
+  };
+  homeMobileBtn.addEventListener('click', t);
+  overlay.addEventListener('click', t);
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    if(window.innerWidth <= 768) t();
+  }));
+}
