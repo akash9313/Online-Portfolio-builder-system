@@ -5,60 +5,41 @@
 
 class AIService {
     constructor() {
-        this.apiKey = 'AIzaSyDWzC903edcmVofFtE1NKxDPPQhnsYw5Ac';
-        this.model = 'gemini-2.5-flash';
-        this.baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
+        // Points to the Firebase Cloud Function
+        // Using standard Google Cloud Functions URL format based on your projectId: 'portfoliox-2e787'
+        this.baseUrl = 'https://us-central1-portfoliox-2e787.cloudfunctions.net/generateAIResponse';
     }
 
-    async callGemini(prompt, isJson = false) {
-        if (!this.apiKey) {
-            throw new Error('Missing Gemini API Key. Please add it in Settings.');
-        }
+    async callAI(prompt, isJson = false) {
+        const requestBody = {
+            prompt: prompt,
+            isJson: isJson
+        };
 
-        const url = `${this.baseUrl}/${this.model}:generateContent?key=${this.apiKey}`;
-        
-        const response = await fetch(url, {
+        const response = await fetch(this.baseUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: isJson ? `${prompt}\n\nReturn the response as a valid JSON object only.` : prompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.7,
-                    topK: 40,
-                    topP: 0.95,
-                    maxOutputTokens: 2048,
-                    responseMimeType: isJson ? "application/json" : "text/plain",
-                }
-            })
+            body: JSON.stringify(requestBody)
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            console.error('Gemini API Error:', error);
-            throw new Error(error.error?.message || 'Failed to connect to Gemini AI');
-        }
-
-        const data = await response.json();
-        const text = data.candidates[0].content.parts[0].text;
-        
-        if (isJson) {
+            let errorMsg = 'Failed to connect to AI backend API';
             try {
-                // Remove potential markdown code blocks if the model included them despite the hint
-                const cleanJson = text.replace(/```json|```/g, '').trim();
-                return JSON.parse(cleanJson);
+                const errorData = await response.json();
+                errorMsg = errorData.error || errorMsg;
             } catch (e) {
-                console.error('Failed to parse AI JSON response:', text);
-                throw new Error('AI returned an invalid response format.');
+                // If it fails to parse JSON error, fall back to default
             }
+            console.error('Backend AI Error:', errorMsg);
+            throw new Error(errorMsg);
         }
 
-        return text.trim();
+        const jsonResponse = await response.json();
+        
+        // The backend already handles the JSON validation and parsing for us securely
+        return jsonResponse.data;
     }
 
     /**
@@ -70,7 +51,7 @@ class AIService {
         Location: ${location}. 
         The tone should be modern, professional, and highlight expertise. Use first-person "I".`;
         
-        return await this.callGemini(prompt);
+        return await this.callAI(prompt);
     }
 
     /**
@@ -81,7 +62,7 @@ class AIService {
         Exclude these skills if they are already listed: ${currentSkills.join(', ')}.
         Return a JSON array of strings.`;
         
-        return await this.callGemini(prompt, true);
+        return await this.callAI(prompt, true);
     }
 
     /**
@@ -95,7 +76,7 @@ class AIService {
         
         Focus on results, challenges overcome, and technical implementation. Keep it under 350 characters. Use professional action verbs. Use first-person.`;
         
-        return await this.callGemini(prompt);
+        return await this.callAI(prompt);
     }
 
     /**
@@ -108,7 +89,7 @@ class AIService {
         Consider the depth of descriptions, the variety of skills, and whether key links (GitHub/LinkedIn) are present.
         Return a JSON object: { "score": number, "tips": [string, string, string], "feedback": string }`;
         
-        return await this.callGemini(prompt, true);
+        return await this.callAI(prompt, true);
     }
 
     /**
@@ -121,7 +102,7 @@ class AIService {
         Extract: Full Name, Role/Title, Summary/Bio, Skills (array), Education (array), Projects (array).
         Format the response as a structured JSON object. Focus on high accuracy.`;
         
-        return await this.callGemini(prompt, true);
+        return await this.callAI(prompt, true);
     }
 }
 

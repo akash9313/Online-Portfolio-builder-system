@@ -6,8 +6,9 @@
 class PortfolioChatbot {
     constructor(userData) {
         this.userData = userData;
-        this.apiKey = 'AIzaSyDWzC903edcmVofFtE1NKxDPPQhnsYw5Ac';
         this.isOpen = false;
+        // Points to the Firebase Cloud Function securely without exposing API keys
+        this.baseUrl = 'https://us-central1-portfoliox-2e787.cloudfunctions.net/generateAIResponse';
         this.init();
     }
 
@@ -110,10 +111,6 @@ class PortfolioChatbot {
     }
 
     async askAI(question) {
-        if (!this.apiKey) {
-            return "Please configure the Gemini API Key in the portfolio builder settings to enable this AI assistant.";
-        }
-
         const prompt = `
             You are a helpful AI assistant representing ${this.userData.profile?.fullName || 'the candidate'} on their professional portfolio.
             Answer the recruiter's question based ONLY on the following candidate data. Be professional, enthusiastic, and concise.
@@ -131,20 +128,23 @@ class PortfolioChatbot {
             If the data doesn't contain the answer, politely say you don't have that specific information but highlight a related strength instead.
         `;
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.apiKey}`;
-        
-        const response = await fetch(url, {
+        const response = await fetch(this.baseUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
+                prompt: prompt,
+                isJson: false
             })
         });
 
-        if (!response.ok) throw new Error('AI Service unavailable');
+        if (!response.ok) {
+             throw new Error('AI Service Backend unavailable');
+        }
         
         const data = await response.json();
-        return data.candidates[0].content.parts[0].text;
+        return data.data;
     }
 }
 
