@@ -27,43 +27,45 @@ export default async function handler(req, res) {
     return
   }
 
-  // Load API Key from Vercel Secure Environment Variables
-  const apiKey = process.env.OPENAI_API_KEY
+  // Load API Key from Vercel Secure Environment Variables (Gemini Key now)
+  const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
-    res.status(500).json({ error: 'Server AI configuration error. Backend lacks API key.' })
+    res.status(500).json({ error: 'Server AI configuration error. Backend lacks Gemini API key.' })
     return
   }
 
   try {
+    const promptText = isJson 
+      ? `${prompt}\n\nReturn the response as a valid JSON object strictly formatted.` 
+      : prompt;
+
+    // Gemini API format
     const requestBody = {
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
-      max_tokens: 2048
+      contents: [{ parts: [{ text: promptText }] }]
     }
 
-    if (isJson) {
-      requestBody.response_format = { type: "json_object" }
-      requestBody.messages[0].content += "\n\nReturn the response as a valid JSON object only."
-    }
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(requestBody)
     })
 
     if (!response.ok) {
       const errorData = await response.json()
-      res.status(response.status).json({ error: errorData.error?.message || "Error from OpenAI API." })
+      res.status(response.status).json({ error: errorData.error?.message || "Error from Gemini API." })
       return
     }
 
     const data = await response.json()
-    const text = data.choices[0].message.content
+    
+    // Extracting text from Gemini's specific JSON structure
+    const text = data.candidates && data.candidates[0] && data.candidates[0].content.parts[0].text
+        ? data.candidates[0].content.parts[0].text
+        : "";
 
     if (isJson) {
       try {
