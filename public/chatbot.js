@@ -7,8 +7,7 @@ class PortfolioChatbot {
     constructor(userData) {
         this.userData = userData;
         this.isOpen = false;
-        // Points to the Firebase Cloud Function securely without exposing API keys
-        this.baseUrl = 'https://us-central1-portfoliox-2e787.cloudfunctions.net/generateAIResponse';
+        this.baseUrl = 'https://online-portfolio-builder-system.vercel.app/api/generateAI';
         this.init();
     }
 

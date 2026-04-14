@@ -5,9 +5,7 @@
 
 class AIService {
     constructor() {
-        // Points to the Firebase Cloud Function
-        // Using standard Google Cloud Functions URL format based on your projectId: 'portfoliox-2e787'
-        this.baseUrl = 'https://us-central1-portfoliox-2e787.cloudfunctions.net/generateAIResponse';
+        this.baseUrl = 'https://online-portfolio-builder-system.vercel.app/api/generateAI';
     }
 
     async callAI(prompt, isJson = false) {
