@@ -439,10 +439,6 @@ onAuthStateChanged(auth, async user => {
       document.getElementById('spName').textContent = d.fullName || user.email.split('@')[0];
       document.getElementById('spAvatar').textContent = (d.fullName || user.email).charAt(0).toUpperCase();
 
-      if (d.published && d.username) {
-        showLiveCard(d.username);
-      }
-
       if (d.visibility) {
         document.querySelectorAll('.vis-opt').forEach(o => {
           o.classList.toggle('active', o.dataset.vis === d.visibility);
@@ -493,6 +489,10 @@ onAuthStateChanged(auth, async user => {
     }
 
     renderChecklist();
+
+    if (currentUserData && currentUserData.published && currentUserData.username) {
+      showLiveCard(currentUserData.username);
+    }
 
   } catch (err) {
     console.error('Load publish page error:', err);
