@@ -101,11 +101,13 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       const empty  = document.getElementById('emptyState');
       const search = document.getElementById('searchInput').value.toLowerCase();
 
-      const filtered = allProjects.filter(p =>
-        p.title.toLowerCase().includes(search) ||
-        p.tech.toLowerCase().includes(search)   ||
-        p.description.toLowerCase().includes(search)
-      );
+      const filtered = allProjects.filter(p => {
+        const title = (p.title || '').toLowerCase();
+        const tech = (Array.isArray(p.tech) ? p.tech.join(', ') : (p.tech || '')).toLowerCase();
+        const desc = (p.description || p.desc || '').toLowerCase();
+        
+        return title.includes(search) || tech.includes(search) || desc.includes(search);
+      });
 
       // Stats
       document.getElementById('statTotal').textContent = allProjects.length;
@@ -127,8 +129,11 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       empty.style.display = 'none';
 
       filtered.forEach((proj, i) => {
-        const tags    = proj.tech.split(',').map(s => s.trim()).filter(Boolean);
-        const initial = proj.title.trim().charAt(0).toUpperCase();
+        const rawTech = Array.isArray(proj.tech) ? proj.tech.join(', ') : (proj.tech || '');
+        const tags    = rawTech.split(',').map(s => s.trim()).filter(Boolean);
+        const title   = proj.title || 'Untitled Project';
+        const description = proj.description || proj.desc || 'No description provided.';
+        const initial = title.trim().charAt(0).toUpperCase();
         let dateStr   = 'Recently';
         try {
           if (proj.createdAt?.toDate) dateStr = proj.createdAt.toDate().toLocaleDateString('en-US',{month:'short',year:'numeric'});
@@ -144,13 +149,13 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
             <div class="proj-initial">${initial}</div>
             <div class="proj-body">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.8rem;">
-                <div class="proj-title">${proj.title}</div>
+                <div class="proj-title">${title}</div>
                 <div class="proj-actions">
                   ${proj.link ? `<a href="${proj.link}" target="_blank" class="proj-link-btn" title="View project"><i class="fas fa-external-link-alt"></i></a>` : ''}
-                  <button class="proj-del-btn" data-id="${proj.id}" data-name="${proj.title}" title="Delete"><i class="fas fa-trash"></i></button>
+                  <button class="proj-del-btn" data-id="${proj.id}" data-name="${title}" title="Delete"><i class="fas fa-trash"></i></button>
                 </div>
               </div>
-              <div class="proj-desc">${proj.description}</div>
+              <div class="proj-desc">${description}</div>
               <div class="proj-techs">${tags.map(t=>`<span class="proj-tech">${t}</span>`).join('')}</div>
               <div class="proj-footer">
                 <span class="proj-date"><i class="fas fa-clock"></i>${dateStr}</span>
@@ -163,11 +168,11 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
               <div class="proj-initial">${initial}</div>
               <div class="proj-actions">
                 ${proj.link ? `<a href="${proj.link}" target="_blank" class="proj-link-btn" title="View project"><i class="fas fa-external-link-alt"></i></a>` : ''}
-                <button class="proj-del-btn" data-id="${proj.id}" data-name="${proj.title}" title="Delete"><i class="fas fa-trash"></i></button>
+                <button class="proj-del-btn" data-id="${proj.id}" data-name="${title}" title="Delete"><i class="fas fa-trash"></i></button>
               </div>
             </div>
-            <div class="proj-title">${proj.title}</div>
-            <div class="proj-desc">${proj.description}</div>
+            <div class="proj-title">${title}</div>
+            <div class="proj-desc">${description}</div>
             <div class="proj-techs">${tags.map(t=>`<span class="proj-tech">${t}</span>`).join('')}</div>
             <div class="proj-footer">
               <span class="proj-date"><i class="fas fa-clock"></i>${dateStr}</span>
@@ -189,10 +194,20 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
     /* ── Load ── */
     async function loadProjects() {
       const snap  = await getDocs(collection(db, 'users', currentUser.uid, 'projects'));
-      allProjects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allProjects = snap.docs.map(d => {
+        const data = d.data();
+        // Ensure description/tech exist for sorting or other logic
+        return { 
+          id: d.id, 
+          ...data,
+          title: data.title || 'Untitled Project',
+          tech: Array.isArray(data.tech) ? data.tech.join(', ') : (data.tech || ''),
+          description: data.description || data.desc || ''
+        };
+      });
       allProjects.sort((a,b) => {
-        const ta = a.createdAt?.toDate?.() || new Date(0);
-        const tb = b.createdAt?.toDate?.() || new Date(0);
+        const ta = (a.createdAt && typeof a.createdAt.toDate === 'function') ? a.createdAt.toDate() : new Date(0);
+        const tb = (b.createdAt && typeof b.createdAt.toDate === 'function') ? b.createdAt.toDate() : new Date(0);
         return tb - ta;
       });
       renderProjects();
@@ -284,10 +299,18 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       if (av) av.textContent = name.charAt(0).toUpperCase();
       if (sn) sn.textContent = name.split(' ')[0] || name;
 
-      await loadProjects();
-      const ol = document.getElementById('loadingOverlay');
-      ol.style.opacity = '0';
-      setTimeout(() => ol.style.display = 'none', 400);
+      try {
+        await loadProjects();
+      } catch (err) {
+        console.error("Error loading projects:", err);
+        showToast("Error loading projects. Some work might be missing.", true);
+      } finally {
+        const ol = document.getElementById('loadingOverlay');
+        if (ol) {
+          ol.style.opacity = '0';
+          setTimeout(() => ol.style.display = 'none', 400);
+        }
+      }
     });
 
     /* ── Logout ── */

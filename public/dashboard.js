@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
-  getFirestore, doc, getDoc, collection, getDocs, setDoc, addDoc
+  getFirestore, doc, getDoc, collection, getDocs, setDoc, addDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { aiService } from "./aiService.js";
 
@@ -123,7 +123,7 @@ async function runPortfolioAudit() {
       skillsCount: skills.size,
       eduCount: edu.size,
       projectsCount: proj.size,
-      projects: proj.docs.map(d => ({ title: d.data().title, desc: d.data().desc }))
+      projects: proj.docs.map(d => ({ title: d.data().title, description: d.data().description || d.data().desc || '' }))
     };
 
     const analysis = await aiService.analyzePortfolioScore(auditData);
@@ -212,9 +212,9 @@ document.getElementById('parseResumeBtn').addEventListener('click', async () => 
       for (const p of data.Projects) {
         await addDoc(collection(db, 'users', user.uid, 'projects'), {
           title: p.title || p.name || 'Untitled Project',
-          desc: p.description || p.desc || '',
-          tech: p.technologies || p.tech || [],
-          date: new Date().toISOString()
+          description: p.description || p.desc || '',
+          tech: Array.isArray(p.technologies || p.tech) ? (p.technologies || p.tech).join(', ') : (p.technologies || p.tech || ''),
+          createdAt: serverTimestamp()
         });
       }
     }
