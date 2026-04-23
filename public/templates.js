@@ -17,13 +17,17 @@ const db = getFirestore(app);
 let currentUser = null;
 let selectedTemplate = '';
 
-async function saveTemplateSelection(name) {
+async function saveTemplateSelection(name, isUserAction) {
   if (!currentUser) return;
   try {
-    await setDoc(doc(db, 'users', currentUser.uid), {
+    const dataToSave = {
       template: name,
       templateFile: getTemplateFileByName(name)
-    }, { merge: true });
+    };
+    if (isUserAction) {
+      dataToSave.published = false;
+    }
+    await setDoc(doc(db, 'users', currentUser.uid), dataToSave, { merge: true });
   } catch (err) {
     console.error('Failed to save template selection:', err);
   }
@@ -81,6 +85,7 @@ async function saveTemplateSelection(name) {
 
     /* ── Apply selection ── */
     function applySelection(name, toast) {
+      if (selectedTemplate === name && toast) return;
       selectedTemplate = name;
 
       document.querySelectorAll('.template-card').forEach(card => {
@@ -102,7 +107,7 @@ async function saveTemplateSelection(name) {
       banner.classList.add('visible'); // trigger reveal
 
       if (currentUser) {
-        saveTemplateSelection(name);
+        saveTemplateSelection(name, toast);
       }
 
       if (toast) showToast(`"${name}" template selected ✅`);
