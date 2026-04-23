@@ -68,13 +68,22 @@ async function loadDashboard(uid) {
   try {
     const [skillsSnap, eduSnap, projSnap, profileDoc] = await Promise.all([
       getDocs(collection(db, "users", uid, "skills")),
-      getDocs(collection(db, "users", uid, "education")),
+      getDoc(doc(db, "users", uid, "education", "main")),
       getDocs(collection(db, "users", uid, "projects")),
       getDoc(doc(db, "users", uid))
     ]);
 
     const numSkills = skillsSnap.size;
-    const numEdu    = eduSnap.size;
+    
+    // Count education records from the main document
+    let numEdu = 0;
+    if (eduSnap.exists()) {
+      const eData = eduSnap.data();
+      const hasData = (obj) => obj && Object.values(obj).some(v => String(v).trim() !== '');
+      if (hasData(eData.university)) numEdu++;
+      if (hasData(eData.school)) numEdu++;
+    }
+
     const numProj   = projSnap.size;
     const profileOk = profileDoc.exists();
 
@@ -114,14 +123,22 @@ async function runPortfolioAudit() {
     const [profile, skills, edu, proj] = await Promise.all([
       getDoc(doc(db, 'users', user.uid)),
       getDocs(collection(db, 'users', user.uid, 'skills')),
-      getDocs(collection(db, 'users', user.uid, 'education')),
+      getDoc(doc(db, 'users', user.uid, 'education', 'main')),
       getDocs(collection(db, 'users', user.uid, 'projects'))
     ]);
+
+    let eduCount = 0;
+    if (edu.exists()) {
+      const eData = edu.data();
+      const hasData = (obj) => obj && Object.values(obj).some(v => String(v).trim() !== '');
+      if (hasData(eData.university)) eduCount++;
+      if (hasData(eData.school)) eduCount++;
+    }
 
     const auditData = {
       profile: profile.exists() ? profile.data() : {},
       skillsCount: skills.size,
-      eduCount: edu.size,
+      eduCount: eduCount,
       projectsCount: proj.size,
       projects: proj.docs.map(d => ({ title: d.data().title, description: d.data().description || d.data().desc || '' }))
     };
@@ -191,7 +208,7 @@ document.getElementById('parseResumeBtn').addEventListener('click', async () => 
     if (data.FullName || data.Role || data.Summary) {
       await setDoc(doc(db, 'users', user.uid), {
         fullName: data.FullName || '',
-        role: data.Role || '',
+        role: data.role || data.Role || '',
         bio: data.Summary || ''
       }, { merge: true });
     }
@@ -217,6 +234,32 @@ document.getElementById('parseResumeBtn').addEventListener('click', async () => 
           createdAt: serverTimestamp()
         });
       }
+    }
+
+    // 4. Education
+    if (data.Education && Array.isArray(data.Education)) {
+      const eduData = { university: {}, school: {} };
+      if (data.Education[0]) {
+        const e = data.Education[0];
+        eduData.university = {
+          degree: e.degree || '',
+          name: e.school || e.university || '',
+          year: e.duration || e.year || '',
+          grade: e.grade || '',
+          location: e.location || ''
+        };
+      }
+      if (data.Education[1]) {
+        const e = data.Education[1];
+        eduData.school = {
+          name: e.school || '',
+          board: e.board || 'State Board',
+          location: e.location || '',
+          year: e.duration || e.year || '',
+          grade: e.grade || ''
+        };
+      }
+      await setDoc(doc(db, 'users', user.uid, 'education', 'main'), eduData);
     }
 
     alert('Resume parsed and data imported! Recalculating your dashboard...');
