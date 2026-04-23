@@ -1387,8 +1387,45 @@
             }
 
             .nav-links {
-                display: none;
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: rgba(8, 12, 24, 0.98);
+                backdrop-filter: blur(20px);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 32px;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 100;
+                border-left: 1px solid var(--border-dim);
             }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .mobile-toggle {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                z-index: 101;
+                cursor: pointer;
+            }
+
+            .mobile-toggle span {
+                width: 28px;
+                height: 2px;
+                background: var(--text-primary);
+                transition: 0.3s;
+            }
+
+            .mobile-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            .mobile-toggle.active span:nth-child(2) { opacity: 0; }
+            .mobile-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
             .hero-content {
                 grid-template-columns: 1fr;
@@ -1414,7 +1451,8 @@
             }
 
             .hero-right {
-                order: -1;
+                order: 1;
+                transform: scale(0.9);
             }
 
             .profile-card-3d-wrapper {
@@ -1428,12 +1466,13 @@
 
             #about,
             #skills,
+            #education,
             #projects,
             #contact {
                 padding: 80px 24px;
             }
 
-            .projects-grid {
+            .projects-grid, .education-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -1454,18 +1493,34 @@
             }
         }
 
-        @media (max-width: 500px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
+        @media (max-width: 600px) {
+            .section-header { text-align: center; }
+            .section-title { font-size: 2rem; }
+            .section-subtitle { font-size: 0.9rem; }
+            .contact-email { font-size: 1.2rem; word-break: break-all; }
+            #about, #skills, #education, #projects, #contact { padding: 60px 16px; }
+            .footer-made { font-size: 0.6rem; }
+        }
 
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .hero-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .stat-item {
+                border-left: none;
+                border-top: 1px solid var(--border-dim);
+                padding: 15px 0 0;
+                width: 100%;
+            }
+            .stat-value { font-size: 1.5rem; }
+            
             .skill-row {
                 grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .skill-level {
-                text-align: left;
+                gap: 5px;
             }
         }
 
@@ -1520,6 +1575,11 @@
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact" class="nav-cta">Hire Me</a></li>
         </ul>
+        <div class="mobile-toggle" id="mobile-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </nav>
 
     <!-- ══════════════════════════════════════════════════════
@@ -2015,7 +2075,7 @@
             // Profile card mini stats
             const activeProjects = (d.projects || []).length;
             const skills = d.skills || [];
-            const topSkillLevel = skills.length ? Math.max(...skills.map(s => s.level || 0)) : 0;
+            const topSkillLevel = skills.length ? Math.max(...skills.map(s => parseInt(s.level) || 0)) : 0;
             document.getElementById("profile-mini-stats").innerHTML = `
     <div class="pcs-item"><div class="pcs-value">${activeProjects}</div><div class="pcs-label">Projects</div></div>
     <div class="pcs-item"><div class="pcs-value">${skills.length}</div><div class="pcs-label">Skills</div></div>
