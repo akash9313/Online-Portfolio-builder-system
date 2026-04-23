@@ -164,9 +164,24 @@
     .new-badge { position:absolute; top:14px; left:14px; z-index:10; background:rgba(34,197,94,0.12); color:var(--accent-3); border:1px solid rgba(34,197,94,0.3); border-radius:100px; padding:5px 12px; font-size:0.7rem; font-weight:700; display:flex; align-items:center; gap:5px; }
 
     /* Preview window */
-    .template-preview { height:210px; position:relative; overflow:hidden; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .template-preview { height:210px; position:relative; overflow:hidden; border-bottom:1px solid rgba(255,255,255,0.06); background: var(--bg); }
     .template-card:hover .preview-inner { transform:scale(1.05); }
-    .preview-inner { width:100%; height:100%; transition:transform 0.5s ease; }
+    .preview-inner { width:100%; height:100%; transition:transform 0.5s ease; position:relative; }
+    
+    .template-iframe {
+      width: 400%;
+      height: 400%;
+      transform: scale(0.25);
+      transform-origin: top left;
+      border: none;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: #ffffff; /* White background by default for templates */
+      overflow: hidden;
+    }
+    .template-iframe::-webkit-scrollbar { display: none; }
 
     /* ─ CLASSIC ─ */
     .classic .preview-inner { background:linear-gradient(160deg,#0f172a,#1e293b); padding:22px 20px; }

@@ -16,17 +16,12 @@ const templates = [
 ];
 
 for (const t of templates) {
-  // We'll search for <div class="template-preview classic">
-  // and replace everything inside it until its matching </div>.
-  // Since we know the exact structure, we can just use a non-greedy regex
-  // up to the <div class="card-body"> and re-insert the card-body part.
-  const regex = new RegExp(`<div class="template-preview ${t.cssClass}">[\\s\\S]*?<div class="card-body">`, 'g');
+  const regex = new RegExp(`<div class="template-preview ${t.cssClass}">[\\s\\S]*?</div>\\s*</div>`, 'g');
   const replacement = `<div class="template-preview">
             <div class="preview-inner">
-              <iframe class="template-iframe" src="templates/${t.filename}" tabindex="-1" scrolling="no"></iframe>
+              <iframe class="template-iframe" src="templates/${t.filename}" tabindex="-1"></iframe>
             </div>
-          </div>
-          <div class="card-body">`;
+          </div>`;
   html = html.replace(regex, replacement);
 }
 
