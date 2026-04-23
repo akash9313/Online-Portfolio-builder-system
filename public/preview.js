@@ -27,7 +27,8 @@ import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/fireb
       'Terminal Hacker':     'templates/terminal-hacker.html',
       'Gradient Splash':     'templates/gradient-splash.html',
       'Executive Pro':       'templates/executive-pro.html',
-      'Bento Grid':          'templates/bento-grid.html'
+      'Bento Grid':          'templates/bento-grid.html',
+      '3D Modern':           'templates/3D_Modern.html'
     };
 
     const iframe        = document.getElementById('previewIframe');
@@ -90,9 +91,13 @@ import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/fireb
       }
     }
 
+    let currentUid = '';
+
     /* ── Auth + Init ── */
     onAuthStateChanged(auth, async user => {
       if (!user) { window.location.href = 'loginpage.html'; return; }
+
+      currentUid = user.uid;
 
       // Load profile
       const snap = await getDoc(doc(db, 'users', user.uid));
@@ -117,7 +122,7 @@ import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/fireb
       document.getElementById('shareWhatsApp').onclick = () => window.open(`https://wa.me/?text=Check+out+my+portfolio!+https://${portfolioUrl}`, '_blank');
       document.getElementById('shareEmail').onclick    = () => window.location.href = `mailto:?subject=My+Portfolio&body=https://${portfolioUrl}`;
 
-      // Check template
+      // Check template — prefer templateFile from Firestore, fall back to templateMap
       if (snap.exists()) {
         const d = snap.data();
         selectedTpl = d.template || '';
@@ -134,7 +139,8 @@ import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/fireb
         document.getElementById('tplPillName').textContent       = selectedTpl;
 
         const file = templateMap[selectedTpl] || 'templates/classic.html';
-        loadIframe(file);
+        // Always pass uid so the template loads the user's real data
+        loadIframe(`${file}?uid=${encodeURIComponent(currentUid)}&mode=readonly`);
       }
 
       // Hide loader

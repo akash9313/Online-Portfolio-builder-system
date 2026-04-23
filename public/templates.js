@@ -76,7 +76,8 @@ async function saveTemplateSelection(name, isUserAction) {
       'Terminal Hacker': 'templates/terminal-hacker.html',
       'Gradient Splash': 'templates/gradient-splash.html',
       'Executive Pro': 'templates/executive-pro.html',
-      'Bento Grid': 'templates/bento-grid.html'
+      'Bento Grid': 'templates/bento-grid.html',
+      '3D Modern': 'templates/3D_Modern.html'
     };
 
     function getTemplateFileByName(name) {
@@ -166,7 +167,22 @@ async function saveTemplateSelection(name, isUserAction) {
     document.querySelectorAll('.btn-preview-card').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
-        showToast('Preview coming soon! 👀');
+
+        // Get the template name from the parent card
+        const card = btn.closest('.template-card');
+        const templateName = card?.dataset.template;
+        if (!templateName) return;
+
+        const templateFile = getTemplateFileByName(templateName);
+
+        if (currentUser) {
+          // Open the real template with the user's live Firebase data
+          const url = `${templateFile}?uid=${encodeURIComponent(currentUser.uid)}&mode=readonly`;
+          window.open(url, '_blank');
+        } else {
+          // Not logged in — open the template with demo data (no uid param)
+          window.open(templateFile, '_blank');
+        }
       });
     });
 

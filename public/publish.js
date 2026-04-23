@@ -345,11 +345,13 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
     }
 
     await setDoc(doc(db, 'users', currentUser.uid), {
-      username: slug,
-      visibility: visibility,
-      published: true,
-      publishedAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
+      username:       slug,
+      visibility:     visibility,
+      published:      true,
+      template:       templateDisplayName,
+      templateFile:   templateFile,
+      publishedAt:    serverTimestamp(),
+      updatedAt:      serverTimestamp()
     }, { merge: true });
 
     currentUserData = {
