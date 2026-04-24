@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://portfoliox.web.app/sitemap.xml
+
+# Disallow indexing of user-specific dashboard pages
+Disallow: /dashboard.html
+Disallow: /education.html
+Disallow: /profile.html
+Disallow: /projects.html
+Disallow: /publish.html
+Disallow: /settings.html
+Disallow: /skills.html
+Disallow: /preview.html
