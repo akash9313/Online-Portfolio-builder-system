@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://portfoliox.web.app/sitemap.xml
+Sitemap: https://portfoliox-2e787.web.app/sitemap.xml
 
 # Disallow indexing of user-specific dashboard pages
 Disallow: /dashboard.html
