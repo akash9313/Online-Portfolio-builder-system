@@ -4,15 +4,7 @@ import {
   getFirestore, doc, getDoc, collection, getDocs, setDoc, addDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { aiService } from "./aiService.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
-  authDomain: "portfoliox-2e787.firebaseapp.com",
-  projectId: "portfoliox-2e787",
-  storageBucket: "portfoliox-2e787.firebasestorage.app",
-  messagingSenderId: "562709786891",
-  appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
-};
+import { firebaseConfig } from "./firebase-config.js";
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);

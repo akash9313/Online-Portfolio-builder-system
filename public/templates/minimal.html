@@ -499,19 +499,11 @@
 
 <!-- ================= FIREBASE ================= -->
 <script type="module">
+  import { firebaseConfig } from "../firebase-config.js";
   import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { getFirestore, doc, getDoc, collection, getDocs }
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
-    authDomain: "portfoliox-2e787.firebaseapp.com",
-    projectId: "portfoliox-2e787",
-    storageBucket: "portfoliox-2e787.firebasestorage.app",
-    messagingSenderId: "562709786891",
-    appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
-  };
 
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -775,6 +767,7 @@
 
   function hideLoader() {
     const ls = document.getElementById('loadingScreen');
+    if (!ls) return;
     setTimeout(() => {
       ls.classList.add('fade');
       setTimeout(() => ls.style.display = 'none', 500);

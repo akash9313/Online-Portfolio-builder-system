@@ -1,30 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Executive Pro — Portfolio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Fonts: Playfair Display (display) + DM Sans (body) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Instrument+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* ── Design Tokens ─────────────────────────────── */
     :root {
-      --ink:        #0e0e0e;
-      --paper:      #f5f2ed;
-      --charcoal:   #1c1c1e;
-      --gold:       #b8922a;
-      --gold-light: #d4a843;
-      --muted:      #6b6560;
-      --rule:       rgba(184,146,42,0.25);
-      --card-bg:    #ffffff;
-      --sidebar-w:  280px;
-      --radius:     4px;
-      --transition: 0.25s ease;
+      --paper: #f9f7f2;
+      --charcoal: #1a1a1a;
+      --gold: #b8922a;
+      --gold-light: #d4af37;
+      --muted: #66615c;
+      --rule: #e8e4dc;
+      --card-bg: #ffffff;
+      --radius: 4px;
+      --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,71 +27,75 @@
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Instrument Sans', sans-serif;
       background: var(--paper);
-      color: var(--ink);
-      line-height: 1.7;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      color: var(--charcoal);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    /* ── Editable highlight ────────────────────────── */
-    [contenteditable="true"]:hover {
-      outline: 1px dashed var(--gold-light);
-      border-radius: 2px;
+    /* ─── EDITABLE ─── */
+    [contenteditable="true"] {
+      transition: background 0.2s;
       cursor: text;
+      border-radius: 2px;
+    }
+    [contenteditable="true"]:hover {
+      background: rgba(184, 146, 42, 0.05);
+      outline: 1px dashed rgba(184, 146, 42, 0.3);
     }
     [contenteditable="true"]:focus {
-      outline: 1.5px solid var(--gold);
-      background: rgba(184,146,42,0.06);
-      border-radius: 2px;
+      outline: 1px solid var(--gold);
+      background: #fff;
     }
 
-    /* ── Layout shell ──────────────────────────────── */
+    /* ══════════════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════════════ */
     .page-wrapper {
       display: flex;
       min-height: 100vh;
     }
 
-    /* ══════════════════════════════════════════════════
-       SIDEBAR
-    ══════════════════════════════════════════════════ */
+    /* ── Sidebar ───────────────────────────────────── */
     .sidebar {
-      width: var(--sidebar-w);
-      min-height: 100vh;
+      width: 320px;
       background: var(--charcoal);
-      color: #e8e2d9;
+      color: #f0ebe3;
+      padding: 64px 40px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 56px 28px 40px;
       position: sticky;
       top: 0;
       height: 100vh;
       overflow-y: auto;
-      flex-shrink: 0;
+      z-index: 10;
     }
 
-    /* avatar ring */
     .avatar-ring {
-      width: 112px;
-      height: 112px;
+      width: 100px;
+      height: 100px;
+      border: 1px solid var(--gold);
       border-radius: 50%;
-      border: 2px solid var(--gold);
-      padding: 4px;
-      margin-bottom: 24px;
-      background: #2a2926;
+      padding: 6px;
+      margin-bottom: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .avatar-initials {
+      width: 100%;
+      height: 100%;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: 'Playfair Display', serif;
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: var(--gold-light);
-      letter-spacing: -1px;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--charcoal);
     }
 
     .sidebar-name {
@@ -619,6 +618,7 @@
      FIREBASE FETCH & REAL-TIME EDIT
 ═══════════════════════════════════════════════════════ -->
 <script type="module">
+  import { firebaseConfig } from "../firebase-config.js";
   import { initializeApp } from
     "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, onAuthStateChanged } from
@@ -627,13 +627,6 @@
     getFirestore, doc, getDoc,
     collection, getDocs, updateDoc
   } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  /* ── Firebase config (same project) ──────────────── */
-  const firebaseConfig = {
-    apiKey:       "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
-    authDomain:   "portfoliox-2e787.firebaseapp.com",
-    projectId:    "portfoliox-2e787"
-  };
 
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
