@@ -20,7 +20,8 @@ import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/fireb
       'Gradient Splash':     'templates/gradient-splash.html',
       'Executive Pro':       'templates/executive-pro.html',
       'Bento Grid':          'templates/bento-grid.html',
-      '3D Modern':           'templates/3D_Modern.html'
+      '3D Modern':           'templates/3D_Modern.html',
+      '3D Classic':          'templates/3D_classic.html'
     };
 
     const iframe        = document.getElementById('previewIframe');
