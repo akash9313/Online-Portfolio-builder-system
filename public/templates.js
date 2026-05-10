@@ -113,19 +113,31 @@ async function saveTemplateSelection(name, isUserAction) {
       if (!user) return;
       try {
         const profileSnap = await getDoc(doc(db, 'users', user.uid));
-        if (!profileSnap.exists()) return;
-        const data = profileSnap.data();
-        if (data.template) {
-          applySelection(data.template, false);
-        }
-        if (data.fullName) {
-          const avatar = document.getElementById('spAvatar');
-          const nameEl = document.getElementById('spName');
-          if (avatar) avatar.textContent = data.fullName.charAt(0).toUpperCase();
-          if (nameEl) nameEl.textContent = data.fullName.split(' ')[0];
+        const avatar = document.getElementById('spAvatar');
+        const nameEl = document.getElementById('spName');
+
+        if (profileSnap.exists()) {
+          const data = profileSnap.data();
+          if (data.template) applySelection(data.template, false);
+          
+          if (nameEl) nameEl.textContent = data.fullName || user.email.split('@')[0];
+          if (data.avatarUrl) {
+            if (avatar) avatar.innerHTML = `<img src="${data.avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+          } else {
+            if (avatar) avatar.textContent = (data.fullName || user.email).charAt(0).toUpperCase();
+          }
+        } else {
+          if (nameEl) nameEl.textContent = user.email.split('@')[0];
+          if (avatar) avatar.textContent = user.email.charAt(0).toUpperCase();
         }
       } catch (err) {
         console.error('Failed to load saved template:', err);
+      } finally {
+        const ol = document.getElementById('loadingOverlay');
+        if (ol) {
+          ol.style.opacity = '0';
+          setTimeout(() => ol.style.display = 'none', 400);
+        }
       }
     });
 

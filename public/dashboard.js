@@ -41,10 +41,6 @@ const projectsVal     = document.getElementById("projectsVal");
 onAuthStateChanged(auth, async (user) => {
   if (!user) { window.location.href = "index.html"; return; }
 
-  // Hide loading
-  loadingOverlay.style.opacity = "0";
-  setTimeout(() => { loadingOverlay.style.display = "none"; }, 400);
-
   // User display
   const username = user.email.split("@")[0];
   const initial  = username.charAt(0).toUpperCase();
@@ -53,6 +49,10 @@ onAuthStateChanged(auth, async (user) => {
   if (spName)   spName.textContent   = username;
 
   await loadDashboard(user.uid);
+
+  // Hide loading after backend is loaded
+  loadingOverlay.style.opacity = "0";
+  setTimeout(() => { loadingOverlay.style.display = "none"; }, 400);
 });
 
 /* ── Load data ── */
@@ -78,6 +78,18 @@ async function loadDashboard(uid) {
 
     const numProj   = projSnap.size;
     const profileOk = profileDoc.exists();
+    
+    if (profileOk) {
+      const d = profileDoc.data();
+      const name = d.fullName || auth.currentUser.email.split("@")[0];
+      if (welcomeText) welcomeText.innerHTML = `Welcome back, <span style="background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${name}</span> 👋`;
+      if (spName) spName.textContent = name;
+      if (d.avatarUrl && spAvatar) {
+        spAvatar.innerHTML = `<img src="${d.avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+      } else if (spAvatar) {
+        spAvatar.textContent = (d.fullName || auth.currentUser.email).charAt(0).toUpperCase();
+      }
+    }
 
     // Stat pills
     if (profileStatus)  profileStatus.textContent  = profileOk    ? "✅ Completed"  : "⚠️ Incomplete";

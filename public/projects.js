@@ -1,7 +1,7 @@
 import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut }
       from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp }
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, serverTimestamp }
       from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { aiService } from "./aiService.js";
     import { firebaseConfig } from "./firebase-config.js";
@@ -285,11 +285,27 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       if (!user) { window.location.href = 'loginpage.html'; return; }
       currentUser = user;
 
-      const name = user.displayName || user.email || 'User';
       const av   = document.getElementById('spAvatar');
       const sn   = document.getElementById('spName');
-      if (av) av.textContent = name.charAt(0).toUpperCase();
-      if (sn) sn.textContent = name.split(' ')[0] || name;
+
+      try {
+        const profileSnap = await getDoc(doc(db,'users',user.uid));
+        if (profileSnap.exists()) {
+          const d = profileSnap.data();
+          if (sn) sn.textContent = d.fullName || user.email.split('@')[0];
+          if (d.avatarUrl) {
+            if (av) av.innerHTML = `<img src="${d.avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+          } else {
+            if (av) av.textContent = (d.fullName || user.email).charAt(0).toUpperCase();
+          }
+        } else {
+          if (sn) sn.textContent = user.email.split('@')[0];
+          if (av) av.textContent = user.email.charAt(0).toUpperCase();
+        }
+      } catch (e) {
+        if (sn) sn.textContent = user.email.split('@')[0];
+        if (av) av.textContent = user.email.charAt(0).toUpperCase();
+      }
 
       try {
         await loadProjects();

@@ -188,11 +188,27 @@ onAuthStateChanged(auth, async user => {
   currentUser = user;
 
   // Sidebar
-  const name = user.displayName || user.email || 'User';
   const avatarEl = document.getElementById('spAvatar');
   const nameEl   = document.getElementById('spName');
-  if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
-  if (nameEl)   nameEl.textContent   = name.split(' ')[0] || name;
+
+  try {
+    const profileSnap = await getDoc(doc(db,'users',user.uid));
+    if (profileSnap.exists()) {
+      const d = profileSnap.data();
+      if (nameEl) nameEl.textContent = d.fullName || user.email.split('@')[0];
+      if (d.avatarUrl) {
+        if (avatarEl) avatarEl.innerHTML = `<img src="${d.avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+      } else {
+        if (avatarEl) avatarEl.textContent = (d.fullName || user.email).charAt(0).toUpperCase();
+      }
+    } else {
+      if (nameEl) nameEl.textContent = user.email.split('@')[0];
+      if (avatarEl) avatarEl.textContent = user.email.charAt(0).toUpperCase();
+    }
+  } catch (e) {
+    if (nameEl) nameEl.textContent = user.email.split('@')[0];
+    if (avatarEl) avatarEl.textContent = user.email.charAt(0).toUpperCase();
+  }
 
   // Load data — await so inputs are populated before hiding overlay
   await loadEducation();

@@ -14,15 +14,22 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 
   onAuthStateChanged(auth, user => {
     if (user) {
-      loginBtn.style.display  = 'none';
-      signupBtn.style.display = 'none';
-      profilePill.style.display = 'flex';
-      profileAv.textContent   = (user.displayName || user.email).charAt(0).toUpperCase();
-      profileEm.textContent   = user.displayName || user.email;
+      if (loginBtn) loginBtn.style.display  = 'none';
+      if (signupBtn) signupBtn.style.display = 'none';
+      if (profilePill) profilePill.style.display = 'flex';
+      if (profileAv) profileAv.textContent   = (user.displayName || user.email).charAt(0).toUpperCase();
+      if (profileEm) profileEm.textContent   = user.displayName || user.email;
     } else {
-      loginBtn.style.display  = 'flex';
-      signupBtn.style.display = 'flex';
-      profilePill.style.display = 'none';
+      if (loginBtn) loginBtn.style.display  = 'flex';
+      if (signupBtn) signupBtn.style.display = 'flex';
+      if (profilePill) profilePill.style.display = 'none';
+    }
+
+    // Hide loader
+    const ol = document.getElementById('loadingOverlay');
+    if (ol) {
+      ol.style.opacity = '0';
+      setTimeout(() => ol.style.display = 'none', 400);
     }
   });
 
@@ -32,12 +39,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
   });
 
   /* ── CTA / Get Started ── */
-  function handleCTA() {
+  function handleCTA(e) {
+    if (e && e.preventDefault) e.preventDefault();
     const user = auth.currentUser;
-    window.location.href = user ? 'dashboard.html' : 'usersignup.html';
+    window.location.href = user ? 'dashboard.html' : 'loginpage.html';
   }
   document.getElementById('getStartedBtn').addEventListener('click', handleCTA);
   document.getElementById('ctaBtn').addEventListener('click', handleCTA);
+  if (signupBtn) signupBtn.addEventListener('click', handleCTA);
 
   /* ── Custom cursor ── */
   const cursor = document.getElementById('cursor');

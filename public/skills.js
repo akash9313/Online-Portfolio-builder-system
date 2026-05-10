@@ -319,12 +319,16 @@ import { firebaseConfig } from "./firebase-config.js";
       if (!user) { window.location.href = 'loginpage.html'; return; }
       currentUser = user;
 
-      // Load profile name
+      // Load profile name and avatar
       const profileSnap = await getDoc(doc(db,'users',user.uid));
       if (profileSnap.exists()) {
         const d = profileSnap.data();
-        document.getElementById('spName').textContent   = d.fullName || user.email.split('@')[0];
-        document.getElementById('spAvatar').textContent = (d.fullName || user.email).charAt(0).toUpperCase();
+        document.getElementById('spName').textContent = d.fullName || user.email.split('@')[0];
+        if (d.avatarUrl) {
+          document.getElementById('spAvatar').innerHTML = `<img src="${d.avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+        } else {
+          document.getElementById('spAvatar').textContent = (d.fullName || user.email).charAt(0).toUpperCase();
+        }
       } else {
         document.getElementById('spName').textContent   = user.email.split('@')[0];
         document.getElementById('spAvatar').textContent = user.email.charAt(0).toUpperCase();

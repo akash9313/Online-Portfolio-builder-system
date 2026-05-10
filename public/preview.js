@@ -95,12 +95,19 @@ import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.7.1/fireb
       // Load profile
       const snap = await getDoc(doc(db, 'users', user.uid));
       let userName = user.email.split('@')[0];
+      const spAvatar = document.getElementById('spAvatar');
       if (snap.exists()) {
         const d = snap.data();
         if (d.fullName) userName = d.fullName;
+        if (d.avatarUrl && spAvatar) {
+          spAvatar.innerHTML = `<img src="${d.avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+        } else if (spAvatar) {
+          spAvatar.textContent = userName.charAt(0).toUpperCase();
+        }
+      } else if (spAvatar) {
+        spAvatar.textContent = userName.charAt(0).toUpperCase();
       }
-      document.getElementById('spName').textContent   = userName;
-      document.getElementById('spAvatar').textContent = userName.charAt(0).toUpperCase();
+      document.getElementById('spName').textContent = userName;
 
       // Build portfolio URL slug
       const slug = userName.toLowerCase().replace(/\s+/g, '-');

@@ -430,8 +430,14 @@ onAuthStateChanged(auth, async user => {
       } else {
         document.getElementById('tplNameEl').textContent = '';
       }
-      document.getElementById('spName').textContent = d.fullName || user.email.split('@')[0];
-      document.getElementById('spAvatar').textContent = (d.fullName || user.email).charAt(0).toUpperCase();
+      const sn = document.getElementById('spName');
+      const av = document.getElementById('spAvatar');
+      if (sn) sn.textContent = d.fullName || user.email.split('@')[0];
+      if (d.avatarUrl) {
+        if (av) av.innerHTML = `<img src="${d.avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+      } else {
+        if (av) av.textContent = (d.fullName || user.email).charAt(0).toUpperCase();
+      }
 
       if (d.visibility) {
         document.querySelectorAll('.vis-opt').forEach(o => {
@@ -439,8 +445,10 @@ onAuthStateChanged(auth, async user => {
         });
       }
     } else {
-      document.getElementById('spName').textContent = user.email.split('@')[0];
-      document.getElementById('spAvatar').textContent = user.email.charAt(0).toUpperCase();
+      const sn = document.getElementById('spName');
+      const av = document.getElementById('spAvatar');
+      if (sn) sn.textContent = user.email.split('@')[0];
+      if (av) av.textContent = user.email.charAt(0).toUpperCase();
     }
 
     slugInput.value = slug;

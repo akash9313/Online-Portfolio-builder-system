@@ -3,136 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <title>Signup | PortfolioX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="canonical" href="https://portfoliox-2e787.web.app/usersignup.html" />
-  <link rel="stylesheet" href="usersignup.css">
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link rel="shortcut icon" href="assets/logo.png">
   <link rel="apple-touch-icon" href="assets/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="loginpage.css">
 </head>
 <body>
 
-<div class="bg-blob blob1"></div>
-<div class="bg-blob blob2"></div>
+<!-- Background -->
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="particles" id="particles"></div>
 
-<div class="login-box">
-  <h2>Create <span>Account</span></h2>
+<!-- Toast -->
+<div class="toast success" id="toast">
+  <i class="fas fa-check-circle" id="toastIcon"></i>
+  <span id="toastMsg"></span>
+</div>
 
-  <form id="signupForm">
+<!-- Login Card -->
+<div class="login-wrap">
+  <div class="login-card">
 
-    <div class="field">
-      <input type="email" id="email" required>
-      <label>Email</label>
+    <!-- Header -->
+    <div class="card-header">
+      <a href="index.html" class="logo-mark">
+        <div class="icon"><i class="fas fa-rocket"></i></div>
+        Portfolio<span class="x">X</span>
+      </a>
+      <h1>Create Account</h1>
+      <p>Start building your professional portfolio today</p>
     </div>
 
-    <!-- 🔐 Password -->
-    <div class="field" style="position:relative;">
-      <input type="password" id="password" required>
-      <label>Password</label>
-      <span id="togglePassword" style="
-        position:absolute;
-        right:14px;
-        top:50%;
-        transform:translateY(-50%);
-        cursor:pointer;
-      ">👁️</span>
+    <!-- Alert banner -->
+    <div class="alert-banner warn" id="alertBanner">
+      <i class="fas fa-triangle-exclamation"></i>
+      <span id="alertMsg"></span>
     </div>
 
-    <!-- 🔐 Confirm Password -->
-    <div class="field" style="position:relative;">
-      <input type="password" id="confirmPassword" required>
-      <label>Confirm Password</label>
-      <span id="toggleConfirmPassword" style="
-        position:absolute;
-        right:14px;
-        top:50%;
-        transform:translateY(-50%);
-        cursor:pointer;
-      ">👁️</span>
-    </div>
+    <!-- Form -->
+    <form id="signupForm" novalidate>
 
-    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px;">
-      Password must be at least 8 characters and include uppercase,
-      lowercase, number, and special character.
-    </p>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-wrap">
+          <i class="fas fa-envelope input-icon"></i>
+          <input class="field-input" type="email" id="email" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+      </div>
 
-    <button class="primary glow" type="submit">Signup</button>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock input-icon"></i>
+          <input class="field-input" type="password" id="password" placeholder="Create a strong password" required>
+          <button class="pw-toggle" type="button" id="pwToggle" title="Show/hide password">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 6px; padding-left: 4px;">
+          Min 8 chars, uppercase, lowercase, number, special char.
+        </div>
+      </div>
 
-    <div style="margin:15px 0;text-align:center;">OR</div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock input-icon"></i>
+          <input class="field-input" type="password" id="confirmPassword" placeholder="Confirm your password" required>
+          <button class="pw-toggle" type="button" id="pwConfirmToggle" title="Show/hide password">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
 
-    <button type="button" id="googleSignup" class="primary glow">
-      Continue with Google
+      <button class="btn-main btn-primary" type="submit" id="signupBtn">
+        <div class="spinner"></div>
+        <span class="btn-text"><i class="fas fa-user-plus"></i>&nbsp; Sign Up</span>
+      </button>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">OR CONTINUE WITH</div>
+
+    <!-- Google -->
+    <button class="btn-main btn-google" type="button" id="googleBtn">
+      <div class="spinner"></div>
+      <svg class="google-icon btn-text" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      <span class="btn-text">Continue with Google</span>
     </button>
 
-    <p class="signup-text">
-      Already have an account?
-      <a href="loginpage.html">Login</a>
-    </p>
-  </form>
+    <!-- Footer -->
+    <div class="card-footer">
+      Already have an account? <a href="loginpage.html">Sign In</a>
+    </div>
+
+  </div>
+  <!-- Legal footer for trust -->
+  <div style="text-align: center; margin-top: 20px; font-size: 0.85rem; color: #94a3b8;">
+    <a href="privacy.html" style="color: inherit; text-decoration: none; margin: 0 10px;">Privacy Policy</a>
+    <a href="terms.html" style="color: inherit; text-decoration: none; margin: 0 10px;">Terms of Service</a>
+    <a href="mailto:abuse@portfoliox.com" style="color: inherit; text-decoration: none; margin: 0 10px;">Report Abuse</a>
+  </div>
 </div>
-<div style="text-align: center; margin-top: 20px; font-size: 0.85rem; color: #94a3b8; position: relative; z-index: 10;">
-  <a href="privacy.html" style="color: inherit; text-decoration: none; margin: 0 10px;">Privacy Policy</a>
-  <a href="terms.html" style="color: inherit; text-decoration: none; margin: 0 10px;">Terms of Service</a>
-  <a href="mailto:abuse@portfoliox.com" style="color: inherit; text-decoration: none; margin: 0 10px;">Report Abuse</a>
-</div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
-    GoogleAuthProvider,
-    signInWithPopup
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { firebaseConfig } from "./firebase-config.js";
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  const password = document.getElementById("password");
-  const confirmPassword = document.getElementById("confirmPassword");
-
-  // 👁️ Toggle passwords
-  document.getElementById("togglePassword").onclick = () => {
-    password.type = password.type === "password" ? "text" : "password";
-  };
-  document.getElementById("toggleConfirmPassword").onclick = () => {
-    confirmPassword.type =
-      confirmPassword.type === "password" ? "text" : "password";
-  };
-
-  function isStrongPassword(pw) {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{8,}$/.test(pw);
-  }
-
-  document.getElementById("signupForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    if (!isStrongPassword(password.value))
-      return alert("Password not strong enough");
-
-    if (password.value !== confirmPassword.value)
-      return alert("Passwords do not match");
-
-    const cred = await createUserWithEmailAndPassword(
-      auth,
-      email.value,
-      password.value
-    );
-
-    await sendEmailVerification(cred.user);
-    alert("📧 Verification email sent (check Spam).");
-    window.location.href = "loginpage.html";
-  });
-
-  document.getElementById("googleSignup").onclick = async () => {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-    window.location.href = "dashboard.html";
-  };
-</script>
-
+<script type="module" src="usersignup.js"></script>
 </body>
 </html>

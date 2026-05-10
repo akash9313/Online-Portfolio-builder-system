@@ -313,6 +313,11 @@ onAuthStateChanged(auth, async user => {
     document.getElementById('accountName').textContent     = name;
     document.getElementById('spName').textContent          = name;
     document.getElementById('displayNameInput').value      = name;
+
+    if (snap.exists() && snap.data().avatarUrl) {
+      document.getElementById('spAvatar').innerHTML = `<img src="${snap.data().avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+      document.getElementById('accountAvatar').innerHTML = `<img src="${snap.data().avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+    }
   } catch {
     const fallback = email.split('@')[0];
     document.getElementById('accountName').textContent  = fallback;
@@ -362,14 +367,14 @@ onAuthStateChanged(auth, async user => {
   } catch { /* silent */ }
 
   // Load progress ring
-  loadProgress(user.uid);
+  await loadProgress(user.uid);
 
   // Load sessions
   renderSessions(user);
 
 
   // Load storage info
-  estimateStorage(user.uid);
+  await estimateStorage(user.uid);
 
   hideLoader();
   setLastSaved(false);
