@@ -48,19 +48,49 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
   document.getElementById('ctaBtn').addEventListener('click', handleCTA);
   if (signupBtn) signupBtn.addEventListener('click', handleCTA);
 
-  /* ── Custom cursor ── */
+  /* ── Custom cursor & Interactive Elements ── */
   const cursor = document.getElementById('cursor');
   const ring   = document.getElementById('cursorRing');
   let mx=0,my=0,rx=0,ry=0;
+
+  const cards = document.querySelectorAll('.feat-card, .tpl-card, .step-card, .testimonial-card');
+
   document.addEventListener('mousemove', e=>{
     mx=e.clientX; my=e.clientY;
     cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+
+    // Spotlight effect for cards
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
   });
+
+  // Removed 3D Glass Tilt Effect as per user request (they want float instead of tilt)
+  
   (function animRing(){
     rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
     ring.style.left=rx+'px'; ring.style.top=ry+'px';
     requestAnimationFrame(animRing);
   })();
+
+  /* ── Magnetic Buttons ── */
+  const magneticBtns = document.querySelectorAll('.h-btn, .nav-btn, .see-all, .social-links a');
+  magneticBtns.forEach(btn => {
+    btn.addEventListener('mousemove', function(e) {
+      const rect = this.getBoundingClientRect();
+      const h = rect.width / 2;
+      const x = e.clientX - rect.left - h;
+      const y = e.clientY - rect.top - rect.height / 2;
+      this.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+    });
+    btn.addEventListener('mouseleave', function() {
+      this.style.transform = '';
+    });
+  });
 
   /* ── Navbar scroll ── */
   window.addEventListener('scroll',()=>{

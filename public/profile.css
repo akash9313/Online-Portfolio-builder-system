@@ -39,18 +39,29 @@
 
     /* Custom Cursor */
     .cursor {
-      position:fixed; width:10px; height:10px; border-radius:50%;
-      background:var(--accent); pointer-events:none; z-index:99999;
-      transform:translate(-50%,-50%); transition:width .3s,height .3s,background .3s;
-      mix-blend-mode:screen;
-    }
-    .cursor-ring {
-      position:fixed; width:34px; height:34px; border-radius:50%;
-      border:1.5px solid rgba(56,189,248,0.5); pointer-events:none; z-index:99998;
-      transform:translate(-50%,-50%); transition:transform .18s ease,width .3s,height .3s;
-    }
-    body:has(a:hover) .cursor, body:has(button:hover) .cursor,
-    body:has(input:hover) .cursor, body:has(textarea:hover) .cursor { width:18px; height:18px; }
+  position: fixed; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent); pointer-events: none; z-index: 99999;
+  transform: translate(-50%,-50%); 
+  transition: width 0.3s cubic-bezier(0.2, 0, 0, 1), height 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s, opacity 0.3s, transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed; width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid rgba(56,189,248,0.6); pointer-events: none; z-index: 99998;
+  transform: translate(-50%,-50%); 
+  transition: width 0.3s cubic-bezier(0.2, 0, 0, 1), height 0.3s cubic-bezier(0.2, 0, 0, 1), border-color 0.3s, background 0.3s, opacity 0.3s, transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+  backdrop-filter: blur(2px);
+}
+body:has(a:hover) .cursor, body:has(button:hover) .cursor, body:has(.magnetic:hover) .cursor, body:has(.hover-target:hover) .cursor { 
+  opacity: 0; transform: translate(-50%, -50%) scale(0);
+}
+body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring, body:has(.magnetic:hover) .cursor-ring, body:has(.hover-target:hover) .cursor-ring { 
+  opacity: 0; transform: translate(-50%, -50%) scale(0);
+}
+
+a, button, .magnetic, .hover-target {
+  cursor: pointer;
+}
     body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring { width:48px; height:48px; }
 
     /* Orbs */

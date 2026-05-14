@@ -27,18 +27,29 @@
 
     /* ── Custom cursor ── */
     .cursor {
-      position: fixed; width: 12px; height: 12px; border-radius: 50%;
+      position: fixed; width: 10px; height: 10px; border-radius: 50%;
       background: var(--accent); pointer-events: none; z-index: 99999;
-      transform: translate(-50%,-50%); transition: transform 0.1s ease, width 0.3s, height 0.3s, background 0.3s;
+      transform: translate(-50%,-50%); 
+      transition: width 0.3s cubic-bezier(0.2, 0, 0, 1), height 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s, opacity 0.3s, transform 0.3s cubic-bezier(0.2, 0, 0, 1);
       mix-blend-mode: screen;
     }
     .cursor-ring {
-      position: fixed; width: 36px; height: 36px; border-radius: 50%;
-      border: 1.5px solid rgba(56,189,248,0.5); pointer-events: none; z-index: 99998;
-      transform: translate(-50%,-50%); transition: transform 0.18s ease, width 0.3s, height 0.3s;
+      position: fixed; width: 38px; height: 38px; border-radius: 50%;
+      border: 1px solid rgba(56,189,248,0.6); pointer-events: none; z-index: 99998;
+      transform: translate(-50%,-50%); 
+      transition: width 0.3s cubic-bezier(0.2, 0, 0, 1), height 0.3s cubic-bezier(0.2, 0, 0, 1), border-color 0.3s, background 0.3s, opacity 0.3s, transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+      backdrop-filter: blur(2px);
     }
-    body:has(a:hover) .cursor, body:has(button:hover) .cursor { width:20px; height:20px; }
-    body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring { width:50px; height:50px; border-color:rgba(56,189,248,0.3); }
+    body:has(a:hover) .cursor, body:has(button:hover) .cursor, body:has(.magnetic:hover) .cursor { 
+      opacity: 0; transform: translate(-50%, -50%) scale(0);
+    }
+    body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring, body:has(.magnetic:hover) .cursor-ring { 
+      opacity: 0; transform: translate(-50%, -50%) scale(0);
+    }
+    
+    a, button, .magnetic, .see-all, .social-links a, .tpl-card {
+      cursor: pointer;
+    }
 
     /* ── Scrollbar ── */
     ::-webkit-scrollbar { width:5px; }
@@ -133,7 +144,7 @@
       display:flex; align-items:center; gap:7px;
       padding:9px 20px; border-radius:10px; border:none;
       font-family:'Inter',sans-serif; font-weight:600; font-size:0.85rem;
-      cursor:pointer; transition:all 0.3s ease; text-decoration:none;
+      cursor:pointer; transition:background 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s, transform 0.15s ease-out; text-decoration:none;
     }
     .btn-ghost { background:rgba(255,255,255,0.05); color:var(--muted); border:1px solid rgba(255,255,255,0.1); }
     .btn-ghost:hover { color:var(--text); border-color:rgba(255,255,255,0.25); background:rgba(255,255,255,0.09); }
@@ -217,7 +228,7 @@
       display:inline-flex; align-items:center; gap:9px;
       padding:14px 28px; border-radius:12px; font-family:'Inter',sans-serif;
       font-weight:600; font-size:0.95rem; text-decoration:none; border:none; cursor:pointer;
-      transition:all 0.35s ease; position:relative; overflow:hidden;
+      transition:background 0.35s, box-shadow 0.35s, border 0.35s, color 0.35s, transform 0.15s ease-out; position:relative; overflow:hidden;
     }
     .h-btn::after {
       content:''; position:absolute; inset:0;
@@ -406,16 +417,19 @@
     }
 
     .feat-card {
-      background:var(--surface); border:1px solid var(--border);
+      background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08);
       border-radius:18px; padding:2rem 1.8rem;
-      transition:all 0.35s ease; position:relative; overflow:hidden;
+      transition:all 0.3s ease; position:relative; overflow:hidden; z-index:1;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     }
     .feat-card::before {
       content:''; position:absolute; inset:0; border-radius:18px;
-      background:var(--gradient); opacity:0; transition:opacity 0.35s;
+      background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(56,189,248,0.08), transparent 40%);
+      opacity:0; transition:opacity 0.5s; z-index:0; pointer-events:none;
     }
     .feat-card:hover { border-color:rgba(56,189,248,0.35); transform:translateY(-6px); box-shadow:0 20px 50px rgba(0,0,0,0.4); }
-    .feat-card:hover::before { opacity:0.04; }
+    .feat-card:hover::before { opacity:1; }
+    .feat-card > * { position: relative; z-index: 1; }
 
     .feat-card.large { grid-column:span 2; }
     .feat-card.tall  { grid-row:span 2; }
@@ -475,11 +489,19 @@
       z-index:0;
     }
     .step-card {
-      background:var(--surface); border:1px solid var(--border);
+      background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08);
       border-radius:18px; padding:1.8rem 1.6rem; text-align:center;
-      position:relative; z-index:1; transition:all 0.3s ease;
+      position:relative; z-index:1; transition:all 0.3s ease; overflow:hidden;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     }
-    .step-card:hover { border-color:rgba(56,189,248,0.3); transform:translateY(-5px); }
+    .step-card::before {
+      content:''; position:absolute; inset:0; border-radius:18px;
+      background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(56,189,248,0.08), transparent 40%);
+      opacity:0; transition:opacity 0.5s; z-index:0; pointer-events:none;
+    }
+    .step-card:hover { border-color:rgba(56,189,248,0.3); transform:translateY(-5px); box-shadow:0 15px 40px rgba(0,0,0,0.3); }
+    .step-card:hover::before { opacity:1; }
+    .step-card > * { position: relative; z-index: 1; }
     .step-num {
       width:56px; height:56px; border-radius:50%; margin:0 auto 1.2rem;
       background:var(--gradient); display:flex; align-items:center; justify-content:center;
@@ -497,10 +519,17 @@
 
     .templates-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
     .tpl-card {
-      border-radius:16px; overflow:hidden; border:1px solid var(--border);
-      transition:all 0.35s ease; cursor:pointer; position:relative; group: '';
+      background:rgba(255,255,255,0.02); border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.08);
+      transition:all 0.3s ease; cursor:pointer; position:relative; group: ''; z-index:1;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    }
+    .tpl-card::before {
+      content:''; position:absolute; inset:0; border-radius:16px;
+      background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(56,189,248,0.08), transparent 40%);
+      opacity:0; transition:opacity 0.5s; z-index:2; pointer-events:none;
     }
     .tpl-card:hover { border-color:rgba(56,189,248,0.4); transform:translateY(-6px); box-shadow:0 24px 50px rgba(0,0,0,0.5); }
+    .tpl-card:hover::before { opacity:1; }
     .tpl-preview { height:200px; position:relative; overflow:hidden; }
     .tpl-preview .hover-overlay {
       position:absolute; inset:0; background:rgba(8,12,24,0.75); backdrop-filter:blur(4px);
@@ -538,10 +567,19 @@
     .testimonials-section { padding:7rem 0; position:relative; z-index:1; }
     .testimonials-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; margin-top:3.5rem; }
     .testimonial-card {
-      background:var(--surface); border:1px solid var(--border);
-      border-radius:18px; padding:1.8rem; transition:all 0.3s;
+      background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08);
+      border-radius:18px; padding:1.8rem; transition:all 0.3s ease;
+      position:relative; overflow:hidden; z-index:1;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     }
-    .testimonial-card:hover { border-color:rgba(56,189,248,0.3); transform:translateY(-4px); }
+    .testimonial-card::before {
+      content:''; position:absolute; inset:0; border-radius:18px;
+      background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(56,189,248,0.08), transparent 40%);
+      opacity:0; transition:opacity 0.5s; z-index:0; pointer-events:none;
+    }
+    .testimonial-card:hover { border-color:rgba(56,189,248,0.3); transform:translateY(-4px); box-shadow:0 15px 40px rgba(0,0,0,0.3); }
+    .testimonial-card:hover::before { opacity:1; }
+    .testimonial-card > * { position: relative; z-index: 1; }
     .t-stars { color:#f59e0b; font-size:0.85rem; margin-bottom:1rem; letter-spacing:2px; }
     .t-text { font-size:0.88rem; color:var(--muted); line-height:1.7; margin-bottom:1.4rem; font-style:italic; }
     .t-author { display:flex; align-items:center; gap:10px; }
