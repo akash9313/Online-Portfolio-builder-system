@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const dir = 'c:/Users/Akash/Documents/Online-Portfolio-builder-system/public/templates';
-const files = fs.readdirSync(dir).filter(f => f.endsWith('.html'));
+const files = fs.readdirSync(dir).filter(f => f.endsWith('.html') && f !== 'neon-dark.html');
 
 files.forEach(f => {
   const filePath = path.join(dir, f);

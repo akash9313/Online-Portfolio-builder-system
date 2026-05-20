@@ -410,6 +410,26 @@
             </div>
           </div>
         </section>
+
+        <!-- Recruiter Messages Inbox -->
+        <section class="messages-card reveal reveal-delay-3" style="background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1.8rem; margin-top: 1.5rem;">
+          <div class="pc-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.4rem;">
+            <div>
+              <h3 class="pc-title" style="font-family: 'Syne',sans-serif; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--text);"><i class="fas fa-inbox" style="color: var(--accent); font-size: 0.9rem;"></i> Recruiter Messages</h3>
+              <p class="pc-sub" style="font-size: 0.75rem; color: var(--muted);">Inquiries submitted via your portfolio contact section</p>
+            </div>
+            <span class="pc-badge" id="messageCountPill" style="font-family: 'Syne',sans-serif; font-size: 1.1rem; font-weight: 800; background: var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">0 Messages</span>
+          </div>
+          
+          <div class="activity-list" id="inboxList" style="display: flex; flex-direction: column; gap: 0.8rem; max-height: 400px; overflow-y: auto; padding-right: 4px;">
+            <div class="activity-item msg-placeholder">
+              <div class="act-icon act-info"><i class="fas fa-spinner fa-spin"></i></div>
+              <div class="act-body">
+                <span class="act-text">Loading messages from transmission grid...</span>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
       <!-- Activity Feed -->
