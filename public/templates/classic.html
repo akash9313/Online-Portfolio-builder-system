@@ -644,42 +644,120 @@ body::after {
   border-left: 2px solid var(--lime); padding-left: 24px;
 }
 
-.contact-right {
+/* Contact Blocks */
+.contact-info-blocks {
   display: flex; flex-direction: column; gap: 20px;
-  justify-content: center;
+  margin-top: 30px;
+}
+.ci-block {
+  display: flex; align-items: center; gap: 20px;
   background: var(--ink2); border: 1px solid var(--line);
-  border-radius: 12px; padding: 32px;
+  padding: 20px 24px; border-radius: 12px;
+  transition: all 0.3s ease;
+}
+.ci-block:hover {
+  border-color: var(--lime); transform: translateX(10px);
+  box-shadow: 0 10px 30px rgba(200,241,53,0.05);
+}
+.ci-icon {
+  width: 50px; height: 50px; border-radius: 10px;
+  background: rgba(200,241,53,0.1); border: 1px solid rgba(200,241,53,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--lime); font-size: 1.4rem;
+}
+.ci-text {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.ci-text span:first-child {
+  font-family: var(--font-mono); font-size: 0.75rem;
+  color: var(--grey2); letter-spacing: 0.1em;
+}
+.ci-text a, .ci-text span:last-child {
+  font-family: var(--font-display); font-size: 1.1rem;
+  color: var(--white); text-decoration: none;
+}
+
+/* Classic Form Box */
+.contact-right {
   position: relative; z-index: 1;
 }
-.contact-right::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(200,241,53,0.05) 0%, transparent 80%);
-  z-index: -1;
+.classic-form {
+  background: var(--ink2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  position: relative;
+  transition: all 0.4s ease;
 }
-.contact-item {
+.classic-form:hover {
+  border-color: rgba(200,241,53,0.3);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  transform: translateY(-5px);
+}
+.classic-form::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--lime), transparent);
+}
+.cf-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem; color: var(--white);
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+.cf-form { display: flex; flex-direction: column; gap: 20px; }
+.cf-group { display: flex; flex-direction: column; gap: 8px; }
+.cf-group label {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--lime);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.cf-group input, .cf-group textarea {
+  background: var(--ink); border: 1px solid var(--line);
+  padding: 14px 18px; border-radius: 8px;
+  color: var(--white); font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none; transition: all 0.3s ease;
+}
+.cf-group input:focus, .cf-group textarea:focus {
+  border-color: var(--lime); box-shadow: 0 0 0 2px rgba(200,241,53,0.1);
+}
+.cf-submit {
+  margin-top: 10px; background: var(--lime); color: var(--ink);
+  border: none; padding: 16px; border-radius: 8px;
+  font-family: var(--font-display); font-size: 1.2rem;
+  letter-spacing: 0.05em;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  cursor: pointer; transition: all 0.3s ease;
+}
+.cf-submit:hover {
+  background: var(--white); box-shadow: 0 10px 20px rgba(255,255,255,0.1);
+}
+
+/* Toast */
+.toast-container {
+  position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 15px; pointer-events: none;
+}
+.custom-toast {
+  background: var(--ink2); border: 1px solid var(--lime);
+  border-radius: 12px; padding: 16px 24px;
   display: flex; align-items: center; gap: 16px;
-  font-size: 1rem; color: var(--grey);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  transform: translateX(120%); opacity: 0;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.contact-icon {
-  color: var(--lime);
+.custom-toast.show { transform: translateX(0); opacity: 1; }
+.toast-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(200,241,53,0.1); color: var(--lime);
+  display: flex; align-items: center; justify-content: center;
   font-size: 1.2rem;
-  width: 24px; text-align: center;
-  text-shadow: 0 0 12px rgba(200,241,53,0.4);
 }
-.contact-item a, .contact-item span {
-  color: var(--grey); text-decoration: none; transition: all 0.3s ease;
-}
-.contact-item a {
-  background-image: linear-gradient(var(--lime), var(--lime));
-  background-size: 0% 1px;
-  background-repeat: no-repeat;
-  background-position: left calc(100% - 2px);
-}
-.contact-item a:hover {
-  color: var(--white);
-  background-size: 100% 1px;
-  text-shadow: 0 0 8px rgba(200,241,53,0.4);
-}
+.toast-content { display: flex; flex-direction: column; gap: 4px; }
+.toast-title { font-family: var(--font-display); font-size: 1.05rem; color: var(--white); }
+.toast-msg { font-size: 0.85rem; color: var(--grey); }
 
 /* ════════════════════════════════════════
    FOOTER
@@ -687,31 +765,33 @@ body::after {
 footer {
   padding: 40px 60px;
   display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px;
   background: var(--ink2); border-top: 1px solid var(--line);
 }
-@media(max-width:768px){ footer{ padding: 32px 24px; } }
+@media(max-width:768px){ footer{ padding: 32px 24px; flex-direction: column; align-items: flex-start; gap: 24px; } }
 
-.footer-logo {
-  font-family: var(--font-display); font-size: 1.4rem;
-  letter-spacing: .1em; color: var(--lime);
+.footer-left { display: flex; flex-direction: column; gap: 6px; }
+
+.footer-name {
+  font-family: var(--font-display); font-size: 1.6rem;
+  letter-spacing: .05em; color: var(--lime);
 }
 .footer-note {
-  font-family: var(--font-mono); font-size: .65rem;
-  letter-spacing: .1em; color: var(--grey2);
+  font-family: var(--font-mono); font-size: .75rem;
+  letter-spacing: .05em; color: var(--grey);
 }
-.footer-socials { display: flex; gap: 10px; }
+.footer-socials { display: flex; gap: 12px; }
 .footer-social {
-  width: 34px; height: 34px; border-radius: 5px;
-  border: 1px solid var(--line2);
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--line2); background: rgba(255,255,255,0.02);
   display: flex; align-items: center; justify-content: center;
-  color: var(--grey); font-size: .8rem; text-decoration: none;
-  transition: all .2s ease;
+  color: var(--grey); font-size: 1rem; text-decoration: none;
+  transition: all .3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .footer-social:hover {
-  border-color: var(--lime); color: var(--lime);
-  background: rgba(200,241,53,.08);
-  box-shadow: 0 0 12px rgba(200,241,53,.15);
+  border-color: var(--lime); color: var(--ink);
+  background: var(--lime);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(200,241,53,.2);
 }
 
 /* Global Loader */
@@ -928,38 +1008,69 @@ footer {
       <p class="contact-desc">
         I'm currently open to new opportunities. Whether you have a project, question, or just want to say hi — my inbox is always open.
       </p>
+      
+      <div class="contact-info-blocks">
+        <div class="ci-block">
+          <div class="ci-icon"><i class="fas fa-envelope"></i></div>
+          <div class="ci-text">
+            <span>EMAIL ME</span>
+            <a href="#" contenteditable="true" data-collection="users" data-field="email" id="contactEmail">abc@gmail.com</a>
+          </div>
+        </div>
+        <div class="ci-block">
+          <div class="ci-icon"><i class="fas fa-phone-alt"></i></div>
+          <div class="ci-text">
+            <span>CALL ME</span>
+            <a href="#" contenteditable="true" data-collection="users" data-field="phone" id="contactPhone">+91</a>
+          </div>
+        </div>
+        <div class="ci-block">
+          <div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="ci-text">
+            <span>LOCATION</span>
+            <span contenteditable="true" data-collection="users" data-field="location" id="contactLocation">City, State, Country</span>
+          </div>
+        </div>
+      </div>
     </div>
+    
     <div class="contact-right">
-      <div class="contact-item">
-        <i class="fas fa-envelope contact-icon"></i>
-        <a href="#" contenteditable="true" data-collection="users" data-field="email" id="contactEmail">abc@gmail.com</a>
-      </div>
-      <div class="contact-item">
-        <i class="fas fa-phone-alt contact-icon"></i>
-        <a href="#" contenteditable="true" data-collection="users" data-field="phone" id="contactPhone">+91</a>
-      </div>
-      <div class="contact-item">
-        <i class="fas fa-map-marker-alt contact-icon"></i>
-        <span contenteditable="true" data-collection="users" data-field="location" id="contactLocation">City, State, Country</span>
-      </div>
-      <div class="contact-item">
-        <i class="fab fa-github contact-icon"></i>
-        <a href="#" id="contactGithub" target="_blank" contenteditable="true" data-collection="users" data-field="github">GitHub</a>
-      </div>
-      <div class="contact-item">
-        <i class="fab fa-linkedin contact-icon"></i>
-        <a href="#" id="contactLinkedin" target="_blank" contenteditable="true" data-collection="users" data-field="linkedin">LinkedIn</a>
+      <div class="classic-form">
+        <h3 class="cf-title">SEND A MESSAGE</h3>
+        <form id="contactForm" class="cf-form">
+          <div class="cf-group">
+            <label>NAME</label>
+            <input type="text" id="msgName" placeholder="Your Name" required>
+          </div>
+          <div class="cf-group">
+            <label>EMAIL</label>
+            <input type="email" id="msgEmail" placeholder="your.email@example.com" required>
+          </div>
+          <div class="cf-group">
+            <label>MESSAGE</label>
+            <textarea rows="4" id="msgContent" placeholder="How can I help you?" required></textarea>
+          </div>
+          <button type="submit" id="msgSubmitBtn" class="cf-submit">
+            <span>TRANSMIT</span>
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
       </div>
     </div>
   </div>
 </section>
 
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
 <!-- ══════════════════════════════
      FOOTER
 ══════════════════════════════ -->
 <footer>
-  <div class="footer-logo">PortfolioX</div>
-  <div class="footer-note">© <span id="fyear"></span> &nbsp;&middot;&nbsp; Crafted with <span style="color:var(--lime)">&hearts;</span> using <span style="color:var(--lime)">PortfolioX</span></div>
+  <div class="footer-left">
+    <div class="footer-name" id="footerUserName" contenteditable="true" data-collection="users" data-field="fullName">UserName</div>
+    <div class="footer-note">© <span id="fyear"></span> &nbsp;&middot;&nbsp; Crafted with <span style="color:var(--lime)">&hearts;</span> using <a href="https://portfoliox-2e787.web.app/" target="_blank" style="color:var(--white);text-decoration:none;font-weight:600;">PortfolioX</a></div>
+  </div>
   <div class="footer-socials">
     <a class="footer-social" id="footerGithub" href="#" target="_blank"><i class="fab fa-github"></i></a>
     <a class="footer-social" id="footerLinkedin" href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
@@ -1005,7 +1116,7 @@ import { getAuth, onAuthStateChanged } from
   "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   getFirestore, doc, getDoc,
-  collection, getDocs, updateDoc
+  collection, getDocs, updateDoc, addDoc, serverTimestamp
 } from
   "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -1053,6 +1164,7 @@ onAuthStateChanged(auth, async (user) => {
   setText("panelRole",     d.role || "Developer");
   setText("panelLocation", d.location || "—");
   setText("asideName",     fullName);
+  setText("footerUserName",fullName);
   setText("asideRole",     d.role || "Developer");
   setText("asideLocation", d.location || "—");
   setText("aboutText",     d.about || "Tell your story here.");
@@ -1265,6 +1377,72 @@ onAuthStateChanged(auth, async (user) => {
     });
   }
   
+  /* — Contact Form Submission — */
+  const contactForm = document.getElementById('contactForm');
+  if(contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('msgSubmitBtn');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>TRANSMITTING...</span> <i class="fas fa-spinner fa-spin"></i>';
+
+      const nameVal = document.getElementById('msgName').value.trim();
+      const emailVal = document.getElementById('msgEmail').value.trim();
+      const msgVal = document.getElementById('msgContent').value.trim();
+
+      const toastContainer = document.getElementById('toastContainer');
+      const showToast = (isSuccess, errMsg = '') => {
+        if(!toastContainer) return;
+        const toast = document.createElement('div');
+        toast.className = 'custom-toast';
+        
+        if(isSuccess) {
+          toast.innerHTML = `
+            <div class="toast-icon"><i class="fas fa-check"></i></div>
+            <div class="toast-content">
+              <div class="toast-title">Transmission Successful</div>
+              <div class="toast-msg">Your payload has been securely delivered.</div>
+            </div>`;
+        } else {
+          toast.innerHTML = `
+            <div class="toast-icon" style="color:#ff5f56;background:rgba(255,95,86,0.1);border-color:#ff5f56;"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="toast-content">
+              <div class="toast-title">Transmission Failed</div>
+              <div class="toast-msg">${errMsg || "Error sending data payload."}</div>
+            </div>`;
+          toast.style.borderColor = '#ff5f56';
+        }
+        
+        toastContainer.appendChild(toast);
+        requestAnimationFrame(() => setTimeout(() => toast.classList.add('show'), 10));
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 500);
+        }, 4000);
+      };
+
+      try {
+        if(!user || !user.uid) throw new Error("Target UID not found");
+        await addDoc(collection(db, "users", user.uid, "messages"), {
+          name: nameVal,
+          email: emailVal,
+          message: msgVal,
+          timestamp: serverTimestamp() || new Date().toISOString()
+        });
+        showToast(true);
+        contactForm.reset();
+      } catch (err) {
+        console.error("Error sending message:", err);
+        showToast(false, err.message || 'Unknown error occurred');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    });
+  }
+
   // Hide global loader once all data is fully populated
   const loader = document.getElementById('globalLoader');
   if (loader) {

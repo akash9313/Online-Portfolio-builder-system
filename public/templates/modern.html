@@ -10,7 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../chatbot.css">
 
   <style>
     /* ─── RESET & BASE ─────────────────────────────────────── */
@@ -61,36 +60,44 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 48px;
+      height: 72px;
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .topbar.scrolled {
       height: 56px;
+      background: rgba(245, 242, 237, 0.95);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+      border-bottom-color: transparent;
     }
     .topbar-logo {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.1rem;
-      letter-spacing: 0.01em;
+      font-size: 1.2rem;
+      letter-spacing: 0.02em;
       color: var(--ink);
       text-decoration: none;
-      transition: color 0.3s ease, transform 0.3s ease;
+      transition: color 0.4s ease, transform 0.4s ease;
       display: inline-block;
     }
     .topbar-logo:hover {
       color: var(--accent);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
     .topbar-nav {
       display: flex;
-      gap: 32px;
+      gap: 36px;
       list-style: none;
     }
     .topbar-nav a {
       position: relative;
-      font-size: 0.82rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--muted);
       text-decoration: none;
-      transition: color 0.3s ease, transform 0.3s ease;
-      padding-bottom: 4px;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      padding: 8px 4px;
       display: inline-block;
     }
     .topbar-nav a::after {
@@ -101,14 +108,18 @@
       bottom: 0;
       left: 50%;
       background-color: var(--accent);
-      transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       transform: translateX(-50%);
     }
     .topbar-nav a:hover {
+      color: var(--ink);
+      transform: translateY(-2px);
+    }
+    .topbar-nav a.active {
       color: var(--accent);
       transform: translateY(-2px);
     }
-    .topbar-nav a:hover::after {
+    .topbar-nav a:hover::after, .topbar-nav a.active::after {
       width: 100%;
     }
 
@@ -674,9 +685,17 @@
     }
 
     /* ─── CONTACT ──────────────────────────────────────────── */
-    .contact-grid {
+    .contact-layout {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: 1.2fr 1fr;
+      gap: 48px;
+    }
+    @media (max-width: 900px) {
+      .contact-layout { grid-template-columns: 1fr; }
+    }
+    .contact-grid-column {
+      display: flex;
+      flex-direction: column;
       gap: 24px;
     }
     .contact-card {
@@ -684,11 +703,11 @@
       background: var(--card-bg);
       border: 1px solid var(--rule);
       border-radius: 20px;
-      padding: 40px;
+      padding: 32px 36px;
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 32px;
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
       overflow: hidden;
       transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
       z-index: 1;
@@ -699,31 +718,29 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: var(--ink);
-      transform-origin: bottom;
-      transform: scaleY(0);
+      transform-origin: left;
+      transform: scaleX(0);
       transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
       z-index: -1;
     }
     .contact-card:hover {
       border-color: var(--ink);
-      transform: translateY(-8px);
+      transform: translateX(8px);
       box-shadow: 0 20px 40px rgba(0,0,0,0.08);
     }
     .contact-card:hover::before {
-      transform: scaleY(1);
+      transform: scaleX(1);
     }
     .contact-top {
       display: flex;
-      justify-content: space-between;
-      width: 100%;
-      align-items: flex-start;
+      align-items: center;
     }
     .contact-icon {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 56px;
-      height: 56px;
+      width: 64px;
+      height: 64px;
       border-radius: 16px;
       background: var(--rule);
       color: var(--accent);
@@ -737,28 +754,13 @@
     .contact-card:hover .contact-icon {
       background: var(--accent);
       color: #fff;
-      transform: scale(1.1) translateY(-4px) rotate(5deg);
+      transform: scale(1.1) rotate(5deg);
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
-    .contact-action {
-      font-size: 1.5rem;
-      color: var(--rule);
-      text-decoration: none;
-      transition: all 0.4s ease;
+    .contact-details {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: 1px solid transparent;
-      background: transparent;
-    }
-    .contact-card:hover .contact-action {
-      color: var(--accent);
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(255,255,255,0.1);
-      transform: translate(6px, -6px) scale(1.1);
+      flex-direction: column;
+      gap: 4px;
     }
     .contact-label {
       font-size: 0.75rem;
@@ -766,7 +768,6 @@
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 12px;
       display: block;
       transition: color 0.5s ease;
     }
@@ -775,14 +776,140 @@
     }
     .contact-value {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.4rem;
+      font-size: 1.15rem;
       color: var(--ink);
       transition: color 0.5s ease;
-      word-break: break-word;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       outline: none;
     }
     .contact-card:hover .contact-value {
       color: #fff;
+    }
+
+    /* ─── MODERN TRANSMISSION BOX ──────────────────────────── */
+    .modern-form-box {
+      background: var(--ink);
+      border-radius: 24px;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .modern-form-box::after {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 250px; height: 250px;
+      background: var(--accent);
+      filter: blur(100px);
+      opacity: 0.15;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .form-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      color: #fff;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+    #transmission-form {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      flex: 1;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .modern-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding: 12px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: #fff;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      border-radius: 0;
+    }
+    .modern-input:focus {
+      outline: none;
+      border-bottom-color: var(--accent);
+      background: rgba(255,255,255,0.03);
+      padding-left: 16px;
+    }
+    .modern-input::placeholder {
+      color: rgba(255,255,255,0.3);
+      font-weight: 300;
+    }
+    textarea.modern-input {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .form-submit {
+      align-self: flex-start;
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 40px;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+    .form-submit span {
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .form-submit:hover span {
+      transform: translateX(8px);
+    }
+    
+    /* TOAST NOTIFICATION */
+    #toast-container {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .modern-toast {
+      background: var(--card-bg);
+      color: var(--ink);
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      border-left: 4px solid var(--accent);
+      transform: translateX(120%);
+      opacity: 0;
+      animation: modernToastSlide 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modern-toast.error {
+      border-left-color: #e63946;
+    }
+    .modern-toast.fade-out {
+      animation: modernToastFade 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    @keyframes modernToastSlide {
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes modernToastFade {
+      to { transform: translateX(120%); opacity: 0; }
     }
 
     /* ─── FOOTER ───────────────────────────────────────────── */
@@ -800,17 +927,21 @@
     }
     footer span.accent { color: var(--accent); }
     
-    .footer-logo {
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .footer-name {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       color: var(--accent);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
     
     .footer-note {
-      text-align: center;
-      flex: 1;
+      text-align: left;
     }
     
     .footer-socials {
@@ -819,9 +950,9 @@
     }
     
     .footer-social {
-      width: 36px;
-      height: 36px;
-      border-radius: 4px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       border: 1px solid rgba(255,255,255,0.2);
       display: flex;
       align-items: center;
@@ -1000,56 +1131,80 @@
         <h2 class="section-title">Get In Touch</h2>
         <div class="section-rule"></div>
       </div>
-      <div class="contact-grid">
-        <div class="contact-card">
-          <div class="contact-top">
-            <div class="contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      
+      <div class="contact-layout">
+        <!-- Left: Contact Details -->
+        <div class="contact-grid-column">
+          <div class="contact-card">
+            <div class="contact-top">
+              <div class="contact-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </div>
             </div>
-            <a href="#" id="contactEmail" class="contact-action" target="_blank">↗</a>
-          </div>
-          <div class="contact-details">
-            <span class="contact-label">Email Address</span>
-            <span class="contact-value" id="email-text"
-                  contenteditable="true" data-collection="users" data-field="email">Loading...</span>
-          </div>
-        </div>
-        
-        <div class="contact-card">
-          <div class="contact-top">
-            <div class="contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path><path d="M14.05 2a9 9 0 0 1 8 7.94"></path><path d="M14.05 6A5 5 0 0 1 18 10"></path></svg>
+            <div class="contact-details">
+              <span class="contact-label">Email Address</span>
+              <a href="#" id="contactEmail" class="contact-value" style="text-decoration:none;"
+                 contenteditable="true" data-collection="users" data-field="email">Loading...</a>
             </div>
-            <a href="#" id="contactPhone" class="contact-action" target="_blank">↗</a>
           </div>
-          <div class="contact-details">
-            <span class="contact-label">Phone Number</span>
-            <span class="contact-value" id="phone-text"
-                  contenteditable="true" data-collection="users" data-field="phone">Loading...</span>
+          
+          <div class="contact-card">
+            <div class="contact-top">
+              <div class="contact-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path><path d="M14.05 2a9 9 0 0 1 8 7.94"></path><path d="M14.05 6A5 5 0 0 1 18 10"></path></svg>
+              </div>
+            </div>
+            <div class="contact-details">
+              <span class="contact-label">Phone Number</span>
+              <a href="#" id="contactPhone" class="contact-value" style="text-decoration:none;"
+                 contenteditable="true" data-collection="users" data-field="phone">Loading...</a>
+            </div>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-top">
+              <div class="contact-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              </div>
+            </div>
+            <div class="contact-details">
+              <span class="contact-label">Location</span>
+              <span class="contact-value" id="contactLocation"
+                    contenteditable="true" data-collection="users" data-field="location">Loading...</span>
+            </div>
           </div>
         </div>
 
-        <div class="contact-card">
-          <div class="contact-top">
-            <div class="contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            </div>
-            <div class="contact-action" style="opacity:0.2;">↗</div>
-          </div>
-          <div class="contact-details">
-            <span class="contact-label">Location</span>
-            <span class="contact-value" id="contactLocation"
-                  contenteditable="true" data-collection="users" data-field="location">Loading...</span>
+        <!-- Right: Transmission Box -->
+        <div class="contact-right">
+          <div class="modern-form-box">
+            <h3 class="form-title">Send a Message</h3>
+            <form id="transmission-form">
+              <div class="form-group">
+                <input type="text" id="t-name" class="modern-input" placeholder="Your Name" required />
+              </div>
+              <div class="form-group">
+                <input type="email" id="t-email" class="modern-input" placeholder="Email Address" required />
+              </div>
+              <div class="form-group">
+                <textarea id="t-message" class="modern-input" placeholder="How can I help you?" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary form-submit">Send Message <span>→</span></button>
+            </form>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
   </main>
 
   <footer>
-    <div class="footer-logo">PortfolioX</div>
-    <div class="footer-note">© <span id="fyear"></span> &nbsp;&middot;&nbsp; Crafted with <span style="color:var(--accent)">&hearts;</span> using <span style="color:var(--accent)">PortfolioX</span></div>
+    <div class="footer-left">
+      <div class="footer-name" id="footerUserName" contenteditable="true" data-collection="users" data-field="fullName">UserName</div>
+      <div class="footer-note">© 2026 <span id="fyear"></span> &nbsp;&middot;&nbsp; Crafted with <span style="color:var(--accent)">&hearts;</span> using <a href="https://portfoliox-2e787.web.app/" target="_blank" style="color:#fff;text-decoration:none;font-weight:600;">PortfolioX</a></div>
+    </div>
     <div class="footer-socials">
       <a href="#" class="footer-social" id="footerGithub" target="_blank"><i class="fab fa-github"></i></a>
       <a href="#" class="footer-social" id="footerLinkedin" target="_blank"><i class="fab fa-linkedin"></i></a>
@@ -1100,7 +1255,9 @@
       const snap = await getDoc(doc(db, "users", user.uid));
       const data = snap.data() || {};
 
-      fullNameEl.textContent = data.fullName  || "Your Name";
+      if (fullNameEl) fullNameEl.textContent = data.fullName || "Your Name";
+      const footerUserNameEl = document.getElementById("footerUserName");
+      if (footerUserNameEl) footerUserNameEl.textContent = data.fullName || "Your Name";
       roleEl.textContent     = data.role      || "Your Role";
       aboutEl.textContent    = data.about     || "Tell your story here.";
       
@@ -1111,6 +1268,7 @@
       const contactEmailEl = document.getElementById("contactEmail");
       if (contactEmailEl) {
         contactEmailEl.href = "mailto:" + (data.email || "");
+        contactEmailEl.textContent = data.email || "hello@example.com";
       }
       const emailTextEl = document.getElementById("email-text");
       if (emailTextEl) {
@@ -1120,6 +1278,7 @@
       const contactPhoneEl = document.getElementById("contactPhone");
       if (contactPhoneEl) {
         contactPhoneEl.href = "tel:" + (data.phone || "");
+        contactPhoneEl.textContent = data.phone || "+1 234 567 890";
       }
       const phoneTextEl = document.getElementById("phone-text");
       if (phoneTextEl) {
@@ -1322,17 +1481,104 @@
       loader.classList.add("hide");
       setTimeout(() => loader.remove(), 600);
 
-      /* — AI Chatbot Init — */
-      if (typeof window.initPortfolioChatbot === 'function') {
-        const fullData = {
-          profile: data,
-          skills: Array.from(skillsSnap.docs).map(d => d.data()),
-          projects: Array.from(projSnap.docs).map(d => d.data()),
-          education: data.education // From user doc or separate
-        };
-        window.initPortfolioChatbot(fullData);
+
+
+      /* — Scroll Spy & Topbar Interaction — */
+      const sections = document.querySelectorAll("main section[id]");
+      const navLinks = document.querySelectorAll(".topbar-nav a");
+      const topbar = document.querySelector(".topbar");
+
+      window.addEventListener("scroll", () => {
+        let current = "";
+        
+        if (window.scrollY > 50) {
+          topbar.classList.add("scrolled");
+        } else {
+          topbar.classList.remove("scrolled");
+        }
+
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop;
+          if (window.scrollY >= sectionTop - 200) {
+            current = section.getAttribute("id");
+          }
+        });
+
+        navLinks.forEach((a) => {
+          a.classList.remove("active");
+          if (a.getAttribute("href") === `#${current}`) {
+            a.classList.add("active");
+          }
+        });
+      });
+
+      /* — Form Submission to Firebase — */
+      const contactForm = document.getElementById("transmission-form");
+      if (contactForm) {
+        contactForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          
+          const tName = document.getElementById("t-name").value.trim();
+          const tEmail = document.getElementById("t-email").value.trim();
+          const tMessage = document.getElementById("t-message").value.trim();
+          
+          if (!tName || !tEmail || !tMessage) return;
+
+          const btn = contactForm.querySelector("button[type='submit']");
+          const ogText = btn.innerHTML;
+          btn.innerHTML = "Sending... <span>⟳</span>";
+          btn.disabled = true;
+
+          try {
+            // Import addDoc dynamically or assume it's available. 
+            // We need to add addDoc to the import list at the top. Let's do it via dynamic import for safety, or just rely on Firestore update.
+            // Wait, we need to import addDoc in the top import block. I will just update the import in the next step or add it to the top.
+            // Actually I'll just use doc() with a random ID and setDoc.
+            const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+            
+            const msgId = Date.now().toString() + Math.random().toString(36).substring(2);
+            await setDoc(doc(db, "users", currentUser.uid, "messages", msgId), {
+              name: tName,
+              email: tEmail,
+              message: tMessage,
+              timestamp: new Date().toISOString(),
+              read: false
+            });
+            
+            showModernToast("Message transmitted successfully!", "success");
+            contactForm.reset();
+          } catch (err) {
+            console.error("Transmission failed:", err);
+            showModernToast("Transmission failed. Please try again.", "error");
+          } finally {
+            btn.innerHTML = ogText;
+            btn.disabled = false;
+          }
+        });
       }
+
     });
+
+    /* — Modern Toast UI — */
+    function showModernToast(msg, type="success") {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+
+      const toast = document.createElement("div");
+      toast.className = `modern-toast ${type}`;
+      
+      const icon = type === 'success' 
+        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`
+        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+
+      toast.innerHTML = `${icon} <span>${msg}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.add("fade-out");
+        toast.addEventListener("animationend", () => toast.remove());
+      }, 4000);
+    }
 
     /* ── In-place Edit → Save on Blur ───────────────────── */
     document.addEventListener("blur", async (e) => {
@@ -1348,6 +1594,11 @@
 
       if (field === "location") {
         document.querySelectorAll(`[data-field='location']`).forEach(m => {
+          if (m !== el) m.textContent = newValue;
+        });
+      }
+      if (field === "fullName") {
+        document.querySelectorAll(`[data-field='fullName']`).forEach(m => {
           if (m !== el) m.textContent = newValue;
         });
       }
@@ -1372,7 +1623,6 @@
       }
     }, true);
   </script>
-  <script src="../chatbot.js"></script>
 
 </body>
 
