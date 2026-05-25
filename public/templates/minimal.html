@@ -161,15 +161,22 @@
 
     /* Avatar */
     .avatar-wrapper {
-      width: 80px; height: 80px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
       background: rgba(255,255,255,0.02);
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
       font-family: var(--font-display);
-      font-size: 2.2rem; font-weight: 700; color: var(--accent);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      font-size: 3.5rem; font-weight: 700; color: var(--accent);
+      box-shadow: 0 10px 30px rgba(0, 243, 255, 0.15);
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s;
+    }
+    .avatar-wrapper:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 243, 255, 0.3);
     }
     .avatar-wrapper img {
       width: 100%; height: 100%; object-fit: cover;
@@ -628,10 +635,159 @@
       border: 1px solid rgba(167, 139, 250, 0.18); background: rgba(167, 139, 250, 0.03);
     }
 
-    /* Contact Details Block */
-    .contact-grid {
-      display: grid; grid-template-columns: 1fr; gap: 1rem;
+    /* ─── NEW CONTACT LAYOUT ─── */
+    .contact-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
     }
+    
+    .contact-cards-row {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Transmission Box */
+    .transmission-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .transmission-box:hover {
+      border-color: rgba(0, 243, 255, 0.2);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.03);
+    }
+
+    .transmission-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .pulse-icon {
+      color: var(--accent);
+      font-size: 1.4rem;
+      animation: iconPulse 2s infinite;
+    }
+    @keyframes iconPulse {
+      0%, 100% { opacity: 1; transform: scale(1); text-shadow: 0 0 10px rgba(0, 243, 255, 0.6); }
+      50% { opacity: 0.6; transform: scale(0.9); text-shadow: none; }
+    }
+    .transmission-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .transmission-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      width: 100%;
+    }
+    .input-group {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .min-input {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid transparent;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+      resize: vertical;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .min-input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+    .input-border {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 1;
+    }
+    .min-input:focus {
+      outline: none;
+      background: rgba(0, 243, 255, 0.02);
+    }
+    .min-input:focus + .input-border {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.15), inset 0 0 10px rgba(0, 243, 255, 0.05);
+    }
+    textarea.min-input {
+      min-height: 120px;
+    }
+
+    .transmit-btn {
+      align-self: flex-start;
+      background: rgba(0, 243, 255, 0.05);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .btn-glow {
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s ease;
+    }
+    .transmit-btn:hover {
+      color: #05070a;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 243, 255, 0.3);
+    }
+    .transmit-btn:hover .btn-glow {
+      opacity: 1;
+    }
+
+    /* Contact Cards */
     .contact-card-premium {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -644,7 +800,8 @@
     .contact-card-premium:hover {
       border-color: var(--border-hover);
       background: var(--bg-card-hover);
-      transform: translateX(5px);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
     .contact-icon-box {
       width: 44px; height: 44px; border-radius: 12px;
@@ -652,6 +809,7 @@
       display: flex; align-items: center; justify-content: center;
       color: var(--accent); font-size: 1.1rem;
       transition: all 0.3s;
+      flex-shrink: 0;
     }
     .contact-card-premium:hover .contact-icon-box {
       border-color: var(--accent); background: rgba(0, 243, 255, 0.05);
@@ -659,6 +817,7 @@
     }
     .contact-info-block {
       display: flex; flex-direction: column; gap: 2px;
+      overflow: hidden;
     }
     .contact-lbl {
       font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
@@ -667,49 +826,119 @@
     .contact-val {
       font-family: var(--font-mono); font-size: 0.9rem; font-weight: 500;
       color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Contact Toast for Form */
+    .min-toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 10000;
+    }
+    .min-toast {
+      background: var(--bg-card);
+      border: 1px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 243, 255, 0.05);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transform: translateX(120%);
+      opacity: 0;
+      animation: toastSlideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    .min-toast.error {
+      border-color: #ff3366;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 51, 102, 0.05);
+    }
+    .min-toast i {
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+    .min-toast.error i {
+      color: #ff3366;
+    }
+    @keyframes toastSlideIn {
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .min-toast.fade-out {
+      animation: toastFadeOut 0.4s ease forwards;
+    }
+    @keyframes toastFadeOut {
+      to { transform: translateX(120%); opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .contact-cards-row {
+        grid-template-columns: 1fr;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* ─── FOOTER ─── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 3rem 0;
+    .minimal-footer {
+      position: relative;
       margin-top: 6rem;
+      padding: 3rem 2.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 2rem;
     }
-    
-    .footer-logo {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--text);
-      text-decoration: none;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
+    .minimal-footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-purple), #ec4899, var(--accent));
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
     }
-    .footer-logo .logo-accent {
-      background: var(--gradient-accent);
+    
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    
+    .footer-name {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent-purple), #f472b6, var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
-      margin-left: 0.5px;
-      font-weight: 900;
+      letter-spacing: 0.02em;
     }
     
     .footer-meta {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
-      font-weight: 600;
+      font-size: 0.75rem;
+      font-weight: 500;
       color: var(--text-muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.02em;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.3rem;
+    }
+    .footer-meta strong {
+      font-weight: 700;
+      color: var(--text-dark);
     }
     
     @keyframes heartbeat {
@@ -717,46 +946,45 @@
       50% { transform: scale(1.15); }
     }
     .footer-meta i {
-      color: #ff3366;
+      color: #ef4444;
       font-size: 0.75rem;
       animation: heartbeat 1.2s infinite ease-in-out;
-      margin: 0 2px;
-      text-shadow: 0 0 8px rgba(255, 51, 102, 0.5);
+      margin: 0 4px;
     }
     
     .footer-socials {
       display: flex;
-      gap: 0.75rem;
+      gap: 1rem;
       align-items: center;
     }
     .footer-social-ico {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.01);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     }
     .footer-social-ico:hover {
       border-color: var(--accent);
       color: var(--accent);
-      background: rgba(0, 243, 255, 0.04);
-      box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
-      transform: translateY(-2px);
+      background: rgba(0, 243, 255, 0.05);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 243, 255, 0.15);
     }
 
     @media (max-width: 768px) {
-      footer {
+      .minimal-footer {
         flex-direction: column;
-        gap: 1.5rem;
-        text-align: center;
-        padding: 2.5rem 0;
+        align-items: flex-start;
+        padding: 2.5rem 1.5rem;
+        gap: 2rem;
       }
     }
 
@@ -895,13 +1123,13 @@
       overflow: hidden;
       z-index: 1;
     }
-    .nav-cta-github {
+    .nav-cta-hire {
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--border);
       color: var(--text);
     }
-    /* GitHub hover spotlight bg */
-    .nav-cta-github::before {
+    /* Hire hover spotlight bg */
+    .nav-cta-hire::before {
       content: '';
       position: absolute;
       inset: 0;
@@ -911,10 +1139,10 @@
       transition: opacity 0.3s ease;
       z-index: -1;
     }
-    .nav-cta-github:hover::before {
+    .nav-cta-hire:hover::before {
       opacity: 1;
     }
-    .nav-cta-github:hover {
+    .nav-cta-hire:hover {
       border-color: var(--accent);
       color: var(--accent);
       box-shadow: 0 0 25px rgba(0, 243, 255, 0.25);
@@ -1012,11 +1240,90 @@
         flex-direction: column; gap: 12px; text-align: center;
       }
     }
+
+    /* Avatar Modal */
+    .avatar-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 10, 0.95);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .avatar-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .avatar-modal-close {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .avatar-modal-close:hover {
+      color: #fff;
+    }
+    .avatar-modal-content {
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      box-shadow: 0 15px 50px rgba(0, 243, 255, 0.3);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      transform: scale(0.8);
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .avatar-modal.active .avatar-modal-content {
+      transform: scale(1);
+    }
+    .avatar-modal-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+    .avatar-modal-initials {
+      font-family: var(--font-display);
+      font-size: 8rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .avatar-modal-content {
+        width: 250px;
+        height: 250px;
+      }
+      .avatar-modal-initials {
+        font-size: 5rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-
+  <!-- Avatar Modal -->
+  <div class="avatar-modal" id="avatarModal">
+    <div class="avatar-modal-close" id="avatarModalClose"><i class="fas fa-times"></i></div>
+    <div class="avatar-modal-content">
+      <img src="" alt="Profile Photo" class="avatar-modal-img" id="avatarModalImg">
+      <div id="avatarModalInitials" class="avatar-modal-initials"></div>
+    </div>
+  </div>
 
   <!-- Loading Screen -->
   <div class="loading-screen" id="loadingScreen">
@@ -1026,7 +1333,7 @@
 
   <!-- Top Navigation Bar -->
   <nav class="topnav">
-    <a class="nav-logo" href="../index.html">Portfolio<span class="logo-accent">X</span></a>
+    <a class="nav-logo" href="#">Portfolio<span class="logo-accent">X</span></a>
     <div class="nav-links">
       <a href="#about" class="nav-link">About</a>
       <a href="#projects" class="nav-link">Projects</a>
@@ -1035,8 +1342,8 @@
       <a href="#contact" class="nav-link">Contact</a>
     </div>
     <div class="nav-actions">
-      <a class="nav-cta-btn nav-cta-github" id="navGithub" href="#" target="_blank">
-        <i class="fab fa-github"></i> GitHub
+      <a class="nav-cta-btn nav-cta-hire" href="#contact">
+        <i class="fas fa-briefcase"></i> Hire Me
       </a>
     </div>
   </nav>
@@ -1169,42 +1476,75 @@
             <div class="section-line"></div>
           </div>
           
-          <div class="contact-grid">
-            <a href="mailto:hello@example.com" class="contact-card-premium" id="contactEmail">
-              <div class="contact-icon-box"><i class="fas fa-envelope"></i></div>
-              <div class="contact-info-block">
-                <span class="contact-lbl">Email Address</span>
-                <span class="contact-val" id="emailText" contenteditable="true" data-collection="users" data-field="email">hello@example.com</span>
+          <div class="contact-layout">
+            <!-- Top: Transmission Box -->
+            <div class="transmission-box tilt-card">
+              <div class="transmission-header">
+                <i class="fas fa-satellite-dish pulse-icon"></i>
+                <div class="transmission-title">Secure Transmission</div>
               </div>
-            </a>
-            
-            <a href="tel:+123456789" class="contact-card-premium" id="contactPhone">
-              <div class="contact-icon-box"><i class="fas fa-phone"></i></div>
-              <div class="contact-info-block">
-                <span class="contact-lbl">Phone Number</span>
-                <span class="contact-val" id="phoneText" contenteditable="true" data-collection="users" data-field="phone">+1 234 567 890</span>
-              </div>
-            </a>
-            
-            <div class="contact-card-premium">
-              <div class="contact-icon-box"><i class="fas fa-map-marker-alt"></i></div>
-              <div class="contact-info-block">
-                <span class="contact-lbl">Location Coordinates</span>
-                <span class="contact-val" data-field="location">San Francisco, CA</span>
+              <form id="minimal-transmission-form" class="transmission-form">
+                <div class="form-row">
+                  <div class="input-group">
+                    <input type="text" id="m-name" class="min-input" placeholder="Initiator Name" required>
+                    <div class="input-border"></div>
+                  </div>
+                  <div class="input-group">
+                    <input type="email" id="m-email" class="min-input" placeholder="Return Address (Email)" required>
+                    <div class="input-border"></div>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <textarea id="m-message" class="min-input" placeholder="Encrypt your message..." required></textarea>
+                  <div class="input-border"></div>
+                </div>
+                <button type="submit" class="transmit-btn">
+                  <span class="transmit-text">Transmit Signal</span>
+                  <i class="fas fa-paper-plane"></i>
+                  <div class="btn-glow"></div>
+                </button>
+              </form>
+            </div>
+
+            <!-- Bottom: Contact Cards -->
+            <div class="contact-cards-row">
+              <a href="mailto:hello@example.com" class="contact-card-premium tilt-card" id="contactEmail">
+                <div class="contact-icon-box"><i class="fas fa-envelope"></i></div>
+                <div class="contact-info-block">
+                  <span class="contact-lbl">Direct Email</span>
+                  <span class="contact-val" id="emailText" contenteditable="true" data-collection="users" data-field="email">hello@example.com</span>
+                </div>
+              </a>
+              
+              <a href="tel:+123456789" class="contact-card-premium tilt-card" id="contactPhone">
+                <div class="contact-icon-box"><i class="fas fa-phone"></i></div>
+                <div class="contact-info-block">
+                  <span class="contact-lbl">Secure Line</span>
+                  <span class="contact-val" id="phoneText" contenteditable="true" data-collection="users" data-field="phone">+1 234 567 890</span>
+                </div>
+              </a>
+
+              <div class="contact-card-premium tilt-card">
+                <div class="contact-icon-box"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="contact-info-block">
+                  <span class="contact-lbl">Coordinates</span>
+                  <span class="contact-val" contenteditable="true" data-collection="users" data-field="location">Global / Remote</span>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Footer element inside right column -->
-          <footer>
-            <div class="footer-logo">Portfolio<span class="logo-accent">X</span></div>
-            <div class="footer-meta">
-              &copy; <span id="fYear">2026</span> &middot; CRAFTED WITH <i class="fas fa-heart"></i> USING PORTFOLIOX
+          <footer class="minimal-footer">
+            <div class="footer-left">
+              <div class="footer-name" id="footerName" contenteditable="true" data-collection="users" data-field="fullName">Akash Roop Singh Uchachariya</div>
+              <div class="footer-meta">
+                &copy; <span id="fYear">2026</span> – Crafted with <i class="fas fa-heart"></i> using <strong>PortfolioX</strong>
+              </div>
             </div>
             <div class="footer-socials">
               <a href="#" class="footer-social-ico" id="footerGithub" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
               <a href="#" class="footer-social-ico" id="footerLinkedin" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-              <!-- <a href="#" class="footer-social-ico" id="footerTwitter" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a> -->
               <a href="#" class="footer-social-ico" id="footerWebsite" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
             </div>
           </footer>
@@ -1877,6 +2217,108 @@
     initAmbientCanvas();
     initTiltGlare();
     initMagnets();
+
+    /* ── Transmission Form Submission ── */
+    const txForm = document.getElementById('minimal-transmission-form');
+    if (txForm) {
+      txForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        function showMinToast(msg, type = 'success') {
+          let container = document.getElementById('min-toast-container');
+          if (!container) {
+            container = document.createElement('div');
+            container.id = 'min-toast-container';
+            container.className = 'min-toast-container';
+            document.body.appendChild(container);
+          }
+          const toast = document.createElement('div');
+          toast.className = `min-toast ${type}`;
+          const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
+          toast.innerHTML = `${icon} <span>${msg}</span>`;
+          container.appendChild(toast);
+          
+          setTimeout(() => {
+            toast.classList.add('fade-out');
+            toast.addEventListener('animationend', () => toast.remove());
+          }, 4000);
+        }
+
+        const name = document.getElementById('m-name').value.trim();
+        const email = document.getElementById('m-email').value.trim();
+        const msg = document.getElementById('m-message').value.trim();
+
+        if (!name || !email || !msg) {
+          showMinToast('Please complete all transmission fields.', 'error');
+          return;
+        }
+
+        const submitBtn = txForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Transmitting...';
+        submitBtn.disabled = true;
+
+        try {
+          // Read from URL if public, otherwise default to current logged in user (editor)
+          const targetUid = new URLSearchParams(window.location.search).get('uid') || (currentUser ? currentUser.uid : null);
+          if (!targetUid) {
+            throw new Error("Target system UID not found.");
+          }
+          
+          const { collection, addDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+          
+          await addDoc(collection(db, "users", targetUid, "messages"), {
+            name: name,
+            email: email,
+            message: msg,
+            timestamp: serverTimestamp(),
+            read: false
+          });
+
+          showMinToast('Signal transmitted successfully.');
+          txForm.reset();
+        } catch (error) {
+          console.error("Transmission failed:", error);
+          showMinToast('Transmission failed. Check connection.', 'error');
+        } finally {
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        }
+      });
+    }
+
+    /* ── Avatar Modal Logic ── */
+    const avatarWrapper = document.getElementById('avatarEl');
+    const avatarModal = document.getElementById('avatarModal');
+    const avatarModalClose = document.getElementById('avatarModalClose');
+    const avatarModalImg = document.getElementById('avatarModalImg');
+    const avatarModalInitials = document.getElementById('avatarModalInitials');
+
+    if (avatarWrapper && avatarModal) {
+      avatarWrapper.addEventListener('click', () => {
+        const img = avatarWrapper.querySelector('img');
+        if (img) {
+          avatarModalImg.src = img.src;
+          avatarModalImg.style.display = 'block';
+          avatarModalInitials.style.display = 'none';
+        } else {
+          avatarModalInitials.textContent = avatarWrapper.textContent;
+          avatarModalInitials.style.display = 'block';
+          avatarModalImg.style.display = 'none';
+        }
+        avatarModal.classList.add('active');
+      });
+
+      avatarModalClose.addEventListener('click', () => {
+        avatarModal.classList.remove('active');
+      });
+
+      avatarModal.addEventListener('click', (e) => {
+        if (e.target === avatarModal) {
+          avatarModal.classList.remove('active');
+        }
+      });
+    }
 
   </script>
 </body>
