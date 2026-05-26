@@ -370,8 +370,8 @@
       transform-origin: left;
     }
 
-    /* Top Right Github Button */
-    .nav-github-btn {
+    /* Top Right Hire Me Button */
+    .nav-hire-btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -392,7 +392,7 @@
       overflow: hidden;
       z-index: 5;
     }
-    .nav-github-btn::after {
+    .nav-hire-btn::after {
       content: '';
       position: absolute;
       inset: 0;
@@ -402,10 +402,10 @@
       transition: opacity 0.3s;
       pointer-events: none;
     }
-    .nav-github-btn:hover::after {
+    .nav-hire-btn:hover::after {
       opacity: 1;
     }
-    .nav-github-btn:hover {
+    .nav-hire-btn:hover {
       border-color: var(--neon-pink);
       color: var(--neon-pink);
       text-shadow: var(--glow-p);
@@ -1246,13 +1246,13 @@
 
     /* ── FOOTER ── */
     .cyber-footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 24px 0;
+      padding: 45px 0;
       margin-top: 60px;
       z-index: 2;
       position: relative;
       background: rgba(3, 7, 18, 0.4);
       backdrop-filter: blur(10px);
+      border-top: none;
     }
     .footer-grid {
       max-width: 1200px;
@@ -1264,40 +1264,29 @@
       flex-wrap: wrap;
       gap: 20px;
     }
-    .footer-logo {
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+    .footer-name {
       font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 700;
       color: var(--neon-cyan);
       text-shadow: var(--glow-c);
-      transition: all 0.3s ease;
-    }
-    .footer-logo span {
-      color: var(--neon-pink);
-      text-shadow: var(--glow-p);
-    }
-    .footer-logo:hover {
-      transform: translateY(-1px);
-      text-shadow: 0 0 15px var(--neon-cyan);
+      margin: 0;
+      outline: none;
+      letter-spacing: 2px;
     }
     .footer-credits {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: #7997b0;
-      letter-spacing: 1.5px;
+      font-size: 0.8rem;
+      color: var(--muted);
       display: flex;
       align-items: center;
-      gap: 8px;
-      text-transform: uppercase;
-    }
-    .footer-credits .bullet {
-      color: var(--neon-pink);
-    }
-    .footer-credits .dot {
-      color: var(--neon-cyan);
-      font-weight: bold;
+      gap: 6px;
     }
     .footer-credits .heart {
       color: var(--neon-pink);
@@ -1309,30 +1298,48 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.2); }
     }
+    .footer-portfoliox-link {
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 5px rgba(0,255,204,0.4);
+      transition: all 0.3s ease;
+      margin-left: 2px;
+    }
+    .footer-portfoliox-link span {
+      color: var(--neon-pink);
+      text-shadow: 0 0 5px rgba(255,0,170,0.4);
+    }
+    .footer-portfoliox-link:hover {
+      text-shadow: var(--glow-c);
+      filter: brightness(1.2);
+    }
     .footer-socials {
       display: flex;
-      gap: 12px;
+      gap: 16px;
     }
     .footer-social-btn {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #7997b0;
-      font-size: 1.1rem;
+      border-radius: 50%;
+      background: rgba(0, 255, 204, 0.02);
+      border: 1px solid rgba(0, 255, 204, 0.15);
+      color: var(--neon-cyan);
+      font-size: 1.15rem;
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .footer-social-btn:hover {
-      background: rgba(0, 255, 204, 0.05);
-      border-color: var(--neon-cyan);
+      background: rgba(0, 255, 204, 0.1);
       color: #fff;
-      box-shadow: 0 0 15px rgba(0, 255, 204, 0.25);
       transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+      border-color: var(--neon-cyan);
     }
 
     /* ── LOADING SCREEN ── */
@@ -1458,6 +1465,207 @@
         text-align: center;
       }
     }
+
+    /* ── SECURE COMM LINK (CONTACT SECTION) ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 30px;
+    }
+    .contact-sub-header {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--neon-cyan);
+      letter-spacing: 2px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px dashed rgba(0, 255, 204, 0.2);
+      padding-bottom: 10px;
+    }
+    .status-dot-pulse {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--neon-pink);
+      box-shadow: var(--glow-p);
+      animation: status-breathe 1.5s infinite;
+    }
+    @keyframes status-breathe {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+    }
+    
+    /* Contact Data List */
+    .contact-data-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .contact-data-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(0, 255, 204, 0.05);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+    .contact-data-item:hover {
+      background: rgba(0, 255, 204, 0.03);
+      border-color: rgba(0, 255, 204, 0.15);
+      transform: translateX(5px);
+    }
+    .contact-icon-box {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg);
+      border-radius: 4px;
+      font-size: 1.1rem;
+      border: 1px solid transparent;
+    }
+    .contact-icon-box.cyan-glow { color: var(--neon-cyan); border-color: rgba(0, 255, 204, 0.2); text-shadow: var(--glow-c); }
+    .contact-icon-box.pink-glow { color: var(--neon-pink); border-color: rgba(255, 0, 170, 0.2); text-shadow: var(--glow-p); }
+    .contact-icon-box.blue-glow { color: var(--neon-blue); border-color: rgba(0, 210, 255, 0.2); text-shadow: 0 0 10px var(--neon-blue); }
+    
+    .contact-text-box { display: flex; flex-direction: column; overflow: hidden; }
+    .contact-label {
+      font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 1px; margin-bottom: 4px;
+    }
+    .contact-val {
+      font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; color: var(--text); text-decoration: none; transition: color 0.3s;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;
+    }
+    .contact-val:hover { color: var(--neon-cyan); }
+
+    /* Transmission Form */
+    .transmission-form {
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .cyber-input-group {
+      position: relative;
+      background: rgba(3, 7, 18, 0.6);
+      border-radius: 4px;
+      padding: 16px 12px 6px;
+      border-bottom: 2px solid rgba(0, 255, 204, 0.15);
+      overflow: hidden;
+    }
+    .cyber-input-group input, .cyber-input-group textarea {
+      width: 100%; background: transparent; border: none; color: var(--text);
+      font-family: var(--font-body); font-size: 1.05rem; outline: none; z-index: 2; position: relative;
+    }
+    .cyber-input-group textarea { resize: vertical; min-height: 80px; }
+    .cyber-input-group label {
+      position: absolute; left: 12px; top: 18px; font-family: var(--font-mono); font-size: 0.8rem;
+      color: var(--muted); letter-spacing: 1px; transition: all 0.3s ease; pointer-events: none; z-index: 1;
+    }
+    
+    /* Interactive Scanner Line */
+    .input-scanner {
+      position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+      background: var(--neon-pink); box-shadow: var(--glow-p); transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    /* Input states */
+    .cyber-input-group input:focus ~ label,
+    .cyber-input-group input:not(:placeholder-shown) ~ label,
+    .cyber-input-group textarea:focus ~ label,
+    .cyber-input-group textarea:not(:placeholder-shown) ~ label {
+      top: 4px; font-size: 0.6rem; color: var(--neon-cyan); text-shadow: var(--glow-c);
+    }
+    .cyber-input-group input:focus ~ .input-scanner,
+    .cyber-input-group textarea:focus ~ .input-scanner {
+      width: 100%;
+    }
+    
+    .submit-transmission {
+      align-self: flex-start;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      padding: 12px 24px;
+      cursor: pointer;
+    }
+    .submit-transmission i { margin-right: 8px; }
+    
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── AVATAR MODAL ── */
+    .avatar-modal {
+      display: none; 
+      position: fixed; 
+      z-index: 10000; 
+      left: 0;
+      top: 0;
+      width: 100%; 
+      height: 100%; 
+      background-color: rgba(3, 7, 18, 0.95);
+      backdrop-filter: blur(10px);
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .avatar-modal.show {
+      display: flex;
+      opacity: 1;
+    }
+    .avatar-modal-content {
+      width: 400px;
+      height: 400px;
+      max-width: 90vw;
+      max-height: 90vw;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid var(--neon-cyan);
+      box-shadow: 0 0 30px var(--neon-cyan), 0 0 60px var(--neon-pink);
+      display: none;
+      transform: scale(0.8);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .avatar-modal-initial {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(9, 14, 28, 0.9) 0%, rgba(3, 7, 18, 0.98) 100%);
+      border: 4px solid var(--neon-cyan);
+      box-shadow: 0 0 30px var(--neon-cyan), 0 0 60px var(--neon-pink);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 8rem;
+      font-weight: 900;
+      color: var(--neon-cyan);
+      text-shadow: var(--glow-c);
+      transform: scale(0.8);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .avatar-modal.show .avatar-modal-content,
+    .avatar-modal.show .avatar-modal-initial {
+      transform: scale(1);
+    }
+    .avatar-modal-close {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      color: var(--neon-pink);
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+      cursor: pointer;
+      text-shadow: var(--glow-p);
+    }
+    .avatar-modal-close:hover,
+    .avatar-modal-close:focus {
+      color: var(--neon-cyan);
+      text-shadow: var(--glow-c);
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body>
@@ -1481,6 +1689,13 @@
     <div class="load-text">BOOTING_SYSTEM...</div>
   </div>
 
+  <!-- Avatar Modal -->
+  <div id="avatarModal" class="avatar-modal">
+    <span class="avatar-modal-close" id="avatarModalClose">&times;</span>
+    <img class="avatar-modal-content" id="avatarModalImg" src="">
+    <div id="avatarModalInitial" class="avatar-modal-initial">?</div>
+  </div>
+
   <!-- Header Nav -->
   <nav>
     <a class="nav-logo" href="#home">PORT<span>FOLIO</span>X</a>
@@ -1490,12 +1705,13 @@
       <a href="#skills" class="nav-link" data-section="skills">STACK.dat</a>
       <a href="#projects" class="nav-link" data-section="projects">BUILDS.sys</a>
       <a href="#education" class="nav-link" data-section="education">HISTORY.log</a>
+      <a href="#contact" class="nav-link" data-section="contact">COMM.link</a>
       <div class="nav-indicator-slider" id="navIndicator"></div>
     </div>
 
-    <a href="#" id="navGithub" target="_blank" class="nav-github-btn">
-      <i class="fa-brands fa-github"></i>
-      <span>GITHUB.sys</span>
+    <a href="#contact" id="navHire" class="nav-hire-btn">
+      <i class="fa-solid fa-envelope"></i>
+      <span>HIRE_ME.exe</span>
     </a>
 
     <button class="nav-toggle" id="navToggle" aria-label="Toggle Menu">
@@ -1670,16 +1886,88 @@
         </div>
       </section>
 
+      <!-- Section: Secure Comm Link (Contact) -->
+      <section id="contact" class="content-section">
+        <div class="cyber-section-header">
+          <span class="header-indicator">// SEC_05</span>
+          <h2 class="section-title">COMM_LINK.exe</h2>
+          <div class="header-line"></div>
+        </div>
+        <div class="contact-grid">
+          <!-- Node Locator -->
+          <div class="cyber-card contact-info-card">
+            <div class="corner-hud tl"></div><div class="corner-hud tr"></div><div class="corner-hud bl"></div><div class="corner-hud br"></div>
+            <h3 class="contact-sub-header"><span class="status-dot-pulse"></span> NODE_LOCATOR</h3>
+            <div class="contact-data-list">
+              <div class="contact-data-item">
+                <div class="contact-icon-box cyan-glow">
+                  <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div class="contact-text-box">
+                  <span class="contact-label">ENCRYPTED_EMAIL</span>
+                  <a href="mailto:cyber@example.com" id="contactDisplayEmail" class="contact-val" contenteditable="true" data-collection="users" data-field="email">cyber@example.com</a>
+                </div>
+              </div>
+              <div class="contact-data-item">
+                <div class="contact-icon-box pink-glow">
+                  <i class="fa-solid fa-phone"></i>
+                </div>
+                <div class="contact-text-box">
+                  <span class="contact-label">FREQ_CHANNEL</span>
+                  <a href="tel:+1234567890" id="contactDisplayPhone" class="contact-val" contenteditable="true" data-collection="users" data-field="phone">+1 (234) 567-890</a>
+                </div>
+              </div>
+              <div class="contact-data-item">
+                <div class="contact-icon-box blue-glow">
+                  <i class="fa-solid fa-location-crosshairs"></i>
+                </div>
+                <div class="contact-text-box">
+                  <span class="contact-label">GEO_COORDINATES</span>
+                  <span class="contact-val" id="contactDisplayLocation" contenteditable="true" data-collection="users" data-field="location">Sector 7G, Earth</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transmission Box -->
+          <div class="cyber-card transmission-box-card">
+            <div class="corner-hud tl"></div><div class="corner-hud tr"></div><div class="corner-hud bl"></div><div class="corner-hud br"></div>
+            <h3 class="contact-sub-header">> TRANSMISSION_BOX</h3>
+            <form id="transmissionForm" class="transmission-form">
+              <div class="form-row">
+                <div class="cyber-input-group">
+                  <input type="text" id="contactName" required placeholder=" ">
+                  <label for="contactName">CALLSIGN (NAME)</label>
+                  <div class="input-scanner"></div>
+                </div>
+                <div class="cyber-input-group">
+                  <input type="email" id="contactEmail" required placeholder=" ">
+                  <label for="contactEmail">RETURN_NODE (EMAIL)</label>
+                  <div class="input-scanner"></div>
+                </div>
+              </div>
+              <div class="cyber-input-group">
+                <textarea id="contactMessage" required placeholder=" " rows="4"></textarea>
+                <label for="contactMessage">DATA_PAYLOAD (MESSAGE)</label>
+                <div class="input-scanner"></div>
+              </div>
+              <button type="submit" class="cyber-btn btn-cyan submit-transmission">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <span>INITIATE_TRANSMISSION</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
       <!-- Cyber Uptime Uptime footer -->
       <footer class="cyber-footer">
         <div class="footer-grid">
-          <a href="https://portfoliox-2e787.web.app/" target="_blank" class="footer-logo">PORT<span>FOLIO</span>X</a>
-          
-          <div class="footer-credits">
-            <span class="bullet">•</span>
-            <span id="fyear">2026</span>
-            <span class="dot">·</span>
-            <span>CRAFTED WITH <span class="heart">♥</span> USING PORTFOLIOX</span>
+          <div class="footer-left">
+            <h3 id="footerName" class="footer-name" contenteditable="true" data-collection="users" data-field="fullName">Akash Roop Singh Uchachariya</h3>
+            <div class="footer-credits">
+              &copy; <span id="fyear">2026</span> &ndash; Crafted with <span class="heart">♥</span> using <a href="https://portfoliox-2e787.web.app/" target="_blank" class="footer-portfoliox-link">PORT<span>FOLIO</span>X</a>
+            </div>
           </div>
           
           <div class="footer-socials">
@@ -1689,13 +1977,93 @@
         </div>
       </footer>
 
+      <!-- Cyber Toast Notification -->
+      <div id="cyberToast" class="cyber-toast">
+        <div class="toast-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+        <div class="toast-content">
+          <span class="toast-title">SYSTEM_MESSAGE</span>
+          <span class="toast-message">TRANSMISSION SENT SUCCESSFULLY.</span>
+        </div>
+        <div class="toast-progress"></div>
+      </div>
+
+  <style>
+    /* ── CYBER TOAST NOTIFICATION ── */
+    .cyber-toast {
+      position: fixed;
+      bottom: -100px;
+      right: 30px;
+      background: rgba(9, 14, 28, 0.95);
+      border: 1px solid var(--neon-cyan);
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.2), inset 0 0 10px rgba(0, 255, 204, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      z-index: 10001;
+      opacity: 0;
+      transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.4s ease;
+      overflow: hidden;
+    }
+    .cyber-toast.show {
+      bottom: 30px;
+      opacity: 1;
+    }
+    .toast-icon {
+      font-size: 1.5rem;
+      color: var(--neon-cyan);
+      text-shadow: var(--glow-c);
+      animation: pulse-icon 2s infinite;
+    }
+    @keyframes pulse-icon {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .toast-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .toast-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--neon-pink);
+      letter-spacing: 2px;
+      text-shadow: var(--glow-p);
+    }
+    .toast-message {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .toast-progress {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 2px;
+      background: var(--neon-cyan);
+      box-shadow: var(--glow-c);
+      width: 100%;
+      transform-origin: left;
+    }
+    .cyber-toast.show .toast-progress {
+      animation: toast-timer 3s linear forwards;
+    }
+    @keyframes toast-timer {
+      0% { transform: scaleX(1); }
+      100% { transform: scaleX(0); }
+    }
+  </style>
+
   <!-- ================= FIREBASE & INTERACTIVE LOGIC ================= -->
   <script type="module">
     import { firebaseConfig } from "../firebase-config.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import {
-      getFirestore, doc, getDoc,
+      getFirestore, doc, getDoc, addDoc,
       collection, getDocs, updateDoc
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -1946,6 +2314,10 @@
       const footerNameEl = document.getElementById('footerName');
       const yearEl     = document.getElementById('fyear');
 
+      const contactDisplayEmail = document.getElementById('contactDisplayEmail');
+      const contactDisplayPhone = document.getElementById('contactDisplayPhone');
+      const contactDisplayLocation = document.getElementById('contactDisplayLocation');
+
       const name = data.fullName || 'Your Name';
       if (nameEl) nameEl.textContent = name;
       if (roleEl) roleEl.textContent = data.role || 'Developer';
@@ -1954,6 +2326,18 @@
       if (footerNameEl) footerNameEl.textContent = name;
       if (yearEl) yearEl.textContent = new Date().getFullYear();
       
+      if (contactDisplayEmail) {
+        contactDisplayEmail.textContent = data.email || 'cyber@example.com';
+        contactDisplayEmail.href = `mailto:${data.email || ''}`;
+      }
+      if (contactDisplayPhone) {
+        contactDisplayPhone.textContent = data.phone || '+1 (234) 567-890';
+        contactDisplayPhone.href = `tel:${data.phone || ''}`;
+      }
+      if (contactDisplayLocation) {
+        contactDisplayLocation.textContent = data.location || 'Sector 7G, Earth';
+      }
+
       if (avatarEl) {
         if (data.avatarUrl) {
           avatarEl.innerHTML = `<img src="${data.avatarUrl}" alt="${name}">`;
@@ -2281,6 +2665,62 @@
         }
       }
     }, true);
+
+    /* ── TRANSMISSION BOX SUBMISSION ── */
+    const transmissionForm = document.getElementById('transmissionForm');
+    const cyberToast = document.getElementById('cyberToast');
+    if (transmissionForm && cyberToast) {
+      transmissionForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const targetUid = new URLSearchParams(window.location.search).get("uid") || (currentUser ? currentUser.uid : null);
+        if (!targetUid) {
+          alert("ERROR: NO TARGET NODE FOUND.");
+          return;
+        }
+
+        const name = document.getElementById('contactName').value;
+        const email = document.getElementById('contactEmail').value;
+        const message = document.getElementById('contactMessage').value;
+
+        // Add scanning effect to form before clearing
+        const btn = transmissionForm.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right:8px;"></i><span>ENCRYPTING...</span>';
+        btn.style.pointerEvents = 'none';
+        
+        try {
+          await addDoc(collection(db, "users", targetUid, "messages"), {
+            name: name,
+            email: email,
+            message: message,
+            timestamp: new Date().toISOString()
+          });
+          
+          setTimeout(() => {
+            // Show toast
+            cyberToast.classList.add('show');
+            
+            // Reset form
+            transmissionForm.reset();
+            btn.innerHTML = originalText;
+            btn.style.pointerEvents = 'auto';
+            
+            // Hide toast after 3s
+            setTimeout(() => {
+              cyberToast.classList.remove('show');
+            }, 3000);
+          }, 800);
+        } catch (error) {
+          console.error("Transmission error:", error);
+          btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="margin-right:8px;"></i><span>ERROR</span>';
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.pointerEvents = 'auto';
+          }, 3000);
+        }
+      });
+    }
   </script>
 
   <!-- ================= HIGH PERFORMANCE OS HUD CANVAS ================= -->
@@ -2441,6 +2881,49 @@
         }
       });
     })();
+  </script>
+
+  <!-- ================= AVATAR MODAL INTERACTION ================= -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const avatarInitial = document.getElementById('avatarInitial');
+      const avatarModal = document.getElementById('avatarModal');
+      const avatarModalClose = document.getElementById('avatarModalClose');
+      const avatarModalImg = document.getElementById('avatarModalImg');
+      const avatarModalInitial = document.getElementById('avatarModalInitial');
+
+      if (avatarInitial && avatarModal) {
+        avatarInitial.style.cursor = 'pointer';
+        avatarInitial.addEventListener('click', () => {
+          const img = avatarInitial.querySelector('img');
+          if (img) {
+            avatarModalImg.src = img.src;
+            avatarModalImg.style.display = 'block';
+            avatarModalInitial.style.display = 'none';
+          } else {
+            avatarModalInitial.innerHTML = avatarInitial.innerHTML;
+            avatarModalInitial.style.display = 'flex';
+            avatarModalImg.style.display = 'none';
+          }
+          avatarModal.classList.add('show');
+        });
+
+        const closeModal = () => {
+          avatarModal.classList.remove('show');
+          setTimeout(() => {
+            avatarModalImg.style.display = 'none';
+            avatarModalInitial.style.display = 'none';
+          }, 300);
+        };
+
+        avatarModalClose.addEventListener('click', closeModal);
+        avatarModal.addEventListener('click', (e) => {
+          if (e.target === avatarModal) {
+            closeModal();
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>

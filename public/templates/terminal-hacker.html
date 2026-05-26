@@ -104,11 +104,13 @@
     .cursor-reticle::after { left: 15px; top: -4px; height: 38px; width: 1px; }
 
     /* ── EDITABLE ── */
-    [contenteditable="true"]:hover {
+    []:hover {
       outline: 1px dashed rgba(0,240,255,0.5);
-      cursor: text; border-radius: 3px;
+      cursor: text; 
+      border-radius: 3px;
     }
-    [contenteditable="true"]:focus {
+    
+    []:focus {
       outline: 1px solid var(--cyan);
       background: rgba(0,240,255,0.06);
       border-radius: 3px;
@@ -337,56 +339,40 @@
     .info-val a { color: var(--purple); text-decoration: none; font-weight: 600; }
     .info-val a:hover { color: var(--cyan); text-shadow: 0 0 8px rgba(0,240,255,0.4); }
 
-    /* ── PROFILE PHOTO / AVATAR HUD ── */
+    /* ── AVATAR HUD ── */
     .avatar-hud-wrapper {
       position: relative;
-      width: 130px;
-      height: 130px;
-      border: 1px dashed rgba(57, 211, 83, 0.3);
-      padding: 6px;
-      border-radius: 8px;
-      background: rgba(3, 7, 18, 0.6);
+      width: 140px;
+      height: 140px;
+      padding: 8px;
+      border: 2px dashed rgba(57, 211, 83, 0.5);
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
       flex-shrink: 0;
+      cursor: pointer;
     }
     .avatar-hud-wrapper:hover {
+      border-style: solid;
       border-color: var(--green);
-      box-shadow: 0 0 20px rgba(57, 211, 83, 0.25);
+      box-shadow: 0 0 25px rgba(57, 211, 83, 0.4);
       transform: scale(1.05);
     }
     
-    /* Camera bracket corners */
-    .avatar-hud-corners .corner {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border: 2px solid var(--green);
-      opacity: 0.6;
-      transition: all 0.3s ease;
-    }
-    .avatar-hud-corners .corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
-    .avatar-hud-corners .corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
-    .avatar-hud-corners .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
-    .avatar-hud-corners .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; }
-    
-    .avatar-hud-wrapper:hover .avatar-hud-corners .corner {
-      opacity: 1;
-      width: 12px;
-      height: 12px;
-      box-shadow: 0 0 8px var(--green);
-    }
+    /* Hide Camera brackets as we are circular now */
+    .avatar-hud-corners { display: none; }
     
     /* The avatar element */
     .avatar-hud-circle {
       width: 100%;
       height: 100%;
-      background: rgba(20, 32, 53, 0.6);
+      background: #000;
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 50%;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -413,8 +399,58 @@
     
     .avatar-hud-wrapper:hover .avatar-hud-circle {
       border-color: var(--green);
-      background: rgba(3, 7, 18, 0.9);
+      box-shadow: inset 0 0 20px rgba(57, 211, 83, 0.2);
     }
+
+    /* ── AVATAR MODAL ── */
+    .avatar-modal {
+      position: fixed; inset: 0; z-index: 100000;
+      background: rgba(3, 7, 18, 0.95);
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .avatar-modal.show {
+      opacity: 1; pointer-events: auto;
+    }
+    .avatar-modal-content {
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 60px rgba(57, 211, 83, 0.4);
+      border: 2px solid var(--green);
+      transform: scale(0.8);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: none;
+    }
+    .avatar-modal.show .avatar-modal-content {
+      transform: scale(1);
+    }
+    .avatar-modal-initial {
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      background: #000;
+      border: 2px solid var(--green);
+      box-shadow: 0 0 60px rgba(57, 211, 83, 0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8rem; font-weight: bold; color: var(--green);
+      font-family: 'JetBrains Mono', monospace;
+      text-shadow: 0 0 20px var(--green);
+      transform: scale(0.8);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: none;
+    }
+    .avatar-modal.show .avatar-modal-initial {
+      transform: scale(1);
+    }
+    .avatar-modal-close {
+      position: absolute; top: 30px; right: 40px;
+      font-size: 3rem; color: var(--muted);
+      cursor: pointer; transition: color 0.3s;
+      line-height: 1; font-family: 'JetBrains Mono', monospace;
+    }
+    .avatar-modal-close:hover { color: var(--green); text-shadow: 0 0 10px var(--green); }
 
     /* ── SKILL TAGS ── */
     .skills-wrap {
@@ -809,18 +845,35 @@
       flex-wrap: wrap;
       gap: 20px;
     }
-    .footer-logo {
-      font-size: 1.1rem;
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+    .footer-name {
+      font-size: 1.3rem;
       font-weight: 900;
-      letter-spacing: 2px;
-      text-decoration: none;
+      letter-spacing: 1px;
       color: var(--green);
       text-shadow: 0 0 10px rgba(57, 211, 83, 0.3);
       text-transform: uppercase;
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      margin: 0;
     }
-    .footer-logo span {
+    .footer-portfoliox-link {
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-decoration: none;
+      color: var(--green);
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+      margin-left: 2px;
+    }
+    .footer-portfoliox-link span {
       color: var(--white);
+    }
+    .footer-portfoliox-link:hover {
+      text-shadow: 0 0 15px rgba(57, 211, 83, 0.6);
+      color: var(--cyan);
     }
     .footer-credits {
       font-size: 0.72rem;
@@ -901,6 +954,13 @@
       <div class="load-progress"><div class="load-progress-fill"></div></div>
     </div>
   </div>
+</div>
+
+<!-- Avatar Modal -->
+<div id="avatarModal" class="avatar-modal">
+  <span class="avatar-modal-close" id="avatarModalClose">&times;</span>
+  <img class="avatar-modal-content" id="avatarModalImg" src="">
+  <div id="avatarModalInitialText" class="avatar-modal-initial">?</div>
 </div>
 
 <!-- Top bar -->
@@ -989,12 +1049,12 @@
               <div class="info-row">
                 <span class="info-key">NAME</span>
                 <span class="info-eq">=</span>
-                <span class="info-val" id="fullName" contenteditable="true" data-collection="users" data-field="fullName">"Loading..."</span>
+                <span class="info-val" id="fullName" data-collection="users" data-field="fullName">"Loading..."</span>
               </div>
               <div class="info-row">
                 <span class="info-key">ROLE</span>
                 <span class="info-eq">=</span>
-                <span class="info-val" id="role" contenteditable="true" data-collection="users" data-field="role" style="color:var(--green);">"Developer"</span>
+                <span class="info-val" id="role" data-collection="users" data-field="role" style="color:var(--green);">"Developer"</span>
               </div>
               <div class="info-row">
                 <span class="info-key">GITHUB</span>
@@ -1033,7 +1093,7 @@
         </div>
         <div class="output-block">
           <div class="comment-line">Bio / about section</div>
-          <p id="aboutText" contenteditable="true" data-collection="users" data-field="about"
+          <p id="aboutText" data-collection="users" data-field="about"
             style="color:var(--muted);font-size:.82rem;line-height:1.85;padding:4px 0;">
             Loading bio...
           </p>
@@ -1125,17 +1185,17 @@
             <div class="info-row">
               <span class="info-key">EMAIL</span>
               <span class="info-eq">=</span>
-              <span class="info-val"><a id="contactEmail" href="#" target="_blank" contenteditable="true" data-collection="users" data-field="email" style="color:var(--cyan);">"loading..."</a></span>
+              <span class="info-val"><a id="contactEmail" href="#" target="_blank" data-collection="users" data-field="email" style="color:var(--cyan);">"loading..."</a></span>
             </div>
             <div class="info-row">
               <span class="info-key">MOBILE</span>
               <span class="info-eq">=</span>
-              <span class="info-val" id="contactPhone" contenteditable="true" data-collection="users" data-field="phone" style="color:var(--green);">"loading..."</span>
+              <span class="info-val" id="contactPhone" data-collection="users" data-field="phone" style="color:var(--green);">"loading..."</span>
             </div>
             <div class="info-row">
               <span class="info-key">LOCATION</span>
               <span class="info-eq">=</span>
-              <span class="info-val" id="contactLocation" contenteditable="true" data-collection="users" data-field="location" style="color:var(--yellow);">"loading..."</span>
+              <span class="info-val" id="contactLocation" data-collection="users" data-field="location" style="color:var(--yellow);">"loading..."</span>
             </div>
           </div>
         </div>
@@ -1200,13 +1260,14 @@
     <!-- Cyber Uptime Uptime footer -->
     <footer class="cyber-footer">
       <div class="footer-grid">
-        <a href="https://portfoliox-2e787.web.app/" target="_blank" class="footer-logo">PORT<span>FOLIO</span>X</a>
-        
-        <div class="footer-credits">
-          <span class="bullet">•</span>
-          <span id="fyear">2026</span>
-          <span class="dot">·</span>
-          <span>CRAFTED WITH <span class="heart">♥</span> USING PORTFOLIOX</span>
+        <div class="footer-left">
+          <h3 id="footerName" class="footer-name" data-collection="users" data-field="fullName">USER_NAME</h3>
+          <div class="footer-credits">
+            <span class="bullet">></span>
+            &copy; <span id="fyear">2026</span>
+            <span class="dot">_</span>
+            <span>CRAFTED WITH <span class="heart">♥</span> USING <a href="https://portfoliox-2e787.web.app/" target="_blank" class="footer-portfoliox-link">PORT<span>FOLIO</span>X</a></span>
+          </div>
         </div>
         
         <div class="footer-socials">
@@ -1359,6 +1420,12 @@
     document.getElementById('fullName').textContent   = `"${data.fullName || 'Your Name'}"`;
     document.getElementById('role').textContent       = `"${data.role     || 'Developer'}"`;
     document.getElementById('aboutText').textContent  = data.about || 'Tell the world about yourself...';
+    
+    // Update footer name
+    const footerNameEl = document.getElementById('footerName');
+    if (footerNameEl) {
+      footerNameEl.textContent = data.fullName || 'USER_NAME';
+    }
 
     // Set contact configuration fields
     document.getElementById('contactEmail').textContent = `"${data.email || 'your.email@server.com'}"`;
@@ -1385,12 +1452,46 @@
 
     // Set Profile Photo / Avatar
     const avatarEl = document.getElementById('avatarInitial');
+    const avatarWrapper = avatarEl ? avatarEl.closest('.avatar-hud-wrapper') : null;
+    const avatarModal = document.getElementById('avatarModal');
+    const avatarModalImg = document.getElementById('avatarModalImg');
+    const avatarModalInitialText = document.getElementById('avatarModalInitialText');
+    const avatarModalClose = document.getElementById('avatarModalClose');
+
     if (avatarEl) {
       if (data.avatarUrl) {
         avatarEl.innerHTML = `<img src="${data.avatarUrl}" alt="${name}">`;
+        if (avatarModalImg) {
+          avatarModalImg.src = data.avatarUrl;
+          avatarModalImg.style.display = 'block';
+          if (avatarModalInitialText) avatarModalInitialText.style.display = 'none';
+        }
       } else {
-        avatarEl.textContent = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        avatarEl.textContent = initials;
+        if (avatarModalInitialText) {
+          avatarModalInitialText.textContent = initials;
+          avatarModalInitialText.style.display = 'flex';
+          if (avatarModalImg) avatarModalImg.style.display = 'none';
+        }
       }
+
+      if (avatarWrapper && avatarModal) {
+        avatarWrapper.addEventListener('click', () => {
+          avatarModal.classList.add('show');
+        });
+      }
+    }
+
+    if (avatarModalClose) {
+      avatarModalClose.addEventListener('click', () => {
+        if (avatarModal) avatarModal.classList.remove('show');
+      });
+    }
+    if (avatarModal) {
+      avatarModal.addEventListener('click', (e) => {
+        if (e.target === avatarModal) avatarModal.classList.remove('show');
+      });
     }
 
     /* ── SKILLS ── */
@@ -1419,7 +1520,7 @@
         skillsContainer.innerHTML += `
           <div class="skill-card">
             <div class="skill-card-header">
-              <span class="skill-card-name" contenteditable="true"
+              <span class="skill-card-name"
                 data-collection="skills" data-docid="${docSnap.id}" data-field="name">
                 ${s.name || ''}
               </span>
@@ -1466,19 +1567,19 @@
           <div class="proj-card">
             <div class="proj-header">
               <span class="proj-num">${perm}</span>
-              <span class="proj-name" contenteditable="true"
+              <span class="proj-name"
                 data-collection="projects" data-docid="${docSnap.id}" data-field="title">
                 ${p.title || 'untitled-project'}
               </span>
               <span class="proj-badge">PROJECT_${num}</span>
             </div>
-            <p class="proj-desc" contenteditable="true"
+            <p class="proj-desc"
               data-collection="projects" data-docid="${docSnap.id}" data-field="description">
               ${p.description || ''}
             </p>
             <div class="proj-tech-row">
               <span class="proj-tech-label">tech-stack:</span>
-              <span class="proj-tech-val" contenteditable="true"
+              <span class="proj-tech-val"
                 data-collection="projects" data-docid="${docSnap.id}" data-field="tech">
                 ${p.tech || ''}
               </span>
@@ -1519,20 +1620,20 @@
             <div class="edu-item">
               <div class="edu-num">[${num}]</div>
               <div>
-                <div class="edu-degree" contenteditable="true"
+                <div class="edu-degree"
                   data-collection="education" data-docid="main" data-field="university.degree">
                   ${degree}
                 </div>
-                <div class="edu-institute" contenteditable="true"
+                <div class="edu-institute"
                   data-collection="education" data-docid="main" data-field="university.name">
                   ${institute}
                 </div>
                 <div class="edu-meta">
-                  <span contenteditable="true"
+                  <span
                     data-collection="education" data-docid="main" data-field="university.year">
                     ${year}
                   </span>
-                  ${grade ? `<span class="edu-grade" contenteditable="true"
+                  ${grade ? `<span class="edu-grade"
                     data-collection="education" data-docid="main" data-field="university.grade">
                     | grade: ${grade}
                   </span>` : ''}
@@ -1555,20 +1656,20 @@
             <div class="edu-item">
               <div class="edu-num">[${num}]</div>
               <div>
-                <div class="edu-degree" contenteditable="true"
+                <div class="edu-degree"
                   data-collection="education" data-docid="main" data-field="school.name">
                   ${degree}
                 </div>
-                <div class="edu-institute" contenteditable="true"
+                <div class="edu-institute"
                   data-collection="education" data-docid="main" data-field="school.board">
                   ${institute}
                 </div>
                 <div class="edu-meta">
-                  <span contenteditable="true"
+                  <span
                     data-collection="education" data-docid="main" data-field="school.year">
                     ${year}
                   </span>
-                  ${grade ? `<span class="edu-grade" contenteditable="true"
+                  ${grade ? `<span class="edu-grade"
                     data-collection="education" data-docid="main" data-field="school.grade">
                     | grade: ${grade}
                   </span>` : ''}
@@ -1752,7 +1853,7 @@
     if (isReadOnly) {
       document.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
     } else {
-      document.querySelectorAll('a[contenteditable="true"]').forEach(el => {
+      document.querySelectorAll('a[]').forEach(el => {
         el.addEventListener('click', e => e.preventDefault());
       });
     }

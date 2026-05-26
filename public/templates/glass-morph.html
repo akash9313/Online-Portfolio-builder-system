@@ -393,7 +393,62 @@
       display: flex; align-items: center; justify-content: center;
       font-family: 'Syne', sans-serif;
       font-size: 2.8rem; font-weight: 800; color: var(--text);
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
+    .avatar-circle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(167,139,250,0.4);
+    }
+    
+    /* ── AVATAR MODAL ── */
+    .avatar-modal {
+      position: fixed; inset: 0; z-index: 100000;
+      background: rgba(13, 8, 30, 0.9);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .avatar-modal.show {
+      opacity: 1; pointer-events: auto;
+    }
+    .avatar-modal-content {
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(167,139,250,0.4);
+      border: 2px solid rgba(255,255,255,0.15);
+      transform: scale(0.8);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: none;
+    }
+    .avatar-modal.show .avatar-modal-content {
+      transform: scale(1);
+    }
+    .avatar-modal-initial {
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(167,139,250,0.3), rgba(56,189,248,0.3));
+      border: 2px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 8rem; font-weight: 800; color: var(--text);
+      transform: scale(0.8);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: none;
+    }
+    .avatar-modal.show .avatar-modal-initial {
+      transform: scale(1);
+    }
+    .avatar-modal-close {
+      position: absolute; top: 30px; right: 40px;
+      font-size: 3rem; color: rgba(255,255,255,0.6);
+      cursor: pointer; transition: color 0.3s;
+      line-height: 1;
+    }
+    .avatar-modal-close:hover { color: #fff; }
     .hero-side-stat { width: 100%; }
     .side-stat-row {
       display: flex; justify-content: space-between; align-items: center;
@@ -993,31 +1048,49 @@
       border-color: rgba(255, 255, 255, 0.22);
       box-shadow: 0 18px 48px rgba(0, 0, 0, 0.3);
     }
-    .footer-logo {
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+    .footer-name {
       font-family: 'Syne', sans-serif;
-      font-size: 1.15rem; font-weight: 800;
-      color: var(--text); letter-spacing: -0.02em;
-      text-decoration: none;
-      transition: transform 0.3s;
-    }
-    .footer-logo:hover {
-      transform: scale(1.05);
-    }
-    .footer-logo span {
+      font-size: 1.6rem; font-weight: 800;
       background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      text-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
+      letter-spacing: -0.02em;
+      margin: 0; outline: none;
+      text-shadow: 0 0 15px rgba(167, 139, 250, 0.2);
     }
-    .footer-copy {
+    .footer-credits {
       font-size: 0.85rem; color: var(--text-soft);
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .footer-copy span {
+    .footer-credits .heart {
       color: var(--accent-3);
       animation: pulse 1.5s ease infinite;
       display: inline-block;
+    }
+    .footer-portfoliox-link {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s ease;
+      margin-left: 2px;
+      display: inline-flex;
+    }
+    .footer-portfoliox-link span {
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .footer-portfoliox-link:hover {
+      transform: scale(1.05);
+      text-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
     }
     .footer-socials {
       display: flex;
@@ -1237,9 +1310,16 @@
   </div>
 </div>
 
+<!-- Avatar Modal -->
+<div id="avatarModal" class="avatar-modal">
+  <span class="avatar-modal-close" id="avatarModalClose">&times;</span>
+  <img class="avatar-modal-content" id="avatarModalImg" src="">
+  <div id="avatarModalInitialText" class="avatar-modal-initial">?</div>
+</div>
+
 <!-- Navbar -->
 <nav class="navbar glass">
-  <a class="nav-logo" href="#hero">Portfolio<span>X</span></a>
+  <a class="nav-logo" href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Portfolio<span>X</span></a>
   <div class="nav-links">
     <a href="#about" class="nav-link active" data-section="about">About</a>
     <a href="#skills" class="nav-link" data-section="skills">Skills</a>
@@ -1248,7 +1328,7 @@
     <a href="#contact" class="nav-link" data-section="contact">Contact</a>
     <div class="nav-active-pill" id="navActivePill"></div>
   </div>
-  <a href="#" id="navGithub" target="_blank" class="nav-github"><i class="fab fa-github"></i> <span>GitHub</span></a>
+  <a href="#contact" id="navHire" class="nav-github"><i class="fas fa-envelope"></i> <span>Hire Me</span></a>
 </nav>
 
 <div class="page-wrapper">
@@ -1415,8 +1495,12 @@
 <!-- Footer -->
 <footer>
   <div class="footer-glass glass">
-    <a href="https://portfoliox-2e787.web.app/" target="_blank" class="footer-logo">Portfolio<span>X</span></a>
-    <div class="footer-copy">© 2026 — Crafted with <span>♥</span> using PortfolioX</div>
+    <div class="footer-left">
+      <h3 id="footerName" class="footer-name" contenteditable="true" data-collection="users" data-field="fullName">UserName</h3>
+      <div class="footer-credits">
+        &copy; <span id="fyear">2026</span> &ndash; Crafted with <span class="heart">♥</span> using <a href="https://portfoliox-2e787.web.app/" target="_blank" class="footer-portfoliox-link">PORT<span>FOLIO</span>X</a>
+      </div>
+    </div>
     <div class="footer-socials">
       <a href="#" id="footerGithub" target="_blank" class="footer-social-btn"><i class="fab fa-github"></i></a>
       <a href="#" id="footerLinkedin" target="_blank" class="footer-social-btn"><i class="fab fa-linkedin-in"></i></a>
@@ -1474,12 +1558,45 @@
     if (roleEl) roleEl.textContent = data.role || 'Your Role';
     if (aboutEl) aboutEl.textContent = data.about || 'Tell the world about yourself…';
     if (footerNameEl) footerNameEl.textContent = name;
+    const avatarModal = document.getElementById('avatarModal');
+    const avatarModalImg = document.getElementById('avatarModalImg');
+    const avatarModalInitialText = document.getElementById('avatarModalInitialText');
+    const avatarModalClose = document.getElementById('avatarModalClose');
+
     if (avatarEl) {
       if (data.avatarUrl) {
         avatarEl.innerHTML = `<img src="${data.avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
+        if (avatarModalImg) {
+          avatarModalImg.src = data.avatarUrl;
+          avatarModalImg.style.display = 'block';
+          if (avatarModalInitialText) avatarModalInitialText.style.display = 'none';
+        }
       } else {
-        avatarEl.textContent = name.charAt(0).toUpperCase();
+        const initial = name.charAt(0).toUpperCase();
+        avatarEl.textContent = initial;
+        if (avatarModalInitialText) {
+          avatarModalInitialText.textContent = initial;
+          avatarModalInitialText.style.display = 'flex';
+          if (avatarModalImg) avatarModalImg.style.display = 'none';
+        }
       }
+      
+      // Open modal on click
+      avatarEl.addEventListener('click', () => {
+        if (avatarModal) avatarModal.classList.add('show');
+      });
+    }
+
+    // Close modal logic
+    if (avatarModalClose) {
+      avatarModalClose.addEventListener('click', () => {
+        if (avatarModal) avatarModal.classList.remove('show');
+      });
+    }
+    if (avatarModal) {
+      avatarModal.addEventListener('click', (e) => {
+        if (e.target === avatarModal) avatarModal.classList.remove('show');
+      });
     }
 
     // Location with icon
@@ -1506,16 +1623,13 @@
       contactLocationEl.textContent = data.location || 'Your Location';
     }
 
-    const navGithubEl      = document.getElementById('navGithub');
     const footerGithubEl   = document.getElementById('footerGithub');
     const footerLinkedinEl = document.getElementById('footerLinkedin');
 
     if (data.github) {
       if (githubEl) githubEl.href = data.github;
-      if (navGithubEl) navGithubEl.href = data.github;
       if (footerGithubEl) footerGithubEl.href = data.github;
     } else {
-      if (navGithubEl) navGithubEl.style.display = 'none';
       if (footerGithubEl) footerGithubEl.style.display = 'none';
     }
 
