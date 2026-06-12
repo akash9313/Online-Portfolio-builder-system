@@ -2801,22 +2801,180 @@
           }
         }
         let name = data.name || 'Skill';
-        let iconName = name.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
-        if (iconName.includes('react')) iconName = 'react-original';
-        else if (iconName.includes('node')) iconName = 'nodejs-plain';
-        else if (iconName.includes('vue')) iconName = 'vuejs-plain';
-        else if (iconName.includes('java') && !iconName.includes('script')) iconName = 'java-plain';
-        else if (iconName.includes('js') || iconName.includes('javascript')) iconName = 'javascript-plain';
-        else if (iconName.includes('html')) iconName = 'html5-plain';
-        else if (iconName.includes('css')) iconName = 'css3-plain';
-        else if (iconName.includes('python')) iconName = 'python-plain';
-        else if (iconName.includes('figma')) iconName = 'figma-plain';
-        else iconName += '-plain';
-        let iconHtml = `<i class="devicon-${iconName}"></i>`;
+        
+        function getDeviconClass(skillName) {
+          const key = skillName.toLowerCase().replace(/\s/g,'').replace(/[^a-z0-9+#\-]/g, '');
+          const deviconMap = {
+            react: 'react-original',
+            nodejs: 'nodejs-plain',
+            node: 'nodejs-plain',
+            typescript: 'typescript-plain',
+            ts: 'typescript-plain',
+            javascript: 'javascript-plain',
+            js: 'javascript-plain',
+            python: 'python-plain',
+            py: 'python-plain',
+            firebase: 'firebase-plain',
+            postgresql: 'postgresql-plain',
+            postgres: 'postgresql-plain',
+            mysql: 'mysql-plain',
+            sqlite: 'sqlite-plain',
+            sql: 'sqlite-plain',
+            database: 'sqlite-plain',
+            db: 'sqlite-plain',
+            mongodb: 'mongodb-plain',
+            mongo: 'mongodb-plain',
+            redis: 'redis-plain',
+            docker: 'docker-plain',
+            kubernetes: 'kubernetes-plain',
+            k8s: 'kubernetes-plain',
+            aws: 'amazonwebservices-original',
+            amazon: 'amazonwebservices-original',
+            googlecloud: 'googlecloud-plain',
+            gcp: 'googlecloud-plain',
+            azure: 'azure-plain',
+            figma: 'figma-plain',
+            photoshop: 'photoshop-plain',
+            illustrator: 'illustrator-plain',
+            git: 'git-plain',
+            github: 'github-original',
+            gitlab: 'gitlab-plain',
+            graphql: 'graphql-plain',
+            nextjs: 'nextjs-line',
+            next: 'nextjs-line',
+            vuejs: 'vuejs-plain',
+            vue: 'vuejs-plain',
+            angularjs: 'angularjs-plain',
+            angular: 'angularjs-plain',
+            tailwindcss: 'tailwindcss-original',
+            tailwind: 'tailwindcss-original',
+            bootstrap: 'bootstrap-plain',
+            html5: 'html5-plain',
+            html: 'html5-plain',
+            css3: 'css3-plain',
+            css: 'css3-plain',
+            java: 'java-plain',
+            'c++': 'cplusplus-plain',
+            cpp: 'cplusplus-plain',
+            'c#': 'csharp-plain',
+            csharp: 'csharp-plain',
+            c: 'c-plain',
+            golang: 'go-original-wordmark',
+            go: 'go-original-wordmark',
+            rust: 'rust-plain',
+            php: 'php-plain',
+            ruby: 'ruby-plain',
+            rails: 'rails-plain',
+            swift: 'swift-plain',
+            kotlin: 'kotlin-plain',
+            flutter: 'flutter-plain',
+            dart: 'dart-plain',
+            sass: 'sass-original',
+            scss: 'sass-original',
+            less: 'less-plain-wordmark',
+            webpack: 'webpack-plain',
+            babel: 'babel-plain',
+            npm: 'npm-original-wordmark',
+            yarn: 'yarn-original',
+            linux: 'linux-plain',
+            windows: 'windows8-original',
+            macos: 'apple-original',
+            ios: 'apple-original',
+            apple: 'apple-original',
+            android: 'android-plain',
+            django: 'django-plain',
+            flask: 'flask-original',
+            springboot: 'spring-original',
+            spring: 'spring-original',
+            laravel: 'laravel-original',
+            dotnet: 'dot-net-plain',
+            '.net': 'dot-net-plain',
+            wordpress: 'wordpress-plain',
+            jquery: 'jquery-plain',
+            bash: 'bash-plain',
+            shell: 'bash-plain',
+            terminal: 'bash-plain',
+            nginx: 'nginx-original',
+            apache: 'apache-line',
+            heroku: 'heroku-original',
+            netlify: 'netlify-plain',
+            vercel: 'vercel-original',
+            digitalocean: 'digitalocean-original',
+            jira: 'jira-plain',
+            confluence: 'confluence-plain',
+            trello: 'trello-plain',
+            slack: 'slack-plain',
+            vscode: 'vscode-plain',
+            webstorm: 'webstorm-plain',
+            intellij: 'intellij-plain',
+            sublime: 'sublimetext-plain',
+            vim: 'vim-plain',
+            chrome: 'chrome-plain',
+            firefox: 'firefox-plain',
+            safari: 'safari-plain',
+            edge: 'edge-plain',
+            salesforce: 'salesforce-plain',
+            shopify: 'shopify-plain',
+            woocommerce: 'woocommerce-plain',
+            unity: 'unity-original',
+            unreal: 'unrealengine-original',
+            tensorflow: 'tensorflow-line',
+            pytorch: 'pytorch-original',
+            opencv: 'opencv-plain',
+            numpy: 'numpy-original',
+            pandas: 'pandas-original',
+            scipy: 'scipy-original',
+            r: 'r-original',
+            matlab: 'matlab-plain',
+            arduino: 'arduino-plain',
+            raspberrypi: 'raspberrypi-line',
+            sketch: 'sketch-line',
+            xd: 'xd-plain',
+            framer: 'framer-original',
+            canva: 'canva-original',
+            machinelearning: 'pytorch-original',
+            ml: 'pytorch-original',
+            deeplearning: 'pytorch-original',
+            ai: 'pytorch-original',
+            artificialintelligence: 'pytorch-original',
+            testing: 'jest-plain',
+            qa: 'jest-plain',
+            agile: 'jira-plain',
+            scrum: 'jira-plain',
+            pm: 'jira-plain',
+            projectmanagement: 'jira-plain',
+            management: 'jira-plain',
+            design: 'figma-plain',
+            ui: 'figma-plain',
+            ux: 'figma-plain',
+            security: 'ssh-original',
+            cyber: 'ssh-original',
+            hacking: 'ssh-original'
+          };
+
+          for (const k in deviconMap) {
+            if (key.includes(k)) return 'devicon-' + deviconMap[k];
+          }
+          return 'devicon-devicon-plain';
+        }
+
+        let iconName = getDeviconClass(name);
+        let iconHtml = `<i class="${iconName}"></i>`;
         skillArr.push({ id: ds.id, name: name, score: lvlScore, criteria: lvlText, icon: iconHtml });
       });
       buildSkillGrid(document.getElementById('skills-grid'), skillArr);
       observeCounter('stat-skill', skillArr.length);
+
+      // Horizontal mouse scroll support
+      const skillsGridEl = document.getElementById('skills-grid');
+      if (skillsGridEl) {
+        skillsGridEl.addEventListener('wheel', (e) => {
+          if (e.deltaY !== 0) {
+            e.preventDefault();
+            skillsGridEl.scrollLeft += e.deltaY;
+          }
+        }, { passive: false });
+      }
 
       /* Projects */
       const projSnap = await getDocs(collection(db, "users", user.uid, "projects"));
