@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Reviews | PortfolioX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="homepage.css" />
+  <link rel="stylesheet" href="reviews.css" />
+</head>
+<body class="dark-theme">
+  <!-- Custom cursor -->
+  <div class="cursor"  id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Ambient orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Glowing Background -->
+  <div class="bg-glow"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo" style="margin-bottom:0;">
+        <div class="logo-icon"><i class="fas fa-rocket"></i></div>
+        <span class="logo-text">Portfolio<span class="x">X</span></span>
+      </a>
+      <div class="nav-actions">
+        <a href="index.html#testimonials" class="nav-btn btn-ghost" style="border-radius: 50px; padding: 10px 24px;">
+          <i class="fas fa-arrow-left" style="transition: transform 0.3s;"></i> Back to Home
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="reviews-header">
+    <div class="section-wrap" style="text-align:center;">
+      <span class="section-eyebrow">Wall of Love</span>
+      <h1 class="section-heading">See what our users say</h1>
+      <p class="section-sub" style="margin: 0 auto;">Read honest reviews from students, developers, and designers using PortfolioX to stand out.</p>
+    </div>
+  </header>
+
+  <!-- Reviews Masonry -->
+  <main class="reviews-main">
+    <div class="section-wrap">
+      <div id="allReviewsLoading" class="reviews-loading">
+        <div class="spinner"></div>
+        <p>Loading reviews...</p>
+      </div>
+      <div class="all-reviews-grid" id="allReviewsContainer">
+        <!-- Fetched reviews will be injected here -->
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="reviews.js"></script>
+
+  <!-- Custom Confirm Modal -->
+  <div class="confirm-modal-overlay" id="confirmModal">
+    <div class="confirm-modal-content">
+      <div class="confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>
+      <h3 class="confirm-title">Delete Review</h3>
+      <p class="confirm-text">Are you sure you want to permanently delete this review? This action cannot be undone.</p>
+      <p id="confirmError" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; display: none;"></p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1571,6 +1571,28 @@
         text-align: center;
       }
     }
+    /* ── Comprehensive Responsive Overrides ── */
+    @media (max-width: 1024px) {
+      .hero-title { font-size: 3.5rem; }
+      .about-grid, .experience-grid { grid-template-columns: 1fr; gap: 40px; }
+      .services-grid, .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.5rem; }
+      .nav-links { display: none; }
+      .services-grid, .portfolio-grid { grid-template-columns: 1fr; }
+      .section { padding: 60px 20px; }
+      .section-title { font-size: 2.2rem; }
+      body, html { overflow-x: hidden; }
+    }
+    @media (max-width: 480px) {
+      .hero-title { font-size: 2rem; line-height: 1.2; word-wrap: break-word; }
+      .section-title { font-size: 1.8rem; }
+      .section { padding: 40px 15px; }
+      .stat-number { font-size: 2.5rem; }
+      img, video, canvas { max-width: 100%; height: auto; }
+    }
   </style>
 </head>
 

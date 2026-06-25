@@ -789,6 +789,32 @@
         -webkit-text-fill-color: transparent;
     }
 
+  /* ── Comprehensive Responsive Overrides ── */
+  @media (max-width: 1024px) {
+    .container { max-width: 90%; }
+    .hero-container { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+    .hero-content { margin: 0 auto; align-items: center; }
+    .hero-title { font-size: 3rem; }
+    .projects-grid, .skills-container { grid-template-columns: repeat(2, 1fr); }
+    .about-content { grid-template-columns: 1fr; gap: 30px; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-container { padding: 15px 20px; }
+    .projects-grid, .skills-container { grid-template-columns: 1fr; }
+    .hero-title { font-size: 2.5rem; }
+    .section-title { font-size: 2rem; }
+    section { padding: 60px 20px; }
+    body, html { overflow-x: hidden; }
+  }
+  @media (max-width: 480px) {
+    .hero-title { font-size: 2rem; line-height: 1.2; word-wrap: break-word; }
+    .section-title { font-size: 1.8rem; }
+    .btn { padding: 10px 20px; font-size: 0.9rem; }
+    section { padding: 40px 15px; }
+    .contact-form { padding: 20px; }
+    img, video, canvas { max-width: 100%; height: auto; }
+  }
   </style>
   
   <div class="toast-container" id="toastContainer"></div>

@@ -57,6 +57,11 @@ service cloud.firestore {
       }
     }
 
+    // Reviews collection
+    match /reviews/{reviewId} {
+      allow read, write: if true;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

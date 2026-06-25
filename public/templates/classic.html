@@ -1081,6 +1081,32 @@ footer {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes pulse { 50% { opacity: 0.5; } }
+/* ── Comprehensive Responsive Overrides ── */
+@media (max-width: 1024px) {
+  .hero-title { font-size: 5rem; }
+  .about-layout { grid-template-columns: 1fr; gap: 40px; }
+  .projects-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .skills-wrapper { gap: 15px; }
+  .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 768px) {
+  .hero { padding: 120px 20px 60px; }
+  .hero-title { font-size: 4rem; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .section { padding: 60px 20px; }
+  .section-title { font-size: 2.5rem; }
+  .project-card { margin-bottom: 20px; }
+  body, html { overflow-x: hidden; }
+}
+@media (max-width: 480px) {
+  .hero-title { font-size: 3rem; line-height: 1.1; word-wrap: break-word; }
+  .hero-subtitle { font-size: 1.2rem; }
+  .section-title { font-size: 2rem; }
+  .section { padding: 40px 15px; }
+  img, video, canvas { max-width: 100%; height: auto; }
+}
 </style>
 </head>
 <body>

@@ -2143,6 +2143,32 @@
         max-width: 100%
       }
     }
+    /* ── Comprehensive Responsive Overrides ── */
+    @media (max-width: 1024px) {
+      .hero-title { font-size: 5vw; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .projects-track { gap: 20px; }
+      .project-card { width: 350px; }
+      .skills-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 768px) {
+      .hero-title { font-size: 8vw; }
+      .nav-links { display: none; }
+      .projects-track { grid-template-columns: 1fr; display: grid; }
+      .project-card { width: 100%; margin-bottom: 20px; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .section { padding: 60px 20px; }
+      .section-title { font-size: 2.5rem; }
+      body, html { overflow-x: hidden; }
+    }
+    @media (max-width: 480px) {
+      .hero-title { font-size: 10vw; line-height: 1.1; word-wrap: break-word; }
+      .section-title { font-size: 2rem; }
+      .section { padding: 40px 15px; }
+      .profile-card { padding: 20px; }
+      img, video, canvas { max-width: 100%; height: auto; }
+    }
   </style>
 </head>
 

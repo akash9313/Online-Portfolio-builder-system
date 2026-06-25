@@ -2289,6 +2289,30 @@
                 height: 400px;
             }
         }
+        /* ── Comprehensive Responsive Overrides ── */
+        @media (max-width: 1024px) {
+            .hero-content { padding: 100px 30px 60px; }
+            .projects-grid, .education-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .profile-card-3d { width: 300px; height: 380px; }
+        }
+        @media (max-width: 768px) {
+            .projects-grid, .education-grid { grid-template-columns: 1fr; }
+            .hero-content { grid-template-columns: 1fr; text-align: center; padding: 100px 20px 40px; }
+            .hero-left { align-items: center; }
+            .hero-title { font-size: 2.8rem; }
+            .section-title { font-size: 2.2rem; }
+            #about, #skills, #education, #projects, #contact { padding: 60px 20px; }
+            body, html { overflow-x: hidden; }
+        }
+        @media (max-width: 480px) {
+            .hero-title { font-size: 2.2rem; line-height: 1.2; word-wrap: break-word; }
+            .section-title { font-size: 1.8rem; }
+            .stat-value { font-size: 1.8rem; }
+            .hero-subtitle { font-size: 1rem; }
+            #about, #skills, #education, #projects, #contact { padding: 40px 15px; }
+            .profile-card-3d { width: 100%; max-width: 280px; height: 350px; }
+            img, video, canvas { max-width: 100%; height: auto; }
+        }
     </style>
 
     <!-- ══════════════════════════════════════════════════════

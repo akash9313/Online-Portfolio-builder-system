@@ -931,6 +931,26 @@
       .ascii-banner { font-size: 0.45rem; }
       .info-key { width: 90px; }
     }
+    /* ── Comprehensive Responsive Overrides ── */
+    @media (max-width: 1024px) {
+      .term-container { max-width: 90%; }
+      .grid-2 { grid-template-columns: 1fr; gap: 40px; }
+      .projects-grid, .skills-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .projects-grid, .skills-grid { grid-template-columns: 1fr; }
+      .section { padding: 60px 20px; }
+      .ascii-art { font-size: 8px; }
+      body, html { overflow-x: hidden; }
+    }
+    @media (max-width: 480px) {
+      .ascii-art { font-size: 4px; line-height: 5px; overflow: hidden; }
+      .term-header { font-size: 1.2rem; }
+      .section { padding: 40px 15px; }
+      img, video, canvas { max-width: 100%; height: auto; }
+      .btn { padding: 8px 15px; font-size: 0.9rem; }
+    }
   </style>
 </head>
 <body>

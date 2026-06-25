@@ -72,16 +72,16 @@
 <!-- ════════════════ NAVBAR ════════════════ -->
 <nav class="navbar" id="navbar">
   <div class="nav-container">
-    <a href="homepage.html" class="logo">
+    <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="logo group">
       <div class="logo-icon"><i class="fas fa-rocket"></i></div>
       <span class="logo-text">Portfolio<span class="x">X</span></span>
     </a>
 
     <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#templates">Templates</a>
-      <a href="#how">How it works</a>
-      <a href="#testimonials">Reviews</a>
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#how" class="nav-link">How it works</a>
+      <a href="#templates" class="nav-link">Templates</a>
+      <a href="#testimonials" class="nav-link">Reviews</a>
     </div>
 
     <button class="mobile-menu-btn" id="homeMobileBtn"><i class="fas fa-bars"></i></button>
@@ -187,96 +187,51 @@
 
 <!-- ════════════════ MARQUEE ════════════════ -->
 <div class="marquee-section">
-  <div class="marquee-label">Beautiful templates for every career</div>
+  <div class="marquee-header reveal">
+    <div class="eyebrow"><span class="eyebrow-dot"></span> 12+ Premium Designs</div>
+    <h2 class="marquee-title">Stunning Templates for <span class="shine">Every Career</span></h2>
+    <p class="marquee-sub">Start with a professionally crafted foundation. Customize everything later with our intuitive editor.</p>
+  </div>
   <div style="overflow:hidden;">
     <div class="marquee-track" id="marqueeTrack">
       <!-- Item 1 -->
-      <div class="template-thumb tt-1">
-        <div class="tt-inner">
-          <div class="tt-circle"></div>
-          <div class="tt-bar a"></div>
-          <div class="tt-bar"></div>
-          <div class="tt-chips"><div class="tt-chip tc1"></div><div class="tt-chip tc2"></div><div class="tt-chip tc3"></div></div>
-        </div>
-        <div class="tt-name">Classic Developer</div>
-      </div>
+      <div class="template-thumb tt-1"><div class="tt-inner"><div class="tt-circle"></div><div class="tt-bar a"></div><div class="tt-bar"></div><div class="tt-chips"><div class="tt-chip tc1"></div><div class="tt-chip tc2"></div><div class="tt-chip tc3"></div></div></div><div class="tt-name">Classic Developer</div></div>
       <!-- Item 2 -->
-      <div class="template-thumb tt-2">
-        <div class="tt-inner" style="display:flex;gap:8px;padding:10px;">
-          <div style="width:30%;background:rgba(56,189,248,0.1);border-radius:6px;padding:6px;display:flex;flex-direction:column;gap:5px;">
-            <div style="width:20px;height:20px;border-radius:50%;background:var(--gradient);margin-bottom:4px;"></div>
-            <div style="height:3px;background:rgba(56,189,248,0.4);border-radius:1px;"></div>
-            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div>
-            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div>
-          </div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:5px;padding-top:4px;">
-            <div style="height:5px;background:var(--gradient);border-radius:2px;width:70%;"></div>
-            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div>
-            <div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;width:60%;"></div>
-          </div>
-        </div>
-        <div class="tt-name">Modern Professional</div>
-      </div>
+      <div class="template-thumb tt-2"><div class="tt-inner" style="display:flex;gap:8px;padding:10px;"><div style="width:30%;background:rgba(56,189,248,0.1);border-radius:6px;padding:6px;display:flex;flex-direction:column;gap:5px;"><div style="width:20px;height:20px;border-radius:50%;background:var(--gradient);margin-bottom:4px;"></div><div style="height:3px;background:rgba(56,189,248,0.4);border-radius:1px;"></div><div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div></div><div style="flex:1;display:flex;flex-direction:column;gap:5px;padding-top:4px;"><div style="height:5px;background:var(--gradient);border-radius:2px;width:70%;"></div><div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div></div></div><div class="tt-name">Modern Professional</div></div>
       <!-- Item 3 -->
-      <div class="template-thumb tt-3">
-        <div class="tt-inner" style="position:relative;overflow:hidden;">
-          <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.4),transparent 70%);"></div>
-          <div style="height:8px;border-radius:3px;background:linear-gradient(90deg,#a78bfa,#818cf8);width:55%;margin-bottom:5px;"></div>
-          <div style="height:4px;border-radius:2px;background:rgba(167,139,250,0.3);width:35%;margin-bottom:10px;"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
-            <div style="height:28px;border-radius:6px;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.3);"></div>
-            <div style="height:28px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"></div>
-          </div>
-        </div>
-        <div class="tt-name">Creative Designer</div>
-      </div>
+      <div class="template-thumb tt-3"><div class="tt-inner" style="position:relative;overflow:hidden;"><div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.4),transparent 70%);"></div><div style="height:8px;border-radius:3px;background:linear-gradient(90deg,#a78bfa,#818cf8);width:55%;margin-bottom:5px;"></div><div style="height:4px;border-radius:2px;background:rgba(167,139,250,0.3);width:35%;margin-bottom:10px;"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;"><div style="height:28px;border-radius:6px;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.3);"></div><div style="height:28px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"></div></div></div><div class="tt-name">Creative Designer</div></div>
       <!-- Item 4 -->
-      <div class="template-thumb tt-4">
-        <div class="tt-inner" style="background:inherit">
-          <div class="tt-topline"></div>
-          <div class="tt-name-m"></div>
-          <div class="tt-role-m"></div>
-          <div class="tt-div"></div>
-          <div class="tt-lm"></div>
-          <div class="tt-lm" style="width:70%"></div>
-          <div class="tt-lm" style="width:85%"></div>
-        </div>
-        <div class="tt-name" style="color:#1e293b;background:linear-gradient(to top,rgba(248,250,252,0.9),transparent);">Minimal Resume</div>
-      </div>
-      <!-- Items 5 & 6 (variants) -->
-      <div class="template-thumb tt-5">
-        <div class="tt-inner">
-          <div style="display:flex;gap:6px;margin-bottom:8px;">
-            <div style="width:16px;height:16px;border-radius:3px;background:rgba(56,189,248,0.3);"></div>
-            <div style="flex:1;height:4px;background:rgba(56,189,248,0.2);border-radius:2px;margin-top:6px;"></div>
-          </div>
-          <div class="tt-line w80"></div>
-          <div class="tt-line w60"></div>
-          <div class="tt-line w40"></div>
-          <div class="tt-chips" style="margin-top:8px;"><div class="tt-chip tc1"></div><div class="tt-chip tc2"></div></div>
-        </div>
-        <div class="tt-name">Tech Portfolio</div>
-      </div>
-      <div class="template-thumb tt-6">
-        <div class="tt-inner">
-          <div style="height:6px;border-radius:3px;background:linear-gradient(90deg,#ec4899,#f59e0b);width:40%;margin-bottom:8px;"></div>
-          <div class="tt-line w80" style="background:rgba(255,255,255,0.12)"></div>
-          <div class="tt-line w60" style="background:rgba(255,255,255,0.08)"></div>
-          <div class="tt-line w70" style="background:rgba(255,255,255,0.08)"></div>
-          <div style="margin-top:8px;display:flex;gap:4px;">
-            <div style="height:14px;width:30px;border-radius:3px;background:rgba(236,72,153,0.25);"></div>
-            <div style="height:14px;width:24px;border-radius:3px;background:rgba(245,158,11,0.25);"></div>
-          </div>
-        </div>
-        <div class="tt-name">Creative Pro</div>
-      </div>
+      <div class="template-thumb tt-4"><div class="tt-inner" style="background:inherit"><div class="tt-topline"></div><div class="tt-name-m"></div><div class="tt-role-m"></div><div class="tt-div"></div><div class="tt-lm"></div><div class="tt-lm" style="width:70%"></div></div><div class="tt-name" style="color:#1e293b;background:linear-gradient(to top,rgba(248,250,252,0.9),transparent);">Minimal Resume</div></div>
+      <!-- Item 5: Neon Dark -->
+      <div class="template-thumb tt-5"><div class="tt-inner"><div style="display:flex;gap:6px;margin-bottom:8px;"><div style="width:16px;height:16px;border-radius:3px;background:#fff;box-shadow:0 0 10px #0ff;"></div><div style="flex:1;height:4px;background:#f0f;border-radius:2px;margin-top:6px;box-shadow:0 0 5px #f0f;"></div></div><div class="tt-line w80" style="background:rgba(255,255,255,0.3);"></div><div class="tt-line w60" style="background:rgba(255,255,255,0.3);"></div><div style="margin-top:8px;display:flex;gap:4px;"><div style="height:14px;width:30px;border-radius:3px;background:rgba(0,255,255,0.2);border:1px solid #0ff;"></div></div></div><div class="tt-name">Neon Dark</div></div>
+      <!-- Item 6: Glass Morph -->
+      <div class="template-thumb tt-6"><div class="tt-inner" style="position:relative; overflow:hidden;"><div style="position:absolute;top:10px;left:10px;width:40px;height:40px;border-radius:50%;background:#ec4899;filter:blur(10px);"></div><div style="position:absolute;bottom:5px;right:10px;width:50px;height:50px;border-radius:50%;background:#38bdf8;filter:blur(15px);"></div><div style="position:relative; z-index:2; background:rgba(255,255,255,0.1); backdrop-filter:blur(5px); border-radius:6px; padding:6px; height:100%; border:1px solid rgba(255,255,255,0.2);"><div style="height:6px;border-radius:3px;background:rgba(255,255,255,0.8);width:60%;margin-bottom:8px;"></div><div class="tt-line w80" style="background:rgba(255,255,255,0.4)"></div></div></div><div class="tt-name">Glass Morph</div></div>
+      <!-- Item 7: Terminal Hacker -->
+      <div class="template-thumb tt-7"><div class="tt-inner" style="padding:10px; font-family:monospace;"><div style="height:4px;border-radius:1px;background:#0f0;width:30%;margin-bottom:6px;"></div><div style="height:3px;border-radius:1px;background:rgba(0,255,0,0.5);width:70%;margin-bottom:4px;"></div><div style="height:3px;border-radius:1px;background:rgba(0,255,0,0.5);width:80%;margin-bottom:4px;"></div><div style="height:3px;border-radius:1px;background:rgba(0,255,0,0.5);width:50%;margin-bottom:4px;"></div><div style="display:flex;gap:4px;margin-top:6px;"><div style="width:6px;height:6px;background:#0f0;"></div><div style="width:6px;height:6px;background:transparent;border:1px solid #0f0;"></div></div></div><div class="tt-name">Terminal Hacker</div></div>
+      <!-- Item 8: Gradient Splash -->
+      <div class="template-thumb tt-8"><div class="tt-inner" style="background:linear-gradient(135deg,#ff7e5f,#feb47b); position:relative; overflow:hidden;"><div style="height:8px;border-radius:4px;background:#fff;width:50%;margin-bottom:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);"></div><div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.7);width:80%;margin-bottom:5px;"></div><div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.7);width:60%;margin-bottom:5px;"></div><div style="display:flex; gap:5px; margin-top:8px;"><div style="background:#fff; border-radius:10px; width:30px; height:12px;"></div><div style="background:rgba(255,255,255,0.5); border-radius:10px; width:40px; height:12px;"></div></div></div><div class="tt-name" style="background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);">Gradient Splash</div></div>
+      <!-- Item 9: Executive Pro -->
+      <div class="template-thumb tt-9"><div class="tt-inner" style="padding:0; display:flex;"><div style="width:25px; background:#1e293b; height:100%;"></div><div style="flex:1; background:#f8fafc; padding:10px;"><div style="height:6px; background:#0f172a; width:70%; margin-bottom:8px;"></div><div style="height:3px; background:#cbd5e1; width:100%; margin-bottom:4px;"></div><div style="height:3px; background:#cbd5e1; width:80%; margin-bottom:8px;"></div><div style="display:flex; gap:5px;"><div style="width:20px; height:20px; background:#e2e8f0; border-radius:2px;"></div><div style="width:20px; height:20px; background:#e2e8f0; border-radius:2px;"></div></div></div></div><div class="tt-name" style="background:linear-gradient(to top,rgba(15,23,42,0.9),transparent);">Executive Pro</div></div>
+      <!-- Item 10: Bento Grid -->
+      <div class="template-thumb tt-10"><div class="tt-inner" style="display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:5px; padding:8px;"><div style="background:rgba(255,255,255,0.05); border-radius:8px; grid-column:span 2; padding:5px;"><div style="height:4px;background:#38bdf8;width:40%;border-radius:2px;"></div></div><div style="background:rgba(255,255,255,0.05); border-radius:8px; padding:5px;"><div style="height:4px;background:rgba(255,255,255,0.2);width:80%;border-radius:2px;margin-bottom:3px;"></div><div style="height:4px;background:rgba(255,255,255,0.2);width:50%;border-radius:2px;"></div></div><div style="background:rgba(255,255,255,0.05); border-radius:8px; padding:5px; display:flex; align-items:center; justify-content:center;"><div style="width:12px; height:12px; border-radius:50%; background:#ec4899;"></div></div></div><div class="tt-name">Bento Grid</div></div>
+      <!-- Item 11: 3D Modern -->
+      <div class="template-thumb tt-11"><div class="tt-inner" style="padding:12px; perspective: 100px;"><div style="background:linear-gradient(135deg, #3b82f6, #2563eb); height:25px; border-radius:4px; box-shadow: 2px 4px 10px rgba(0,0,0,0.5); transform: rotateX(5deg) rotateY(-5deg); margin-bottom:10px;"></div><div style="background:rgba(255,255,255,0.1); height:8px; border-radius:2px; width:60%; margin-bottom:5px; box-shadow: 1px 2px 5px rgba(0,0,0,0.3);"></div><div style="background:rgba(255,255,255,0.1); height:8px; border-radius:2px; width:80%; box-shadow: 1px 2px 5px rgba(0,0,0,0.3);"></div></div><div class="tt-name">3D Modern</div></div>
+      <!-- Item 12: 3D Classic -->
+      <div class="template-thumb tt-12"><div class="tt-inner" style="padding:12px; background:#f0f0f0;"><div style="background:#fff; height:25px; border-radius:2px; box-shadow: 4px 4px 0 #cbd5e1; margin-bottom:12px; border:1px solid #e2e8f0;"></div><div style="display:flex; gap:8px;"><div style="background:#fff; flex:1; height:20px; border-radius:2px; box-shadow: 3px 3px 0 #cbd5e1; border:1px solid #e2e8f0;"></div><div style="background:#fff; width:20px; height:20px; border-radius:50%; box-shadow: 2px 2px 0 #cbd5e1; border:1px solid #e2e8f0;"></div></div></div><div class="tt-name" style="color:#1e293b;background:linear-gradient(to top,rgba(248,250,252,0.9),transparent);">3D Classic</div></div>
+
       <!-- Duplicate for seamless loop -->
       <div class="template-thumb tt-1"><div class="tt-inner"><div class="tt-circle"></div><div class="tt-bar a"></div><div class="tt-bar"></div><div class="tt-chips"><div class="tt-chip tc1"></div><div class="tt-chip tc2"></div><div class="tt-chip tc3"></div></div></div><div class="tt-name">Classic Developer</div></div>
       <div class="template-thumb tt-2"><div class="tt-inner" style="display:flex;gap:8px;padding:10px;"><div style="width:30%;background:rgba(56,189,248,0.1);border-radius:6px;padding:6px;display:flex;flex-direction:column;gap:5px;"><div style="width:20px;height:20px;border-radius:50%;background:var(--gradient);margin-bottom:4px;"></div><div style="height:3px;background:rgba(56,189,248,0.4);border-radius:1px;"></div><div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div></div><div style="flex:1;display:flex;flex-direction:column;gap:5px;padding-top:4px;"><div style="height:5px;background:var(--gradient);border-radius:2px;width:70%;"></div><div style="height:3px;background:rgba(255,255,255,0.1);border-radius:1px;"></div></div></div><div class="tt-name">Modern Professional</div></div>
-      <div class="template-thumb tt-3"><div class="tt-inner" style="position:relative;overflow:hidden;"><div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.4),transparent 70%);"></div><div style="height:8px;border-radius:3px;background:linear-gradient(90deg,#a78bfa,#818cf8);width:55%;margin-bottom:5px;"></div><div style="height:4px;border-radius:2px;background:rgba(167,139,250,0.3);width:35%;margin-bottom:10px;"></div></div><div class="tt-name">Creative Designer</div></div>
+      <div class="template-thumb tt-3"><div class="tt-inner" style="position:relative;overflow:hidden;"><div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.4),transparent 70%);"></div><div style="height:8px;border-radius:3px;background:linear-gradient(90deg,#a78bfa,#818cf8);width:55%;margin-bottom:5px;"></div><div style="height:4px;border-radius:2px;background:rgba(167,139,250,0.3);width:35%;margin-bottom:10px;"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;"><div style="height:28px;border-radius:6px;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.3);"></div><div style="height:28px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"></div></div></div><div class="tt-name">Creative Designer</div></div>
       <div class="template-thumb tt-4"><div class="tt-inner" style="background:inherit"><div class="tt-topline"></div><div class="tt-name-m"></div><div class="tt-role-m"></div><div class="tt-div"></div><div class="tt-lm"></div><div class="tt-lm" style="width:70%"></div></div><div class="tt-name" style="color:#1e293b;background:linear-gradient(to top,rgba(248,250,252,0.9),transparent);">Minimal Resume</div></div>
-      <div class="template-thumb tt-5"><div class="tt-inner"><div class="tt-line w80"></div><div class="tt-line w60"></div><div class="tt-line w40"></div></div><div class="tt-name">Tech Portfolio</div></div>
-      <div class="template-thumb tt-6"><div class="tt-inner"><div style="height:6px;border-radius:3px;background:linear-gradient(90deg,#ec4899,#f59e0b);width:40%;margin-bottom:8px;"></div><div class="tt-line w80" style="background:rgba(255,255,255,0.12)"></div></div><div class="tt-name">Creative Pro</div></div>
+      <div class="template-thumb tt-5"><div class="tt-inner"><div style="display:flex;gap:6px;margin-bottom:8px;"><div style="width:16px;height:16px;border-radius:3px;background:#fff;box-shadow:0 0 10px #0ff;"></div><div style="flex:1;height:4px;background:#f0f;border-radius:2px;margin-top:6px;box-shadow:0 0 5px #f0f;"></div></div><div class="tt-line w80" style="background:rgba(255,255,255,0.3);"></div><div class="tt-line w60" style="background:rgba(255,255,255,0.3);"></div><div style="margin-top:8px;display:flex;gap:4px;"><div style="height:14px;width:30px;border-radius:3px;background:rgba(0,255,255,0.2);border:1px solid #0ff;"></div></div></div><div class="tt-name">Neon Dark</div></div>
+      <div class="template-thumb tt-6"><div class="tt-inner" style="position:relative; overflow:hidden;"><div style="position:absolute;top:10px;left:10px;width:40px;height:40px;border-radius:50%;background:#ec4899;filter:blur(10px);"></div><div style="position:absolute;bottom:5px;right:10px;width:50px;height:50px;border-radius:50%;background:#38bdf8;filter:blur(15px);"></div><div style="position:relative; z-index:2; background:rgba(255,255,255,0.1); backdrop-filter:blur(5px); border-radius:6px; padding:6px; height:100%; border:1px solid rgba(255,255,255,0.2);"><div style="height:6px;border-radius:3px;background:rgba(255,255,255,0.8);width:60%;margin-bottom:8px;"></div><div class="tt-line w80" style="background:rgba(255,255,255,0.4)"></div></div></div><div class="tt-name">Glass Morph</div></div>
+      <div class="template-thumb tt-7"><div class="tt-inner" style="padding:10px; font-family:monospace;"><div style="height:4px;border-radius:1px;background:#0f0;width:30%;margin-bottom:6px;"></div><div style="height:3px;border-radius:1px;background:rgba(0,255,0,0.5);width:70%;margin-bottom:4px;"></div><div style="height:3px;border-radius:1px;background:rgba(0,255,0,0.5);width:80%;margin-bottom:4px;"></div><div style="height:3px;border-radius:1px;background:rgba(0,255,0,0.5);width:50%;margin-bottom:4px;"></div><div style="display:flex;gap:4px;margin-top:6px;"><div style="width:6px;height:6px;background:#0f0;"></div><div style="width:6px;height:6px;background:transparent;border:1px solid #0f0;"></div></div></div><div class="tt-name">Terminal Hacker</div></div>
+      <div class="template-thumb tt-8"><div class="tt-inner" style="background:linear-gradient(135deg,#ff7e5f,#feb47b); position:relative; overflow:hidden;"><div style="height:8px;border-radius:4px;background:#fff;width:50%;margin-bottom:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);"></div><div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.7);width:80%;margin-bottom:5px;"></div><div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.7);width:60%;margin-bottom:5px;"></div><div style="display:flex; gap:5px; margin-top:8px;"><div style="background:#fff; border-radius:10px; width:30px; height:12px;"></div><div style="background:rgba(255,255,255,0.5); border-radius:10px; width:40px; height:12px;"></div></div></div><div class="tt-name" style="background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);">Gradient Splash</div></div>
+      <div class="template-thumb tt-9"><div class="tt-inner" style="padding:0; display:flex;"><div style="width:25px; background:#1e293b; height:100%;"></div><div style="flex:1; background:#f8fafc; padding:10px;"><div style="height:6px; background:#0f172a; width:70%; margin-bottom:8px;"></div><div style="height:3px; background:#cbd5e1; width:100%; margin-bottom:4px;"></div><div style="height:3px; background:#cbd5e1; width:80%; margin-bottom:8px;"></div><div style="display:flex; gap:5px;"><div style="width:20px; height:20px; background:#e2e8f0; border-radius:2px;"></div><div style="width:20px; height:20px; background:#e2e8f0; border-radius:2px;"></div></div></div></div><div class="tt-name" style="background:linear-gradient(to top,rgba(15,23,42,0.9),transparent);">Executive Pro</div></div>
+      <div class="template-thumb tt-10"><div class="tt-inner" style="display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:5px; padding:8px;"><div style="background:rgba(255,255,255,0.05); border-radius:8px; grid-column:span 2; padding:5px;"><div style="height:4px;background:#38bdf8;width:40%;border-radius:2px;"></div></div><div style="background:rgba(255,255,255,0.05); border-radius:8px; padding:5px;"><div style="height:4px;background:rgba(255,255,255,0.2);width:80%;border-radius:2px;margin-bottom:3px;"></div><div style="height:4px;background:rgba(255,255,255,0.2);width:50%;border-radius:2px;"></div></div><div style="background:rgba(255,255,255,0.05); border-radius:8px; padding:5px; display:flex; align-items:center; justify-content:center;"><div style="width:12px; height:12px; border-radius:50%; background:#ec4899;"></div></div></div><div class="tt-name">Bento Grid</div></div>
+      <div class="template-thumb tt-11"><div class="tt-inner" style="padding:12px; perspective: 100px;"><div style="background:linear-gradient(135deg, #3b82f6, #2563eb); height:25px; border-radius:4px; box-shadow: 2px 4px 10px rgba(0,0,0,0.5); transform: rotateX(5deg) rotateY(-5deg); margin-bottom:10px;"></div><div style="background:rgba(255,255,255,0.1); height:8px; border-radius:2px; width:60%; margin-bottom:5px; box-shadow: 1px 2px 5px rgba(0,0,0,0.3);"></div><div style="background:rgba(255,255,255,0.1); height:8px; border-radius:2px; width:80%; box-shadow: 1px 2px 5px rgba(0,0,0,0.3);"></div></div><div class="tt-name">3D Modern</div></div>
+      <div class="template-thumb tt-12"><div class="tt-inner" style="padding:12px; background:#f0f0f0;"><div style="background:#fff; height:25px; border-radius:2px; box-shadow: 4px 4px 0 #cbd5e1; margin-bottom:12px; border:1px solid #e2e8f0;"></div><div style="display:flex; gap:8px;"><div style="background:#fff; flex:1; height:20px; border-radius:2px; box-shadow: 3px 3px 0 #cbd5e1; border:1px solid #e2e8f0;"></div><div style="background:#fff; width:20px; height:20px; border-radius:50%; box-shadow: 2px 2px 0 #cbd5e1; border:1px solid #e2e8f0;"></div></div></div><div class="tt-name" style="color:#1e293b;background:linear-gradient(to top,rgba(248,250,252,0.9),transparent);">3D Classic</div></div>
     </div>
   </div>
 </div>
@@ -294,7 +249,7 @@
       <!-- Card 1: Templates -->
       <div class="feat-card large reveal reveal-delay-1">
         <div class="feat-icon fi-blue"><i class="fas fa-palette"></i></div>
-        <div class="feat-title">10 Professional Templates</div>
+        <div class="feat-title">12+ Professional Templates</div>
         <p class="feat-desc">Hand-crafted designs for developers, designers, and creatives. Each template is built to impress recruiters at first glance.</p>
         <div class="feat-visual">
           <div class="mini-template-row">
@@ -351,6 +306,19 @@
         <div class="feat-icon fi-pink"><i class="fas fa-tachometer-alt"></i></div>
         <div class="feat-title">Powerful Dashboard</div>
         <p class="feat-desc">Manage everything from one clean interface — profile, skills, projects, education, and publishing.</p>
+        <div class="feat-visual">
+          <div class="dash-preview">
+            <div class="dp-sidebar">
+              <div class="dp-dot"></div><div class="dp-dot"></div><div class="dp-dot"></div><div class="dp-dot"></div>
+            </div>
+            <div class="dp-main">
+              <div class="dp-header"></div>
+              <div class="dp-cards">
+                <div class="dp-card"></div><div class="dp-card"></div><div class="dp-card"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Card 5: Firebase -->
@@ -358,6 +326,16 @@
         <div class="feat-icon fi-yellow"><i class="fas fa-shield-alt"></i></div>
         <div class="feat-title">Secure & Real-Time</div>
         <p class="feat-desc">Powered by Firebase — your data is safe, synced in real-time, and always backed up.</p>
+        <div class="feat-visual">
+          <div class="secure-preview">
+            <div class="sp-shield"><i class="fas fa-lock"></i></div>
+            <div class="sp-lines">
+               <div class="sp-line sl1"></div>
+               <div class="sp-line sl2"></div>
+               <div class="sp-line sl3"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Card 6: Mobile -->
@@ -365,6 +343,13 @@
         <div class="feat-icon fi-blue"><i class="fas fa-mobile-alt"></i></div>
         <div class="feat-title">Fully Responsive</div>
         <p class="feat-desc">Your portfolio looks stunning on every device — desktop, tablet, and mobile.</p>
+        <div class="feat-visual">
+          <div class="resp-preview">
+            <div class="rp-desktop"></div>
+            <div class="rp-tablet"></div>
+            <div class="rp-mobile"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -380,22 +365,26 @@
     </div>
     <div class="steps-grid">
       <div class="step-card reveal reveal-delay-1">
-        <div class="step-num">1</div>
+        <div class="step-bg-num">01</div>
+        <div class="step-icon"><i class="fas fa-user-plus"></i></div>
         <div class="step-title">Create Account</div>
         <p class="step-desc">Sign up free with email or Google in under 30 seconds.</p>
       </div>
-      <div class="step-card reveal reveal-delay-2">
-        <div class="step-num">2</div>
+      <div class="step-card reveal reveal-delay-2" style="margin-top: 30px;">
+        <div class="step-bg-num">02</div>
+        <div class="step-icon"><i class="fas fa-pen-nib"></i></div>
         <div class="step-title">Fill Your Profile</div>
         <p class="step-desc">Add your bio, skills, projects and education using our guided forms.</p>
       </div>
       <div class="step-card reveal reveal-delay-3">
-        <div class="step-num">3</div>
+        <div class="step-bg-num">03</div>
+        <div class="step-icon"><i class="fas fa-magic"></i></div>
         <div class="step-title">Pick a Template</div>
-        <p class="step-desc">Choose from 4 stunning portfolio designs built by professionals.</p>
+        <p class="step-desc">Choose from 12+ stunning portfolio designs built by professionals.</p>
       </div>
-      <div class="step-card reveal reveal-delay-3" style="transition-delay:0.4s">
-        <div class="step-num">4</div>
+      <div class="step-card reveal reveal-delay-3" style="transition-delay:0.4s; margin-top: 30px;">
+        <div class="step-bg-num">04</div>
+        <div class="step-icon"><i class="fas fa-globe"></i></div>
         <div class="step-title">Publish & Share</div>
         <p class="step-desc">Hit publish and share your live portfolio URL with the world.</p>
       </div>
@@ -488,6 +477,77 @@
           <div class="tpl-tags"><span class="tpl-tag">Minimal</span><span class="tpl-tag">ATS-Safe</span><span class="tpl-tag">Light</span></div>
         </div>
       </div>
+
+      <!-- Creative Designer -->
+      <div class="tpl-card reveal reveal-delay-1">
+        <div class="tpl-preview tt-3" style="position:relative;overflow:hidden;padding:16px;">
+          <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.4),transparent 70%);"></div>
+          <div style="height:8px;border-radius:3px;background:linear-gradient(90deg,#a78bfa,#818cf8);width:55%;margin-bottom:8px;"></div>
+          <div style="height:4px;border-radius:2px;background:rgba(167,139,250,0.3);width:35%;margin-bottom:16px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="height:60px;border-radius:8px;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.3);"></div>
+            <div style="height:60px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"></div>
+            <div style="height:40px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);grid-column:span 2;"></div>
+          </div>
+          <div class="hover-overlay"><button class="preview-btn">Preview</button></div>
+        </div>
+        <div class="tpl-info">
+          <div class="tpl-info-row">
+            <span class="tpl-name">Creative Designer</span>
+            <span class="tpl-badge" style="background:rgba(167,139,250,0.15);color:#c4b5fd;border:1px solid rgba(167,139,250,0.3);">🎨 Creative</span>
+          </div>
+          <div class="tpl-tags"><span class="tpl-tag">Designer</span><span class="tpl-tag">Vibrant</span><span class="tpl-tag">Grid</span></div>
+        </div>
+      </div>
+
+      <!-- Neon Dark -->
+      <div class="tpl-card reveal reveal-delay-2">
+        <div class="tpl-preview tt-5" style="padding:16px;">
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <div style="width:24px;height:24px;border-radius:4px;background:#fff;box-shadow:0 0 12px #0ff;"></div>
+            <div style="flex:1;height:6px;background:#f0f;border-radius:3px;margin-top:9px;box-shadow:0 0 8px #f0f;"></div>
+          </div>
+          <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.3);width:80%;margin-bottom:8px;"></div>
+          <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.3);width:60%;margin-bottom:16px;"></div>
+          <div style="display:flex;gap:8px;">
+            <div style="height:24px;width:60px;border-radius:4px;background:rgba(0,255,255,0.2);border:1px solid #0ff;box-shadow:inset 0 0 8px rgba(0,255,255,0.5);"></div>
+            <div style="height:24px;width:60px;border-radius:4px;background:rgba(255,0,255,0.2);border:1px solid #f0f;box-shadow:inset 0 0 8px rgba(255,0,255,0.5);"></div>
+          </div>
+          <div class="hover-overlay"><button class="preview-btn" style="background:#0ff;color:#000;box-shadow:0 0 15px #0ff;">Preview</button></div>
+        </div>
+        <div class="tpl-info">
+          <div class="tpl-info-row">
+            <span class="tpl-name">Neon Dark</span>
+            <span class="tpl-badge" style="background:rgba(0,255,255,0.1);color:#0ff;border:1px solid rgba(0,255,255,0.3);">⚡ Neon</span>
+          </div>
+          <div class="tpl-tags"><span class="tpl-tag">Cyberpunk</span><span class="tpl-tag">Dark Mode</span><span class="tpl-tag">Glow</span></div>
+        </div>
+      </div>
+
+      <!-- Glass Morph -->
+      <div class="tpl-card reveal reveal-delay-3">
+        <div class="tpl-preview tt-6" style="padding:16px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:20px;left:20px;width:80px;height:80px;border-radius:50%;background:#ec4899;filter:blur(20px);"></div>
+          <div style="position:absolute;bottom:10px;right:20px;width:100px;height:100px;border-radius:50%;background:#38bdf8;filter:blur(25px);"></div>
+          <div style="position:relative; z-index:2; background:rgba(255,255,255,0.1); backdrop-filter:blur(8px); border-radius:10px; padding:16px; height:100%; border:1px solid rgba(255,255,255,0.2);">
+            <div style="height:8px;border-radius:4px;background:rgba(255,255,255,0.8);width:60%;margin-bottom:12px;"></div>
+            <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.4);width:80%;margin-bottom:6px;"></div>
+            <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.4);width:50%;margin-bottom:16px;"></div>
+            <div style="display:flex;gap:8px;">
+               <div style="width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,0.2);"></div>
+               <div style="width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,0.2);"></div>
+            </div>
+          </div>
+          <div class="hover-overlay"><button class="preview-btn" style="background:rgba(255,255,255,0.2);backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,0.5);">Preview</button></div>
+        </div>
+        <div class="tpl-info">
+          <div class="tpl-info-row">
+            <span class="tpl-name">Glass Morph</span>
+            <span class="tpl-badge" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);">💎 Glass</span>
+          </div>
+          <div class="tpl-tags"><span class="tpl-tag">Modern</span><span class="tpl-tag">Translucent</span><span class="tpl-tag">UI</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -519,34 +579,20 @@
 <!-- ════════════════ TESTIMONIALS ════════════════ -->
 <section class="testimonials-section" id="testimonials">
   <div class="section-wrap">
-    <div class="reveal" style="text-align:center">
-      <span class="section-eyebrow">Reviews</span>
-      <h2 class="section-heading">Loved by professionals</h2>
+    <div class="testimonials-header reveal">
+      <div>
+        <span class="section-eyebrow">Reviews</span>
+        <h2 class="section-heading">Loved by professionals</h2>
+      </div>
+      <div class="testimonials-actions">
+        <button class="h-btn h-btn-outline" id="openReviewModalBtn" style="padding: 10px 18px; font-size:0.85rem;"><i class="fas fa-pen"></i> Write a Review</button>
+        <a href="reviews.html" class="see-all" target="_self">See all reviews <i class="fas fa-arrow-right"></i></a>
+      </div>
     </div>
-    <div class="testimonials-grid">
-      <div class="testimonial-card reveal reveal-delay-1">
-        <div class="t-stars">★★★★★</div>
-        <p class="t-text">"I landed my first dev job within 2 weeks of publishing my PortfolioX portfolio. The templates are absolutely stunning."</p>
-        <div class="t-author">
-          <div class="t-avatar" style="background:linear-gradient(135deg,#38bdf8,#6366f1)">K</div>
-          <div><div class="t-name">Keval Bamarotiya</div><div class="t-role">Full Stack Developer, Gujarat</div></div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal reveal-delay-2">
-        <div class="t-stars">★★★★★</div>
-        <p class="t-text">"The Classic Developer template is exactly what I needed. Clean, professional, and shows off my GitHub projects perfectly."</p>
-        <div class="t-author">
-          <div class="t-avatar" style="background:linear-gradient(135deg,#22c55e,#38bdf8)">M</div>
-          <div><div class="t-name">Mori Umang</div><div class="t-role">Backend Engineer, Gujarat</div></div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal reveal-delay-3">
-        <div class="t-stars">★★★★★</div>
-        <p class="t-text">"Setting up was genuinely 10 minutes. I now have a live URL I can put on my resume. This is incredible for students."</p>
-        <div class="t-author">
-          <div class="t-avatar" style="background:linear-gradient(135deg,#ec4899,#f59e0b)">A</div>
-          <div><div class="t-name">Armaan</div><div class="t-role">CS Student, Rajsthan</div></div>
-        </div>
+    <div class="testimonials-grid" id="reviewsContainer">
+      <div id="homeReviewsLoading" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+        <i class="fas fa-circle-notch fa-spin" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;"></i>
+        <p style="color: var(--muted); font-size: 0.95rem;">Loading reviews...</p>
       </div>
     </div>
   </div>
@@ -614,16 +660,49 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">&copy; 2025 <span>PortfolioX</span>. All rights reserved.</div>
-    <div class="social-links">
-      <a href="https://github.com/akash9313/Online-Portfolio-builder-system" class="soc-btn"><i class="fab fa-github"></i></a>
-      <a href="#" class="soc-btn"><i class="fab fa-twitter"></i></a>
-      <a href="#" class="soc-btn"><i class="fab fa-linkedin"></i></a>
-      <a href="https://www.instagram.com/portfoliox_official/" class="soc-btn"><i class="fab fa-instagram"></i></a>
+    <div class="footer-copy">
+      &copy; 2026 <span class="brand-glow">PortfolioX</span>. All rights reserved. 
+      <span class="divider">•</span> 
+      Crafted with <i class="fas fa-heart pulse-heart"></i> for creators
     </div>
   </div>
 </footer>
-<script type="module" src="homepage.js"></script>
-
+  <script type="module" src="homepage.js"></script>
 </body>
+
+<!-- ════════════════ REVIEW MODAL ════════════════ -->
+<div class="review-modal-overlay" id="reviewModalOverlay">
+  <div class="review-modal">
+    <div class="rm-header">
+      <h3 class="rm-title">Write a Review</h3>
+      <button class="rm-close" id="closeReviewModalBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="rm-body">
+      <div class="rm-stars-container">
+        <label>Your Rating</label>
+        <div class="rm-stars" id="starRatingSelect">
+          <i class="fas fa-star" data-val="1"></i>
+          <i class="fas fa-star" data-val="2"></i>
+          <i class="fas fa-star" data-val="3"></i>
+          <i class="fas fa-star" data-val="4"></i>
+          <i class="fas fa-star" data-val="5"></i>
+        </div>
+      </div>
+      <div class="rm-form-group">
+        <label>Your Name</label>
+        <input type="text" id="reviewName" placeholder="John Doe" autocomplete="off" />
+      </div>
+      <div class="rm-form-group">
+        <label>Your Role/Location</label>
+        <input type="text" id="reviewRole" placeholder="Frontend Developer, NY" autocomplete="off" />
+      </div>
+      <div class="rm-form-group">
+        <label>Your Experience</label>
+        <textarea id="reviewText" rows="4" placeholder="How did PortfolioX help you?"></textarea>
+      </div>
+      <button class="h-btn h-btn-primary" id="submitReviewBtn" style="width:100%;">Submit Review</button>
+      <div id="reviewError" style="color:#ef4444; font-size:0.8rem; margin-top:10px; display:none; text-align:center;"></div>
+    </div>
+  </div>
+</div>
 </html>

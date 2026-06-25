@@ -1470,6 +1470,28 @@
         padding: 20px;
       }
     }
+    /* ── Comprehensive Responsive Overrides ── */
+    @media (max-width: 1024px) {
+      .bento { grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; }
+      .c-hero, .c-avatar, .about-section, .c-skills, .c-proj1, .c-proj2, .c-proj3, .c-edu, .c-contact { grid-column: span 2; }
+      .hero-name { font-size: 3rem; }
+    }
+    @media (max-width: 768px) {
+      .bento { grid-template-columns: 1fr; padding: 15px; }
+      .c-hero, .c-avatar, .about-section, .c-skills, .c-proj1, .c-proj2, .c-proj3, .c-edu, .c-contact { grid-column: span 1; }
+      .nav-links { display: none; }
+      .site-header { padding: 15px 20px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      body, html { overflow-x: hidden; }
+    }
+    @media (max-width: 480px) {
+      .hero-name { font-size: 2.2rem; line-height: 1.2; word-wrap: break-word; }
+      .bento-section-title { font-size: 1.8rem; }
+      .bento { padding: 10px; gap: 10px; }
+      .card-inner { padding: 15px; }
+      img, video, canvas { max-width: 100%; height: auto; }
+      .c-proj1 .proj-visual { height: 200px; }
+    }
   </style>
 </head>
 
