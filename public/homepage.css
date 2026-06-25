@@ -913,3 +913,21 @@
     margin-top: 2rem; gap: 1rem;
   }
 }
+
+/* ── Additional Comprehensive Responsive Overrides ── */
+@media(max-width: 768px) {
+  body, html { overflow-x: hidden; width: 100%; }
+  .hero-section { padding-top: 100px; padding-bottom: 40px; }
+  .section { padding: 60px 20px; }
+  .section-title { font-size: 2.2rem; }
+  .cta-title { font-size: 2rem; }
+}
+@media(max-width: 480px) {
+  .hero-title { font-size: 2.5rem !important; line-height: 1.1; word-wrap: break-word; }
+  .hero-sub { font-size: 1rem; padding: 0 10px; }
+  .section-title { font-size: 1.8rem; }
+  .section { padding: 40px 15px; }
+  .cta-inner { padding: 30px 15px; }
+  img, video, canvas { max-width: 100%; height: auto; }
+  .h-btn { padding: 12px 24px; font-size: 0.95rem; }
+}
