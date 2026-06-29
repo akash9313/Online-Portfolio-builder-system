@@ -1,9 +1,22 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+let isAdmin = false;
+
+onAuthStateChanged(auth, (user) => {
+  if (user && user.email === 'akashuchachariya9313@gmail.com') {
+    isAdmin = true;
+  } else {
+    isAdmin = false;
+  }
+  fetchAllReviews();
+});
 
 const allReviewsContainer = document.getElementById('allReviewsContainer');
 const loading = document.getElementById('allReviewsLoading');
@@ -55,7 +68,7 @@ async function fetchAllReviews() {
       }) : 'Just now';
 
       div.innerHTML = `
-        <button class="delete-review-btn" data-id="${docSnap.id}" title="Delete review"><i class="fas fa-trash"></i></button>
+        ${isAdmin ? `<button class="delete-review-btn" data-id="${docSnap.id}" title="Delete review"><i class="fas fa-trash"></i></button>` : ''}
         <div class="t-stars">${renderStars(data.rating)}</div>
         <p class="t-text">"${data.text}"</p>
         <div class="t-author">
@@ -93,7 +106,7 @@ async function fetchAllReviews() {
   }
 }
 
-fetchAllReviews();
+// fetchAllReviews is now called in onAuthStateChanged
 
 /* ── Custom Confirm Modal Logic ── */
 const confirmModal = document.getElementById('confirmModal');

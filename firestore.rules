@@ -59,7 +59,8 @@ service cloud.firestore {
 
     // Reviews collection
     match /reviews/{reviewId} {
-      allow read, write: if true;
+      allow read, create: if true;
+      allow update, delete: if request.auth != null && request.auth.token.email == 'akashuchachariya9313@gmail.com';
     }
 
     match /{document=**} {

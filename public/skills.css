@@ -386,35 +386,37 @@ a, button, .magnetic, .hover-target {
 
     /* ── Skill Card ── */
     .skill-card {
-      background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.07);
-      border-radius:16px; padding:1.3rem 1.4rem;
+      background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06);
+      border-radius:18px; padding:1.4rem 1.5rem;
       position:relative; overflow:hidden;
-      transition:all 0.3s ease; cursor:default;
+      transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor:pointer;
       animation:cardPop 0.35s ease both;
+      backdrop-filter: blur(12px);
     }
-    .skill-card:hover { transform:translateY(-5px); box-shadow:0 18px 44px rgba(0,0,0,0.28); }
+    .skill-card::after {
+      content:''; position:absolute; top:0; left:0; right:0; height:100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+      opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
+    }
+    .skill-card:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 22px 48px rgba(0,0,0,0.4); z-index: 10; }
+    .skill-card:hover::after { opacity: 1; }
     .skill-card.removing { animation:cardOut 0.28s ease forwards; pointer-events:none; }
 
-    /* Level left stripe */
-    .skill-card::before { content:''; position:absolute; top:0; left:0; bottom:0; width:3px; border-radius:16px 0 0 16px; }
-    .skill-card.lv-beginner::before     { background:var(--yellow); box-shadow:2px 0 12px rgba(245,158,11,0.4); }
-    .skill-card.lv-intermediate::before { background:var(--accent);  box-shadow:2px 0 12px rgba(56,189,248,0.4); }
-    .skill-card.lv-advanced::before     { background:var(--accent-3);box-shadow:2px 0 12px rgba(34,197,94,0.4); }
+    /* Border and glow on hover by level */
+    .skill-card.lv-beginner:hover     { border-color:rgba(245,158,11,0.4); box-shadow: 0 10px 30px rgba(245,158,11,0.15), 0 22px 48px rgba(0,0,0,0.4); }
+    .skill-card.lv-intermediate:hover { border-color:rgba(56,189,248,0.4); box-shadow: 0 10px 30px rgba(56,189,248,0.15), 0 22px 48px rgba(0,0,0,0.4); }
+    .skill-card.lv-advanced:hover     { border-color:rgba(34,197,94,0.4);  box-shadow: 0 10px 30px rgba(34,197,94,0.15), 0 22px 48px rgba(0,0,0,0.4); }
 
-    /* Border on hover by level */
-    .skill-card.lv-beginner:hover     { border-color:rgba(245,158,11,0.3); }
-    .skill-card.lv-intermediate:hover { border-color:rgba(56,189,248,0.3); }
-    .skill-card.lv-advanced:hover     { border-color:rgba(34,197,94,0.3); }
-
-    .skill-card-top { display:flex; align-items:flex-start; gap:12px; margin-bottom:0.9rem; }
+    .skill-card-top { display:flex; align-items:flex-start; gap:14px; margin-bottom:1.1rem; }
     .skill-avatar {
-      width:44px; height:44px; border-radius:12px; flex-shrink:0;
+      width:52px; height:52px; border-radius:14px; flex-shrink:0;
       display:flex; align-items:center; justify-content:center;
-      font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:800;
+      font-family:'Syne',sans-serif; font-size:1.75rem; font-weight:800;
+      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
+      box-shadow: inset 0 2px 10px rgba(255,255,255,0.02);
     }
-    .lv-beginner     .skill-avatar { background:rgba(245,158,11,0.12); color:var(--yellow); }
-    .lv-intermediate .skill-avatar { background:rgba(56,189,248,0.12); color:var(--accent); }
-    .lv-advanced     .skill-avatar { background:rgba(34,197,94,0.12);  color:var(--accent-3); }
+    .skill-card:hover .skill-avatar { transform: scale(1.15) rotate(4deg); filter: drop-shadow(0 4px 12px rgba(255,255,255,0.15)); }
 
     .skill-meta { flex:1; min-width:0; }
     .skill-name { font-size:0.95rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:5px; }
