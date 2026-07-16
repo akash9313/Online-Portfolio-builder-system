@@ -14,6 +14,7 @@
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 
   <style>
     *,
@@ -1111,10 +1112,10 @@
     }
 
     .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 30px 15px;
-      justify-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
       padding: 10px;
     }
 
@@ -1145,17 +1146,14 @@
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
     }
 
-    .app-icon img {
-      width: 44px;
-      height: 44px;
-      object-fit: contain;
+    .app-icon i {
       position: relative;
       z-index: 2;
       transition: transform 0.4s;
     }
 
-    .skill-app:hover .app-icon img {
-      transform: scale(1.1);
+    .skill-app:hover .app-icon i {
+      transform: scale(1.15);
     }
 
     .app-name {
@@ -1421,6 +1419,150 @@
 
     .proj-link:hover .proj-link-icon {
       transform: rotate(45deg);
+    }
+
+    /* ══════════════════════════════════
+       EXPERIENCE SECTION
+    ══════════════════════════════════ */
+    .experience-section {
+      background: white;
+      padding: 100px 0;
+    }
+
+    .exp-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 72px;
+    }
+
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 30px;
+    }
+
+    .exp-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 24px;
+      padding: 36px 32px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04), inset 0 2px 20px rgba(255, 255, 255, 0.8);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      display: flex;
+      flex-direction: column;
+      min-height: 280px;
+    }
+
+    .exp-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1), inset 0 2px 20px rgba(255, 255, 255, 1);
+    }
+
+    .exp-card-watermark {
+      position: absolute;
+      right: -20px;
+      bottom: -20px;
+      font-size: 160px;
+      opacity: 0.04;
+      z-index: 0;
+      transform: rotate(-15deg);
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      pointer-events: none;
+    }
+
+    .exp-card:hover .exp-card-watermark {
+      transform: rotate(0deg) scale(1.1);
+      opacity: 0.08;
+    }
+
+    .exp-icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 2;
+    }
+
+    .exp-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 2;
+      line-height: 1.3;
+    }
+
+    .exp-company {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 2;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .exp-type-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+      align-self: flex-start;
+      z-index: 2;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .exp-type-badge.job { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+    .exp-type-badge.internship { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+    .exp-type-badge.fresher { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+    .exp-meta-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: auto;
+      position: relative;
+      z-index: 2;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .exp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #64748b;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
     }
 
     /* ══════════════════════════════════
@@ -2197,6 +2339,7 @@
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
       <a href="#education">Education</a>
       <a href="#contact">Contact</a>
     </div>
@@ -2376,6 +2519,20 @@
     <h2 class="section-heading">Projects</h2>
     <p class="section-sub">A selection of things I've built recently.</p>
     <div class="projects-grid" id="projectsContainer"></div>
+  </section>
+
+  <!-- ══════════ EXPERIENCE ══════════ -->
+  <section class="experience-section" id="experience">
+    <div class="exp-inner">
+      <div class="section-tag">
+        <div class="tag-dot"
+          style="width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,#4facfe,#00f2fe);"></div>
+        Experience
+      </div>
+      <h2 class="section-heading">Professional Journey</h2>
+      <p class="section-sub" style="margin-bottom:48px;">My work history &amp; roles.</p>
+      <div class="exp-grid" id="experienceContainer"></div>
+    </div>
   </section>
 
   <!-- ══════════ EDUCATION ══════════ -->
@@ -2632,157 +2789,68 @@
           else { lvlVal = 3; }
         }
 
-        function getDeviconSvgUrl(skillName) {
-          const key = skillName.toLowerCase().replace(/\s/g,'').replace(/[^a-z0-9+#\-]/g, '');
-          const deviconMap = {
-            react: 'react/react-original.svg',
-            nodejs: 'nodejs/nodejs-original.svg',
-            node: 'nodejs/nodejs-original.svg',
-            typescript: 'typescript/typescript-original.svg',
-            ts: 'typescript/typescript-original.svg',
-            javascript: 'javascript/javascript-original.svg',
-            js: 'javascript/javascript-original.svg',
-            python: 'python/python-original.svg',
-            py: 'python/python-original.svg',
-            firebase: 'firebase/firebase-original.svg',
-            postgresql: 'postgresql/postgresql-original.svg',
-            postgres: 'postgresql/postgresql-original.svg',
-            mysql: 'mysql/mysql-original.svg',
-            sqlite: 'sqlite/sqlite-original.svg',
-            sql: 'sqlite/sqlite-original.svg',
-            database: 'sqlite/sqlite-original.svg',
-            db: 'sqlite/sqlite-original.svg',
-            mongodb: 'mongodb/mongodb-original.svg',
-            mongo: 'mongodb/mongodb-original.svg',
-            redis: 'redis/redis-original.svg',
-            docker: 'docker/docker-original.svg',
-            kubernetes: 'kubernetes/kubernetes-original.svg',
-            k8s: 'kubernetes/kubernetes-original.svg',
-            aws: 'amazonwebservices/amazonwebservices-original-wordmark.svg',
-            amazon: 'amazonwebservices/amazonwebservices-original-wordmark.svg',
-            googlecloud: 'googlecloud/googlecloud-original.svg',
-            gcp: 'googlecloud/googlecloud-original.svg',
-            azure: 'azure/azure-original.svg',
-            figma: 'figma/figma-original.svg',
-            photoshop: 'photoshop/photoshop-original.svg',
-            illustrator: 'illustrator/illustrator-original.svg',
-            git: 'git/git-original.svg',
-            github: 'github/github-original.svg',
-            gitlab: 'gitlab/gitlab-original.svg',
-            graphql: 'graphql/graphql-plain.svg',
-            nextjs: 'nextjs/nextjs-original.svg',
-            next: 'nextjs/nextjs-original.svg',
-            vuejs: 'vuejs/vuejs-original.svg',
-            vue: 'vuejs/vuejs-original.svg',
-            angularjs: 'angularjs/angularjs-original.svg',
-            angular: 'angularjs/angularjs-original.svg',
-            tailwindcss: 'tailwindcss/tailwindcss-original.svg',
-            tailwind: 'tailwindcss/tailwindcss-original.svg',
-            bootstrap: 'bootstrap/bootstrap-original.svg',
-            html5: 'html5/html5-original.svg',
-            html: 'html5/html5-original.svg',
-            css3: 'css3/css3-original.svg',
-            css: 'css3/css3-original.svg',
-            java: 'java/java-original.svg',
-            'c++': 'cplusplus/cplusplus-original.svg',
-            cpp: 'cplusplus/cplusplus-original.svg',
-            'c#': 'csharp/csharp-original.svg',
-            csharp: 'csharp/csharp-original.svg',
-            c: 'c/c-original.svg',
-            golang: 'go/go-original.svg',
-            go: 'go/go-original.svg',
-            rust: 'rust/rust-original.svg',
-            php: 'php/php-original.svg',
-            ruby: 'ruby/ruby-original.svg',
-            rails: 'rails/rails-original.svg',
-            swift: 'swift/swift-original.svg',
-            kotlin: 'kotlin/kotlin-original.svg',
-            flutter: 'flutter/flutter-original.svg',
-            dart: 'dart/dart-original.svg',
-            sass: 'sass/sass-original.svg',
-            scss: 'sass/sass-original.svg',
-            less: 'less/less-plain-wordmark.svg',
-            webpack: 'webpack/webpack-original.svg',
-            babel: 'babel/babel-original.svg',
-            npm: 'npm/npm-original-wordmark.svg',
-            yarn: 'yarn/yarn-original.svg',
-            linux: 'linux/linux-original.svg',
-            windows: 'windows8/windows8-original.svg',
-            macos: 'apple/apple-original.svg',
-            ios: 'apple/apple-original.svg',
-            apple: 'apple/apple-original.svg',
-            android: 'android/android-original.svg',
-            django: 'django/django-plain.svg',
-            flask: 'flask/flask-original.svg',
-            springboot: 'spring/spring-original.svg',
-            spring: 'spring/spring-original.svg',
-            laravel: 'laravel/laravel-original.svg',
-            dotnet: 'dot-net/dot-net-original.svg',
-            '.net': 'dot-net/dot-net-original.svg',
-            wordpress: 'wordpress/wordpress-plain.svg',
-            jquery: 'jquery/jquery-original.svg',
-            bash: 'bash/bash-original.svg',
-            shell: 'bash/bash-original.svg',
-            terminal: 'bash/bash-original.svg',
-            nginx: 'nginx/nginx-original.svg',
-            apache: 'apache/apache-original.svg',
-            heroku: 'heroku/heroku-original.svg',
-            netlify: 'netlify/netlify-original.svg',
-            vercel: 'vercel/vercel-original.svg',
-            digitalocean: 'digitalocean/digitalocean-original.svg',
-            jira: 'jira/jira-original.svg',
-            confluence: 'confluence/confluence-original.svg',
-            trello: 'trello/trello-original.svg',
-            slack: 'slack/slack-original.svg',
-            vscode: 'vscode/vscode-original.svg',
-            chrome: 'chrome/chrome-original.svg',
-            firefox: 'firefox/firefox-original.svg',
-            safari: 'safari/safari-original.svg',
-            edge: 'edge/edge-original.svg',
-            salesforce: 'salesforce/salesforce-original.svg',
-            shopify: 'shopify/shopify-original.svg',
-            unity: 'unity/unity-original.svg',
-            tensorflow: 'tensorflow/tensorflow-original.svg',
-            pytorch: 'pytorch/pytorch-original.svg',
-            opencv: 'opencv/opencv-original.svg',
-            numpy: 'numpy/numpy-original.svg',
-            pandas: 'pandas/pandas-original.svg',
-            arduino: 'arduino/arduino-original.svg',
-            raspberrypi: 'raspberrypi/raspberrypi-original.svg',
-            sketch: 'sketch/sketch-original.svg',
-            machinelearning: 'pytorch/pytorch-original.svg',
-            ml: 'pytorch/pytorch-original.svg',
-            deeplearning: 'pytorch/pytorch-original.svg',
-            ai: 'pytorch/pytorch-original.svg',
-            artificialintelligence: 'pytorch/pytorch-original.svg',
-            testing: 'jest/jest-plain.svg',
-            qa: 'jest/jest-plain.svg',
-            agile: 'jira/jira-original.svg',
-            scrum: 'jira/jira-original.svg',
-            pm: 'jira/jira-original.svg',
-            projectmanagement: 'jira/jira-original.svg',
-            management: 'jira/jira-original.svg',
-            design: 'figma/figma-original.svg',
-            ui: 'figma/figma-original.svg',
-            ux: 'figma/figma-original.svg',
-            security: 'ssh/ssh-original.svg',
-            cyber: 'ssh/ssh-original.svg',
-            hacking: 'ssh/ssh-original.svg'
+        const getDeviconClass = (skillName) => {
+          const name = skillName.toLowerCase().replace(/[^a-z0-9+#-]/g, '');
+          const iconMap = {
+            'html': 'devicon-html5-plain', 'html5': 'devicon-html5-plain',
+            'css': 'devicon-css3-plain', 'css3': 'devicon-css3-plain',
+            'js': 'devicon-javascript-plain', 'javascript': 'devicon-javascript-plain',
+            'ts': 'devicon-typescript-plain', 'typescript': 'devicon-typescript-plain',
+            'react': 'devicon-react-original', 'reactjs': 'devicon-react-original', 'react.js': 'devicon-react-original',
+            'vue': 'devicon-vuejs-plain', 'vuejs': 'devicon-vuejs-plain', 'vue.js': 'devicon-vuejs-plain',
+            'angular': 'devicon-angularjs-plain',
+            'node': 'devicon-nodejs-plain', 'nodejs': 'devicon-nodejs-plain', 'node.js': 'devicon-nodejs-plain',
+            'express': 'devicon-express-original', 'expressjs': 'devicon-express-original', 'express.js': 'devicon-express-original',
+            'python': 'devicon-python-plain',
+            'django': 'devicon-django-plain',
+            'flask': 'devicon-flask-original',
+            'java': 'devicon-java-plain',
+            'spring': 'devicon-spring-plain', 'springboot': 'devicon-spring-plain',
+            'c': 'devicon-c-plain',
+            'c++': 'devicon-cplusplus-plain', 'cpp': 'devicon-cplusplus-plain',
+            'c#': 'devicon-csharp-plain', 'csharp': 'devicon-csharp-plain',
+            'php': 'devicon-php-plain',
+            'laravel': 'devicon-laravel-plain',
+            'ruby': 'devicon-ruby-plain',
+            'rails': 'devicon-rails-plain', 'rubyonrails': 'devicon-rails-plain',
+            'go': 'devicon-go-plain', 'golang': 'devicon-go-plain',
+            'rust': 'devicon-rust-plain',
+            'swift': 'devicon-swift-plain',
+            'kotlin': 'devicon-kotlin-plain',
+            'dart': 'devicon-dart-plain',
+            'flutter': 'devicon-flutter-plain',
+            'sql': 'devicon-mysql-plain',
+            'mysql': 'devicon-mysql-plain',
+            'postgresql': 'devicon-postgresql-plain', 'postgres': 'devicon-postgresql-plain',
+            'mongodb': 'devicon-mongodb-plain', 'mongo': 'devicon-mongodb-plain',
+            'redis': 'devicon-redis-plain',
+            'firebase': 'devicon-firebase-plain',
+            'aws': 'devicon-amazonwebservices-plain', 'amazonwebservices': 'devicon-amazonwebservices-plain',
+            'docker': 'devicon-docker-plain',
+            'kubernetes': 'devicon-kubernetes-plain', 'k8s': 'devicon-kubernetes-plain',
+            'git': 'devicon-git-plain',
+            'github': 'devicon-github-original',
+            'gitlab': 'devicon-gitlab-plain',
+            'linux': 'devicon-linux-plain',
+            'bash': 'devicon-bash-plain',
+            'nextjs': 'devicon-nextjs-plain', 'next.js': 'devicon-nextjs-plain',
+            'tailwind': 'devicon-tailwindcss-original', 'tailwindcss': 'devicon-tailwindcss-original',
+            'bootstrap': 'devicon-bootstrap-plain',
+            'sass': 'devicon-sass-original', 'scss': 'devicon-sass-original',
+            'figma': 'devicon-figma-plain',
+            'graphql': 'devicon-graphql-plain',
+            'jest': 'devicon-jest-plain',
+            'redux': 'devicon-redux-original'
           };
-          for (const k in deviconMap) {
-            if (key.includes(k)) {
-              return `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${deviconMap[k]}`;
-            }
-          }
-          return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><polyline points="64 88 16 128 64 168" fill="none" stroke="%23667eea" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="192 88 240 128 192 168" fill="none" stroke="%23667eea" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="160" y1="40" x2="96" y2="216" fill="none" stroke="%23667eea" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>`;
-        }
+          return iconMap[name] || 'devicon-code-plain';
+        };
 
-        const iconUrl = getDeviconSvgUrl(s.name || '');
+        const iconClass = getDeviconClass(s.name || '');
 
         skillsContainer.innerHTML += `
         <div class="skill-app">
           <div class="app-icon lvl-${lvlVal}">
-             <img src="${iconUrl}" alt="${s.name || 'Skill'}" />
+             <i class="${iconClass} colored" style="font-size: 3rem;"></i>
           </div>
           <div class="app-name" contenteditable="true" data-collection="skills" data-docid="${docSnap.id}" data-field="name">${s.name || 'Skill'}</div>
         </div>`;
@@ -2851,6 +2919,79 @@
 
       if (firstProjName) {
         document.getElementById('latestProjName').textContent = firstProjName;
+      }
+
+      /* ── EXPERIENCE ── */
+      const experienceContainer = document.getElementById('experienceContainer');
+      if (experienceContainer) {
+        try {
+          const expSnap = await getDocs(collection(db, "users", user.uid, "experience"));
+          if (expSnap.empty) {
+            experienceContainer.innerHTML = `<p style="color:var(--text-muted);font-style:italic;">No professional experience added yet.</p>`;
+          } else {
+            experienceContainer.innerHTML = '';
+            let expIdx = 0;
+            expSnap.forEach(docSnap => {
+              const data = docSnap.data();
+              const title = data.title || 'Job Title';
+              const company = data.company || 'Company';
+              const location = data.location || '';
+              const duration = data.duration || 'Duration';
+              const description = data.description || '';
+              const type = data.type ? String(data.type).toLowerCase() : 'job';
+              
+              let typeLabel = 'JOB';
+              let badgeClass = 'job';
+              
+              if(type.includes('intern')) { 
+                typeLabel = 'INTERNSHIP'; 
+                badgeClass = 'internship'; 
+              } else if(type.includes('fresh')) { 
+                typeLabel = 'FRESHER'; 
+                badgeClass = 'fresher'; 
+              }
+
+              const ac = eduAccents[expIdx % eduAccents.length];
+              expIdx++;
+
+              experienceContainer.innerHTML += `
+              <div class="exp-card spotlight">
+                <i class="ph-fill ph-briefcase exp-card-watermark"></i>
+                <div class="exp-icon-wrap" style="background:${ac.iconBg};">
+                  <i class="ph-fill ph-briefcase"></i>
+                </div>
+                <div class="exp-type-badge ${badgeClass}" contenteditable="true" data-collection="experience" data-docid="${docSnap.id}" data-field="type">${typeLabel}</div>
+                <h3 class="exp-title" contenteditable="true"
+                  data-collection="experience" data-docid="${docSnap.id}" data-field="title">
+                  ${title}
+                </h3>
+                <p class="exp-company" style="background:${ac.bar}; -webkit-background-clip:text; -webkit-text-fill-color:transparent;" contenteditable="true"
+                  data-collection="experience" data-docid="${docSnap.id}" data-field="company">
+                  ${company}
+                </p>
+                <div class="exp-meta-row">
+                  <div style="display:flex; gap:14px; flex-wrap:wrap;">
+                    <span class="exp-badge">
+                      <i class="ph-fill ph-calendar-blank"></i>
+                      <span contenteditable="true"
+                        data-collection="experience" data-docid="${docSnap.id}" data-field="duration">
+                        ${duration}
+                      </span>
+                    </span>
+                    <span class="exp-badge">
+                      <i class="ph-fill ph-map-pin"></i>
+                      <span contenteditable="true"
+                        data-collection="experience" data-docid="${docSnap.id}" data-field="location">
+                        ${location || 'Location'}
+                      </span>
+                    </span>
+                  </div>
+                  ${description ? `<p style="color:#64748b; font-size:0.85rem; margin-top:8px; line-height:1.6;" contenteditable="true" data-collection="experience" data-docid="${docSnap.id}" data-field="description">${description}</p>` : ''}
+                </div>
+              </div>`;
+            });
+          }
+        } catch(e) { console.error("Exp load fail:", e); }
       }
 
       /* ── EDUCATION ── */
@@ -3123,7 +3264,7 @@
           });
         }
 
-        const sections = document.querySelectorAll('.section, .about-section, .education-section, .contact-section');
+        const sections = document.querySelectorAll('.section, .about-section, .experience-section, .education-section, .contact-section');
         window.addEventListener('scroll', () => {
           let current = '';
           sections.forEach(sec => {

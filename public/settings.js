@@ -278,106 +278,118 @@ Object.keys(toggleMap).forEach(id => {
 ───────────────────────────────────────── */
 onAuthStateChanged(auth, async user => {
   if (!user) { window.location.href = 'loginpage.html'; return; }
-  currentUser = user;
-
-  settingsRef    = doc(db, 'users', user.uid, 'settings', 'preferences');
-  urlSettingsRef = doc(db, 'users', user.uid, 'settings', 'url');
-
-  /* --- Populate account section --- */
-  const email   = user.email || '';
-  const initial = email.charAt(0).toUpperCase();
-
-  document.getElementById('userEmail').value        = email;
-  document.getElementById('accountEmail').textContent = email;
-  document.getElementById('accountAvatar').textContent = initial;
-  document.getElementById('spAvatar').textContent      = initial;
-
-  // Member since
-  if (user.metadata?.creationTime) {
-    const d = new Date(user.metadata.creationTime);
-    document.getElementById('memberSince').textContent =
-      'Member since ' + d.toLocaleDateString('en-US', { month:'short', year:'numeric' });
-  }
-
-  // Verification badge
-  const badge = document.getElementById('verifyBadge');
-  if (user.emailVerified) {
-    badge.className = 'verify-badge verified';
-    badge.innerHTML = '<i class="fas fa-circle-check"></i> Verified';
-  }
-
-  // Load profile name
+  
   try {
-    const snap = await getDoc(doc(db, 'users', user.uid));
-    const name = snap.exists() ? (snap.data().fullName || email.split('@')[0]) : email.split('@')[0];
-    document.getElementById('accountName').textContent     = name;
-    document.getElementById('spName').textContent          = name;
-    document.getElementById('displayNameInput').value      = name;
+    currentUser = user;
 
-    if (snap.exists() && snap.data().avatarUrl) {
-      document.getElementById('spAvatar').innerHTML = `<img src="${snap.data().avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
-      document.getElementById('accountAvatar').innerHTML = `<img src="${snap.data().avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+    settingsRef    = doc(db, 'users', user.uid, 'settings', 'preferences');
+    urlSettingsRef = doc(db, 'users', user.uid, 'settings', 'url');
+
+    /* --- Populate account section --- */
+    const email   = user.email || '';
+    const initial = email.charAt(0).toUpperCase();
+
+    document.getElementById('userEmail').value        = email;
+    document.getElementById('accountEmail').textContent = email;
+    document.getElementById('accountAvatar').textContent = initial;
+    document.getElementById('spAvatar').textContent      = initial;
+
+    // Member since
+    if (user.metadata?.creationTime) {
+      const d = new Date(user.metadata.creationTime);
+      document.getElementById('memberSince').textContent =
+        'Member since ' + d.toLocaleDateString('en-US', { month:'short', year:'numeric' });
     }
-  } catch {
-    const fallback = email.split('@')[0];
-    document.getElementById('accountName').textContent  = fallback;
-    document.getElementById('spName').textContent       = fallback;
-    document.getElementById('displayNameInput').value   = fallback;
-  }
 
-  // Load toggle settings
-  try {
-    const snap = await getDoc(settingsRef);
-    if (snap.exists()) {
-      const s = snap.data();
-      const defaults = {
-        visibility:    true, allowEdits: true,  seoIndexing: true,
-        analytics:     false, notifications: true, autosave: true,
-        darkMode:      true, showSocial: true, allowResume: true, pwProtect: false,
-      };
-      Object.entries(toggleMap).forEach(([id, key]) => {
-        const el = document.getElementById(id);
-        if (el) el.checked = s[key] ?? defaults[key] ?? false;
-      });
-      // Show pw protect field if enabled
-      if (s.pwProtect) document.getElementById('pwProtectField').style.display = 'block';
+    // Verification badge
+    const badge = document.getElementById('verifyBadge');
+    if (user.emailVerified) {
+      badge.className = 'verify-badge verified';
+      badge.innerHTML = '<i class="fas fa-circle-check"></i> Verified';
     }
-  } catch { /* defaults already set */ }
 
-  // Load URL settings
-  try {
-    const snap = await getDoc(urlSettingsRef);
-    if (snap.exists()) {
-      const u = snap.data();
-      if (u.slug) {
-        document.getElementById('slugInput').value       = u.slug;
-        document.getElementById('urlSlugDisplay').textContent = u.slug;
+    // Load profile name
+    try {
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      const name = snap.exists() ? (snap.data().fullName || email.split('@')[0]) : email.split('@')[0];
+      document.getElementById('accountName').textContent     = name;
+      document.getElementById('spName').textContent          = name;
+      document.getElementById('displayNameInput').value      = name;
+
+      if (snap.exists() && snap.data().avatarUrl) {
+        document.getElementById('spAvatar').innerHTML = `<img src="${snap.data().avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+        document.getElementById('accountAvatar').innerHTML = `<img src="${snap.data().avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+      } else {
+        document.getElementById('spAvatar').textContent = name.charAt(0).toUpperCase();
+        document.getElementById('accountAvatar').textContent = name.charAt(0).toUpperCase();
       }
-      if (u.title)    document.getElementById('portfolioTitle').value = u.title;
-      if (u.metaDesc) {
-        document.getElementById('metaDesc').value        = u.metaDesc;
-        document.getElementById('metaCharCount').textContent = u.metaDesc.length;
-      }
-    } else {
-      // Default slug from email
-      const defaultSlug = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'-');
-      document.getElementById('slugInput').value        = defaultSlug;
-      document.getElementById('urlSlugDisplay').textContent = defaultSlug;
+    } catch (err) {
+      console.error(err);
+      const fallback = email.split('@')[0] || 'User';
+      document.getElementById('accountName').textContent  = fallback;
+      document.getElementById('spName').textContent       = fallback;
+      document.getElementById('displayNameInput').value   = fallback;
     }
-  } catch { /* silent */ }
 
-  // Load progress ring
-  await loadProgress(user.uid);
+    // Load toggle settings
+    try {
+      const snap = await getDoc(settingsRef);
+      if (snap.exists()) {
+        const s = snap.data();
+        const defaults = {
+          visibility:    true, allowEdits: true,  seoIndexing: true,
+          analytics:     false, notifications: true, autosave: true,
+          darkMode:      true, showSocial: true, allowResume: true, pwProtect: false,
+        };
+        Object.entries(toggleMap).forEach(([id, key]) => {
+          const el = document.getElementById(id);
+          if (el) el.checked = s[key] ?? defaults[key] ?? false;
+        });
+        // Show pw protect field if enabled
+        if (s.pwProtect) document.getElementById('pwProtectField').style.display = 'block';
+      }
+    } catch { /* defaults already set */ }
 
-  // Load sessions
-  renderSessions(user);
+    // Load URL settings
+    try {
+      const snap = await getDoc(urlSettingsRef);
+      if (snap.exists()) {
+        const u = snap.data();
+        if (u.slug) {
+          document.getElementById('slugInput').value       = u.slug;
+          document.getElementById('urlSlugDisplay').textContent = u.slug;
+        }
+        if (u.title)    document.getElementById('portfolioTitle').value = u.title;
+        if (u.metaDesc) {
+          document.getElementById('metaDesc').value        = u.metaDesc;
+          document.getElementById('metaCharCount').textContent = u.metaDesc.length;
+        }
+      } else {
+        // Default slug from email
+        const defaultSlug = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'-');
+        document.getElementById('slugInput').value        = defaultSlug;
+        document.getElementById('urlSlugDisplay').textContent = defaultSlug;
+      }
+    } catch { /* silent */ }
 
+    // Load progress ring
+    await loadProgress(user.uid);
 
-  // Load storage info
-  await estimateStorage(user.uid);
+    // Load sessions
+    renderSessions(user);
 
-  hideLoader();
-  setLastSaved(false);
+    // Load storage info
+    await estimateStorage(user.uid);
+
+    hideLoader();
+    setLastSaved(false);
+  } catch (e) {
+    console.error("CRASH IN SETTINGS.JS onAuthStateChanged:", e);
+    showToast("Settings error: " + e.message, "error");
+    document.getElementById('spName').textContent = e.name;
+    document.getElementById('spAvatar').textContent = "E";
+    hideLoader(); // Force hide so user can see toast
+  }
 });
 
 /* ─────────────────────────────────────────

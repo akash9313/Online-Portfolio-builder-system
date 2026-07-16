@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio 3D </title>
+    <title>3D Modern portfolio</title>
     <meta name="description" content="Full-Stack Engineer & Creative Technologist" />
 
     <!-- Preconnect to Google Fonts -->
@@ -2344,8 +2344,9 @@
         <ul class="nav-links">
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Skills</a></li>
-            <li><a href="#education">Education</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#education">Education</a></li>
             <li><a href="#contact">Contact</a></li>
             <li class="mobile-cta-only"><a href="#contact" class="nav-cta">
                 <span class="cta-text">Hire Me</span>
@@ -2481,21 +2482,6 @@
         <div class="os-bg-grid"></div>
         <div class="os-bg-rings"></div>
 
-        <!-- ── DIGITAL ACADEMIC TIMELINE ── -->
-        <section id="education" class="hud-section" aria-label="Education">
-            <div class="hud-title-container reveal">
-                <h2 class="hud-title">Academic Pathway</h2>
-                <div class="hud-subtitle">Foundation :: Milestones</div>
-            </div>
-            
-            <div class="timeline-container" id="education-timeline">
-                <div class="timeline-track">
-                    <div class="timeline-progress" id="timeline-progress"></div>
-                </div>
-                <!-- Nodes populated by JS -->
-            </div>
-        </section>
-
         <!-- ── PROJECT COMMAND CENTER ── -->
         <section id="projects" class="hud-section" aria-label="Projects">
             <div class="hud-title-container reveal">
@@ -2516,6 +2502,38 @@
                 </button>
             </div>
         </section>
+
+        <!-- ── DIGITAL PROFESSIONAL TIMELINE ── -->
+        <section id="experience" class="hud-section" aria-label="Experience">
+            <div class="hud-title-container reveal">
+                <h2 class="hud-title">Professional Log</h2>
+                <div class="hud-subtitle">Career :: Milestones</div>
+            </div>
+            
+            <div class="timeline-container" id="experience-timeline">
+                <div class="timeline-track">
+                    <div class="timeline-progress" id="exp-timeline-progress"></div>
+                </div>
+                <!-- Nodes populated by JS -->
+            </div>
+        </section>
+
+        <!-- ── DIGITAL ACADEMIC TIMELINE ── -->
+        <section id="education" class="hud-section" aria-label="Education">
+            <div class="hud-title-container reveal">
+                <h2 class="hud-title">Academic Pathway</h2>
+                <div class="hud-subtitle">Foundation :: Milestones</div>
+            </div>
+            
+            <div class="timeline-container" id="education-timeline">
+                <div class="timeline-track">
+                    <div class="timeline-progress" id="timeline-progress"></div>
+                </div>
+                <!-- Nodes populated by JS -->
+            </div>
+        </section>
+
+
     </div>
 
     <!-- ══════════════════════════════════════════════════════
@@ -2823,70 +2841,60 @@
 
         /* ── 4b. Skills Section ── */
         function getDeviconClass(name) {
-            const key = name.toLowerCase().trim().replace(/\s/g, '');
+            const key = name.toLowerCase().trim().replace(/[^a-z0-9+#-]/g, '');
             const map = {
-                'javascript': 'devicon-javascript-plain colored',
-                'js': 'devicon-javascript-plain colored',
-                'typescript': 'devicon-typescript-plain colored',
-                'ts': 'devicon-typescript-plain colored',
-                'nodejs': 'devicon-nodejs-plain colored',
-                'node.js': 'devicon-nodejs-plain colored',
-                'node': 'devicon-nodejs-plain colored',
-                'react': 'devicon-react-original colored',
-                'reactjs': 'devicon-react-original colored',
-                'react.js': 'devicon-react-original colored',
-                'angular': 'devicon-angularjs-plain colored',
-                'angularjs': 'devicon-angularjs-plain colored',
-                'vue': 'devicon-vuejs-plain colored',
-                'vuejs': 'devicon-vuejs-plain colored',
-                'vue.js': 'devicon-vuejs-plain colored',
-                'html': 'devicon-html5-plain colored',
-                'html5': 'devicon-html5-plain colored',
-                'css': 'devicon-css3-plain colored',
-                'css3': 'devicon-css3-plain colored',
-                'python': 'devicon-python-plain colored',
-                'c++': 'devicon-cplusplus-plain colored',
-                'cpp': 'devicon-cplusplus-plain colored',
-                'c': 'devicon-c-plain colored',
-                'c#': 'devicon-csharp-plain colored',
-                'csharp': 'devicon-csharp-plain colored',
-                'java': 'devicon-java-plain colored',
-                'go': 'devicon-go-original-wordmark colored',
-                'golang': 'devicon-go-original-wordmark colored',
-                'php': 'devicon-php-plain colored',
-                'ruby': 'devicon-ruby-plain colored',
-                'rails': 'devicon-rails-plain colored',
-                'swift': 'devicon-swift-plain colored',
-                'kotlin': 'devicon-kotlin-plain colored',
-                'git': 'devicon-git-plain colored',
-                'github': 'devicon-github-original colored',
-                'firebase': 'devicon-firebase-plain colored',
-                'docker': 'devicon-docker-plain colored',
-                'kubernetes': 'devicon-kubernetes-plain colored',
-                'k8s': 'devicon-kubernetes-plain colored',
-                'aws': 'devicon-amazonwebservices-original colored',
-                'figma': 'devicon-figma-plain colored',
-                'postgres': 'devicon-postgresql-plain colored',
-                'postgresql': 'devicon-postgresql-plain colored',
-                'mysql': 'devicon-mysql-plain colored',
-                'mongodb': 'devicon-mongodb-plain colored',
-                'mongo': 'devicon-mongodb-plain colored',
-                'redis': 'devicon-redis-plain colored',
-                'graphql': 'devicon-graphql-plain colored',
-                'next': 'devicon-nextjs-original colored',
-                'nextjs': 'devicon-nextjs-original colored',
-                'next.js': 'devicon-nextjs-original colored',
-                'tailwind': 'devicon-tailwindcss-plain colored',
-                'tailwindcss': 'devicon-tailwindcss-plain colored',
-                'bootstrap': 'devicon-bootstrap-plain colored',
-                'sass': 'devicon-sass-original colored',
-                'scss': 'devicon-sass-original colored'
+                'html': 'devicon-html5-plain', 'html5': 'devicon-html5-plain',
+                'css': 'devicon-css3-plain', 'css3': 'devicon-css3-plain',
+                'js': 'devicon-javascript-plain', 'javascript': 'devicon-javascript-plain',
+                'ts': 'devicon-typescript-plain', 'typescript': 'devicon-typescript-plain',
+                'react': 'devicon-react-original', 'reactjs': 'devicon-react-original', 'react.js': 'devicon-react-original',
+                'vue': 'devicon-vuejs-plain', 'vuejs': 'devicon-vuejs-plain', 'vue.js': 'devicon-vuejs-plain',
+                'angular': 'devicon-angularjs-plain',
+                'node': 'devicon-nodejs-plain', 'nodejs': 'devicon-nodejs-plain', 'node.js': 'devicon-nodejs-plain',
+                'express': 'devicon-express-original', 'expressjs': 'devicon-express-original', 'express.js': 'devicon-express-original',
+                'python': 'devicon-python-plain',
+                'django': 'devicon-django-plain',
+                'flask': 'devicon-flask-original',
+                'java': 'devicon-java-plain',
+                'spring': 'devicon-spring-plain', 'springboot': 'devicon-spring-plain',
+                'c': 'devicon-c-plain',
+                'c++': 'devicon-cplusplus-plain', 'cpp': 'devicon-cplusplus-plain',
+                'c#': 'devicon-csharp-plain', 'csharp': 'devicon-csharp-plain',
+                'php': 'devicon-php-plain',
+                'laravel': 'devicon-laravel-plain',
+                'ruby': 'devicon-ruby-plain',
+                'rails': 'devicon-rails-plain', 'rubyonrails': 'devicon-rails-plain',
+                'go': 'devicon-go-plain', 'golang': 'devicon-go-plain',
+                'rust': 'devicon-rust-plain',
+                'swift': 'devicon-swift-plain',
+                'kotlin': 'devicon-kotlin-plain',
+                'dart': 'devicon-dart-plain',
+                'flutter': 'devicon-flutter-plain',
+                'sql': 'devicon-mysql-plain',
+                'mysql': 'devicon-mysql-plain',
+                'postgresql': 'devicon-postgresql-plain', 'postgres': 'devicon-postgresql-plain',
+                'mongodb': 'devicon-mongodb-plain', 'mongo': 'devicon-mongodb-plain',
+                'redis': 'devicon-redis-plain',
+                'firebase': 'devicon-firebase-plain',
+                'aws': 'devicon-amazonwebservices-plain-wordmark', 'amazonwebservices': 'devicon-amazonwebservices-plain-wordmark',
+                'docker': 'devicon-docker-plain',
+                'kubernetes': 'devicon-kubernetes-plain', 'k8s': 'devicon-kubernetes-plain',
+                'git': 'devicon-git-plain',
+                'github': 'devicon-github-original',
+                'gitlab': 'devicon-gitlab-plain',
+                'linux': 'devicon-linux-plain',
+                'bash': 'devicon-bash-plain',
+                'nextjs': 'devicon-nextjs-plain', 'next.js': 'devicon-nextjs-plain', 'next': 'devicon-nextjs-plain',
+                'tailwind': 'devicon-tailwindcss-original', 'tailwindcss': 'devicon-tailwindcss-original',
+                'bootstrap': 'devicon-bootstrap-plain',
+                'sass': 'devicon-sass-original', 'scss': 'devicon-sass-original',
+                'figma': 'devicon-figma-plain',
+                'graphql': 'devicon-graphql-plain',
+                'jest': 'devicon-jest-plain',
+                'redux': 'devicon-redux-original'
             };
-            if (map[key]) return map[key];
-            for (const k in map) {
-                if (key.includes(k)) return map[k];
-            }
-            return 'devicon-devicon-plain colored';
+            const iconClass = map[key] || 'devicon-code-plain';
+            return iconClass + ' colored';
         }
 
         function buildSkills() {
@@ -3032,6 +3040,69 @@
             });
         }
 
+        /* ── 4c. Experience Grid (Digital Timeline) ── */
+        function buildExperience() {
+            const container = document.getElementById("experience-timeline");
+            if (!container) return;
+            const experience = (window.PORTFOLIO_DATA && window.PORTFOLIO_DATA.experience) || [];
+            
+            if (experience.length === 0) {
+                container.innerHTML += `<div style="text-align:center; color:#fff; padding: 40px;">No experience records found.</div>`;
+                return;
+            }
+
+            const nodesHtml = experience.map((exp, i) => {
+                const type = exp.type ? String(exp.type).toLowerCase() : 'job';
+                let typeLabel = 'JOB';
+                let badgeColor = 'var(--accent-cyan)';
+                
+                if(type.includes('intern')) { 
+                    typeLabel = 'INTERNSHIP'; 
+                    badgeColor = 'var(--accent-purple)'; 
+                } else if(type.includes('fresh')) { 
+                    typeLabel = 'FRESHER'; 
+                    badgeColor = 'var(--accent-pink)'; 
+                }
+
+                return `
+                <div class="timeline-node-wrapper">
+                    <div class="timeline-node" onclick="this.parentElement.classList.toggle('expanded')">
+                        <div class="edu-hud-header">
+                            <span class="edu-hud-year">[ ${exp.duration || 'N/A'} ]</span>
+                            <span style="background: ${badgeColor}; color: #000; font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; margin-left: 10px;">${typeLabel}</span>
+                        </div>
+                        <h3 class="edu-hud-school">${exp.title || 'Job Title'}</h3>
+                        <div class="edu-hud-degree">> ${exp.company || 'Company'}</div>
+                        
+                        <div class="edu-hud-details">
+                            <div class="edu-hud-meta-grid">
+                                ${exp.location ? `
+                                <div class="edu-meta-item">
+                                    <span class="edu-meta-label">Location</span>
+                                    <span class="edu-meta-value">${exp.location}</span>
+                                </div>` : ''}
+                                ${exp.description ? `
+                                <div class="edu-meta-item" style="grid-column: span 2;">
+                                    <span class="edu-meta-label">Details</span>
+                                    <span class="edu-meta-value" style="text-transform: none;">${exp.description}</span>
+                                </div>` : ''}
+                                <div class="edu-meta-item">
+                                    <span class="edu-meta-label">Status</span>
+                                    <span class="edu-meta-value">VERIFIED</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join("");
+
+            const track = container.querySelector('.timeline-track');
+            container.innerHTML = '';
+            if(track) container.appendChild(track);
+            container.insertAdjacentHTML('beforeend', nodesHtml);
+        }
+
         /* ── 4d. Education Grid (Digital Timeline) ── */
         function buildEducation() {
             const container = document.getElementById("education-timeline");
@@ -3104,17 +3175,28 @@
 
             // Timeline Scroll Progress
             window.addEventListener('scroll', () => {
-                const timeline = document.getElementById('education-timeline');
-                const progress = document.getElementById('timeline-progress');
-                if (!timeline || !progress) return;
-                
-                const rect = timeline.getBoundingClientRect();
+                const eduTimeline = document.getElementById('education-timeline');
+                const eduProgress = document.getElementById('timeline-progress');
+                const expTimeline = document.getElementById('experience-timeline');
+                const expProgress = document.getElementById('exp-timeline-progress');
                 const windowHeight = window.innerHeight;
                 
-                if (rect.top < windowHeight * 0.8 && rect.bottom > 0) {
-                    let ratio = (windowHeight * 0.8 - rect.top) / rect.height;
-                    ratio = Math.max(0, Math.min(1, ratio));
-                    progress.style.height = `${ratio * 100}%`;
+                if (eduTimeline && eduProgress) {
+                    const rect = eduTimeline.getBoundingClientRect();
+                    if (rect.top < windowHeight * 0.8 && rect.bottom > 0) {
+                        let ratio = (windowHeight * 0.8 - rect.top) / rect.height;
+                        ratio = Math.max(0, Math.min(1, ratio));
+                        eduProgress.style.height = `${ratio * 100}%`;
+                    }
+                }
+                
+                if (expTimeline && expProgress) {
+                    const rect = expTimeline.getBoundingClientRect();
+                    if (rect.top < windowHeight * 0.8 && rect.bottom > 0) {
+                        let ratio = (windowHeight * 0.8 - rect.top) / rect.height;
+                        ratio = Math.max(0, Math.min(1, ratio));
+                        expProgress.style.height = `${ratio * 100}%`;
+                    }
                 }
 
                 const nodes = document.querySelectorAll('.timeline-node-wrapper');
@@ -3427,6 +3509,7 @@
             // 1. Render data into DOM first
             buildHero();
             buildSkills();
+            buildExperience();
             buildEducation();
             buildProjects();
             buildContact();
@@ -3478,11 +3561,12 @@
         }
 
         try {
-          const [profileSnap, skillsSnap, projSnap, eduSnap] = await Promise.all([
+          const [profileSnap, skillsSnap, projSnap, eduSnap, expSnap] = await Promise.all([
             getDoc(doc(db, 'users', user.uid)),
             getDocs(collection(db, 'users', user.uid, 'skills')),
             getDocs(collection(db, 'users', user.uid, 'projects')),
-            getDoc(doc(db, 'users', user.uid, 'education', 'main'))
+            getDoc(doc(db, 'users', user.uid, 'education', 'main')),
+            getDocs(collection(db, 'users', user.uid, 'experience'))
           ]);
 
           const profile = profileSnap.exists() ? profileSnap.data() : {};
@@ -3539,6 +3623,11 @@
             }
           }
 
+          let experience = [];
+          if (expSnap && !expSnap.empty) {
+            experience = expSnap.docs.map(d => d.data());
+          }
+
           const data = {
             name:      profile.fullName  || 'Your Name',
             title:     profile.role      || 'Developer',
@@ -3554,6 +3643,7 @@
             },
             skills:   skills.length   ? skills   : getDemoData().skills,
             projects: projects.length ? projects : getDemoData().projects,
+            experience: experience.length ? experience : getDemoData().experience,
             education: education.length ? education : getDemoData().education,
             stats: [
               { label: 'Projects',  value: String(projects.length || 0) },
@@ -3671,6 +3761,10 @@
           ],
           projects: [
             { id: 1, title: 'Project X', subtitle: '3D Engine', description: 'A high-performance 3D engine.', tags: ['GLSL', 'WebGL'], accentColor: '#00f5d4' }
+          ],
+          experience: [
+            { type: 'job', company: 'Tech Corp', title: 'Senior Developer', duration: '2022 - Present', location: 'Remote', description: 'Leading frontend architecture.' },
+            { type: 'internship', company: 'Startup Inc', title: 'Software Engineering Intern', duration: '2021 - 2022', location: 'San Francisco, CA', description: 'Built core features for the MVP.' }
           ],
           education: [
             { type: 'university', school: 'Stanford University', degree: 'B.S. Computer Science', duration: '2018 - 2022', grade: '3.9 GPA', location: 'Stanford, CA' },

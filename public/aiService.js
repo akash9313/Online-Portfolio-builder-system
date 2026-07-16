@@ -47,7 +47,8 @@ class AIService {
         const prompt = `Act as a professional portfolio writer. Write a compelling, professional, and concise "About Me" bio (max 400 characters) for ${name}, who is a ${role}. 
         Key skills: ${skills.join(', ')}. 
         Location: ${location}. 
-        The tone should be modern, professional, and highlight expertise. Use first-person "I".`;
+        The tone should be modern, professional, and highlight expertise. Use first-person "I".
+        IMPORTANT: Return ONLY the raw rewritten bio text. Do not include any conversational preamble, labels, or extra formatting.`;
         
         return await this.callAI(prompt);
     }
@@ -72,7 +73,23 @@ class AIService {
         Technologies: ${tech}
         Basic Description: ${basicDesc}
         
-        Focus on results, challenges overcome, and technical implementation. Keep it under 350 characters. Use professional action verbs. Use first-person.`;
+        Focus on results, challenges overcome, and technical implementation. Keep it under 350 characters. Use professional action verbs. Use first-person.
+        IMPORTANT: Return ONLY the raw rewritten description text. Do not include any conversational preamble, job title, company name, labels, or formatting.`;
+        
+        return await this.callAI(prompt);
+    }
+
+    /**
+     * Professionalizes a work experience description.
+     */
+    async improveExperienceDesc(title, company, basicDesc) {
+        const prompt = `Rewrite this work experience description to be highly professional and impactful for a tech portfolio. 
+        Job Title: ${title}
+        Company: ${company}
+        Basic Description: ${basicDesc}
+        
+        Focus on responsibilities, achievements, and technical impact. Keep it under 400 characters. Use professional action verbs. Use first-person.
+        IMPORTANT: Return ONLY the raw rewritten description text. Do not include any conversational preamble, job title, company name, labels, or formatting.`;
         
         return await this.callAI(prompt);
     }

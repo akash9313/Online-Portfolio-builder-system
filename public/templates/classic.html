@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio</title>
+<title>Classic Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,300&family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -820,6 +820,71 @@ body::after {
 .proj-link:hover { gap: 10px; }
 
 /* ════════════════════════════════════════
+   EXPERIENCE
+════════════════════════════════════════ */
+.exp-list { display: flex; flex-direction: column; gap: 0; }
+.exp-item {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 40px; align-items: start;
+  padding: 36px 24px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  border-radius: 16px;
+  margin: 0 -24px;
+  transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.exp-item:last-child { border-bottom: none; }
+.exp-item:hover { 
+  background: linear-gradient(90deg, rgba(200,241,53,.06) 0%, transparent 100%);
+  padding-left: 36px;
+  border-bottom-color: transparent;
+  box-shadow: -10px 0 20px -10px rgba(200,241,53,0.1);
+}
+.exp-idx {
+  font-family: var(--font-display); font-size: 3.5rem;
+  color: var(--lime); line-height: 1;
+  opacity: .6;
+  transition: all 0.3s ease;
+}
+.exp-item:hover .exp-idx {
+  opacity: 1; text-shadow: 0 0 15px rgba(200,241,53,.4);
+  transform: scale(1.1);
+}
+.exp-content { transition: transform 0.3s ease; }
+.exp-item:hover .exp-content { transform: translateX(10px); }
+.exp-year {
+  font-family: var(--font-mono); font-size: .7rem;
+  color: var(--grey2); letter-spacing: .1em;
+  margin-bottom: 6px;
+}
+.exp-title {
+  font-family: var(--font-display); font-size: 2rem;
+  color: var(--white); margin-bottom: 4px; line-height: 1.1;
+}
+.exp-company {
+  font-family: var(--font-mono); font-size: 1rem;
+  color: var(--lime); margin-bottom: 12px;
+}
+.exp-desc {
+  font-size: .95rem; color: var(--grey); line-height: 1.8;
+  margin-bottom: 12px;
+}
+.type-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 4px 10px; border-radius: 4px; margin-bottom: 10px;
+}
+.type-badge.job { background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
+.type-badge.internship { background: rgba(167,139,250,0.1); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
+.type-badge.fresher { background: rgba(52,211,153,0.1); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
+.exp-meta-group { display: flex; gap: 16px; margin-top: 10px; }
+.exp-meta {
+  font-family: var(--font-mono); font-size: 0.75rem;
+  color: var(--grey2); display: flex; align-items: center; gap: 6px;
+}
+
+/* ════════════════════════════════════════
    EDUCATION
 ════════════════════════════════════════ */
 .edu-list { display: flex; flex-direction: column; gap: 0; }
@@ -1129,6 +1194,7 @@ footer {
     <a href="#about">About</a>
     <a href="#skills">Skills</a>
     <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
     <a href="#education">Education</a>
     <a href="#contact">Contact</a>
     <a href="#contact" class="mobile-cta">Hire Me</a>
@@ -1302,10 +1368,21 @@ footer {
 </section>
 
 <!-- ══════════════════════════════
+     EXPERIENCE
+══════════════════════════════ -->
+<section class="section" id="experience">
+  <div class="sec-watermark" aria-hidden="true">04</div>
+  <div class="sec-eyebrow">Professional journey</div>
+  <div class="sec-title">WORK<br><em>Experience</em></div>
+
+  <div class="exp-list" id="experienceList"><!-- JS fills --></div>
+</section>
+
+<!-- ══════════════════════════════
      EDUCATION
 ══════════════════════════════ -->
 <section class="section" id="education">
-  <div class="sec-watermark" aria-hidden="true">04</div>
+  <div class="sec-watermark" aria-hidden="true">05</div>
   <div class="sec-eyebrow">Academic journey</div>
   <div class="sec-title">EDUCATION<br><em>Path</em></div>
 
@@ -1316,7 +1393,7 @@ footer {
      CONTACT
 ══════════════════════════════ -->
 <section class="section contact-section" id="contact">
-  <div class="sec-watermark" aria-hidden="true">05</div>
+  <div class="sec-watermark" aria-hidden="true">06</div>
   <div class="sec-eyebrow">Get in touch</div>
   <div class="contact-layout">
     <div class="contact-left">
@@ -1400,7 +1477,7 @@ footer {
 document.getElementById("fyear").textContent = new Date().getFullYear();
 
 /* Active nav on scroll */
-const sections  = ["about","skills","projects","education","contact"];
+const sections  = ["about","skills","projects","experience","education","contact"];
 const navLinks  = document.querySelectorAll(".nav-links a:not(.mobile-cta)");
 const topNav = document.getElementById("topNav");
 let ticking = false;
@@ -1725,6 +1802,70 @@ onAuthStateChanged(auth, async (user) => {
        No projects added yet.
      </p>`;
   setText("statProjects", String(pIdx));
+
+  /* — Experience — */
+  const expList = document.getElementById("experienceList");
+  if (expList) {
+    expList.innerHTML = "";
+    let exIdx = 0;
+    try {
+      const expSnap = await getDocs(collection(db,"users",user.uid,"experience"));
+      let arr = [];
+      expSnap.forEach(d => arr.push({id: d.id, ...d.data()}));
+      arr.sort((a,b) => (b.order||0) - (a.order||0));
+
+      arr.forEach(exp => {
+        exIdx++;
+        const typeStr = exp.type || 'job';
+        const isFresher = (typeStr === 'fresher');
+        
+        let typeBadge = '';
+        if (typeStr === 'job') {
+          typeBadge = '<span class="type-badge job"><i class="fas fa-briefcase"></i> Job</span>';
+        } else if (typeStr === 'internship') {
+          typeBadge = '<span class="type-badge internship"><i class="fas fa-graduation-cap"></i> Internship</span>';
+        } else if (typeStr === 'fresher') {
+          typeBadge = '<span class="type-badge fresher"><i class="fas fa-seedling"></i> Fresher</span>';
+        }
+
+        const title = exp.title || "Role";
+        const company = exp.company || "Company";
+        const duration = exp.duration || "Duration";
+        const location = exp.location || "";
+        const desc = exp.description || "Description here.";
+
+        expList.innerHTML += 
+          `<div class="exp-item">
+             <div class="exp-idx">${String(exIdx).padStart(2,"0")}</div>
+             <div class="exp-content">
+               ${typeBadge}
+               <div class="exp-title" contenteditable="true"
+                    data-collection="experience" data-docid="${exp.id}" data-field="title">
+                 ${isFresher ? "Academic / Objective" : title}
+               </div>
+               ${!isFresher ? `<div class="exp-company" contenteditable="true"
+                    data-collection="experience" data-docid="${exp.id}" data-field="company">
+                 ${company}
+               </div>` : ''}
+               <div class="exp-desc" contenteditable="true"
+                    data-collection="experience" data-docid="${exp.id}" data-field="description">
+                 ${desc}
+               </div>
+               <div class="exp-meta-group">
+                 ${!isFresher ? `<span class="exp-meta"><i class="fas fa-calendar-alt"></i> ${duration}</span>` : ''}
+                 ${!isFresher && location ? `<span class="exp-meta"><i class="fas fa-map-marker-alt"></i> ${location}</span>` : ''}
+               </div>
+             </div>
+           </div>`;
+      });
+    } catch (e) {
+      console.error(e);
+    }
+
+    if(exIdx === 0) {
+      expList.innerHTML = `<p style="color:var(--grey2);font-family:var(--font-mono);font-size:.82rem;padding:36px;">No experience added yet.</p>`;
+    }
+  }
 
   /* — Education — */
   const eduList = document.getElementById("educationList");

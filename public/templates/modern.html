@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 
   <style>
     /* ─── RESET & BASE ─────────────────────────────────────── */
@@ -582,7 +583,7 @@
     /* ─── SKILLS ───────────────────────────────────────────── */
     .skills-grid {
       display: flex;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       gap: 32px;
       justify-content: center;
       width: 100%;
@@ -645,6 +646,16 @@
       opacity: 0.12;
     }
     .skill-card:hover::after { opacity: 1; }
+    
+    .skill-icon {
+      font-size: clamp(1.8rem, 25cqi, 2.5rem);
+      margin-bottom: clamp(6px, 8cqi, 12px);
+      color: var(--level-color, var(--ink));
+      transition: all 0.4s ease;
+    }
+    .skill-card:hover .skill-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
     
     .skill-name {
       font-family: 'DM Serif Display', serif;
@@ -810,6 +821,16 @@
       box-shadow: 0 10px 20px rgba(200, 75, 49, 0.15);
       transform: translate(6px, -6px) scale(1.1);
     }
+
+    .type-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.65rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 4px 10px; border-radius: 4px; margin-bottom: 10px; align-self: flex-start;
+    }
+    .type-badge.job { background: rgba(58, 107, 138, 0.1); color: var(--accent2); border: 1px solid rgba(58, 107, 138, 0.2); }
+    .type-badge.internship { background: rgba(200, 75, 49, 0.1); color: var(--accent); border: 1px solid rgba(200, 75, 49, 0.2); }
+    .type-badge.fresher { background: rgba(40, 200, 64, 0.1); color: #28c840; border: 1px solid rgba(40, 200, 64, 0.2); }
 
     /* ─── EDUCATION ────────────────────────────────────────── */
     .edu-grid {
@@ -1299,7 +1320,8 @@
     <ul class="topbar-nav">
       <li><a href="#about-section">About</a></li>
       <li><a href="#skills-section">Skills</a></li>
-      <li><a href="#projects-section">Work</a></li>
+      <li><a href="#projects-section">Projects</a></li>
+      <li><a href="#experience-section">Experience</a></li>
       <li><a href="#education-section">Education</a></li>
       <li><a href="#contact-section">Contact</a></li>
     </ul>
@@ -1317,7 +1339,8 @@
     <ul class="topbar-nav">
       <li><a href="#about-section" class="mobile-link">About</a></li>
       <li><a href="#skills-section" class="mobile-link">Skills</a></li>
-      <li><a href="#projects-section" class="mobile-link">Work</a></li>
+      <li><a href="#projects-section" class="mobile-link">Projects</a></li>
+      <li><a href="#experience-section" class="mobile-link">Experience</a></li>
       <li><a href="#education-section" class="mobile-link">Education</a></li>
       <li><a href="#contact-section" class="mobile-link">Contact</a></li>
     </ul>
@@ -1395,10 +1418,20 @@
       <div class="projects-list" id="projects"></div>
     </section>
 
+    <!-- Experience -->
+    <section id="experience-section">
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2 class="section-title">Professional Journey</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="edu-grid" id="experience"></div>
+    </section>
+
     <!-- Education -->
     <section id="education-section">
       <div class="section-header">
-        <span class="section-number">04</span>
+        <span class="section-number">05</span>
         <h2 class="section-title">Education Journey</h2>
         <div class="section-rule"></div>
       </div>
@@ -1408,7 +1441,7 @@
     <!-- Contact -->
     <section id="contact-section">
       <div class="section-header">
-        <span class="section-number">05</span>
+        <span class="section-number">06</span>
         <h2 class="section-title">Get In Touch</h2>
         <div class="section-rule"></div>
       </div>
@@ -1598,6 +1631,74 @@
 
       /* — Skills — */
       const skillsSnap = await getDocs(collection(db, "users", user.uid, "skills"));
+      
+      function getSkillIcon(name) {
+        if(!name) return 'fa-solid fa-laptop-code';
+        const n = name.toLowerCase();
+        
+        // Exact / highly specific matches first
+        if(n === 'c') return 'devicon-c-plain colored';
+        if(n === 'c++' || n === 'cpp') return 'devicon-cplusplus-plain colored';
+        if(n === 'c#' || n === 'csharp') return 'devicon-csharp-plain colored';
+        if(n === 'java') return 'devicon-java-plain colored';
+        if(n === 'r') return 'devicon-r-original colored';
+        
+        // Partial string matching for common skills
+        if(n.includes('typescript') || n === 'ts') return 'devicon-typescript-plain colored';
+        if(n.includes('javascript') || n === 'js') return 'devicon-javascript-plain colored';
+        if(n.includes('react')) return 'devicon-react-original colored';
+        if(n.includes('next')) return 'devicon-nextjs-plain colored';
+        if(n.includes('node')) return 'devicon-nodejs-plain colored';
+        if(n.includes('express')) return 'devicon-express-original colored';
+        if(n.includes('python')) return 'devicon-python-plain colored';
+        if(n.includes('html')) return 'devicon-html5-plain colored';
+        if(n.includes('css')) return 'devicon-css3-plain colored';
+        if(n.includes('tailwind')) return 'devicon-tailwindcss-original colored';
+        if(n.includes('bootstrap')) return 'devicon-bootstrap-plain colored';
+        if(n.includes('sass') || n.includes('scss')) return 'devicon-sass-original colored';
+        if(n.includes('aws') || n.includes('amazon')) return 'devicon-amazonwebservices-plain-wordmark colored';
+        if(n.includes('azure')) return 'devicon-azure-plain colored';
+        if(n.includes('gcp') || n.includes('google cloud')) return 'devicon-googlecloud-plain colored';
+        if(n.includes('docker')) return 'devicon-docker-plain colored';
+        if(n.includes('kubernetes') || n.includes('k8s')) return 'devicon-kubernetes-plain colored';
+        if(n.includes('git')) return 'devicon-git-plain colored';
+        if(n.includes('github')) return 'devicon-github-original colored';
+        if(n.includes('figma')) return 'devicon-figma-plain colored';
+        if(n.includes('xd')) return 'devicon-xd-plain colored';
+        if(n.includes('photoshop')) return 'devicon-photoshop-plain colored';
+        if(n.includes('vue')) return 'devicon-vuejs-plain colored';
+        if(n.includes('angular')) return 'devicon-angularjs-plain colored';
+        if(n.includes('php')) return 'devicon-php-plain colored';
+        if(n.includes('laravel')) return 'devicon-laravel-original colored';
+        if(n.includes('django')) return 'devicon-django-plain colored';
+        if(n.includes('flask')) return 'devicon-flask-original colored';
+        if(n.includes('spring')) return 'devicon-spring-plain colored';
+        if(n.includes('mysql')) return 'devicon-mysql-plain colored';
+        if(n.includes('postgres') || n.includes('psql')) return 'devicon-postgresql-plain colored';
+        if(n.includes('mongo')) return 'devicon-mongodb-plain colored';
+        if(n.includes('redis')) return 'devicon-redis-plain colored';
+        if(n.includes('sql')) return 'devicon-sqldeveloper-plain colored';
+        if(n.includes('android')) return 'devicon-android-plain colored';
+        if(n.includes('apple') || n.includes('ios')) return 'devicon-apple-original';
+        if(n.includes('swift')) return 'devicon-swift-plain colored';
+        if(n.includes('kotlin')) return 'devicon-kotlin-plain colored';
+        if(n.includes('flutter')) return 'devicon-flutter-plain colored';
+        if(n.includes('dart')) return 'devicon-dart-plain colored';
+        if(n.includes('ruby')) return 'devicon-ruby-plain colored';
+        if(n.includes('rust')) return 'devicon-rust-plain colored';
+        if(n.includes('go') || n.includes('golang')) return 'devicon-go-original-wordmark colored';
+        if(n.includes('firebase')) return 'devicon-firebase-plain colored';
+        if(n.includes('linux') || n.includes('ubuntu')) return 'devicon-linux-plain';
+        if(n.includes('windows')) return 'devicon-windows8-original colored';
+        
+        // General fallbacks via FontAwesome
+        if(n.includes('cloud')) return 'fa-solid fa-cloud';
+        if(n.includes('api')) return 'fa-solid fa-server';
+        if(n.includes('ui') || n.includes('ux') || n.includes('design')) return 'fa-solid fa-pen-nib';
+        
+        return 'fa-solid fa-laptop-code';
+      }
+
       let sc = 0;
       skillsEl.innerHTML = "";
       skillsSnap.forEach(docSnap => {
@@ -1622,6 +1723,7 @@
 
         skillsEl.innerHTML += `
           <div class="skill-card" style="--level-color: ${color};">
+            <i class="${getSkillIcon(s.name)} skill-icon"></i>
             <div class="skill-name"
                  contenteditable="true"
                  data-collection="skills"
@@ -1678,6 +1780,71 @@
           </div>`;
       });
       projCount.textContent = pc;
+
+      /* — Experience — */
+      const expEl = document.getElementById("experience");
+      if (expEl) {
+        expEl.innerHTML = "";
+        try {
+          const expSnap = await getDocs(collection(db, "users", user.uid, "experience"));
+          let arr = [];
+          expSnap.forEach(d => arr.push({id: d.id, ...d.data()}));
+          arr.sort((a, b) => (b.order || 0) - (a.order || 0));
+
+          if (arr.length > 0) {
+            let exIdx = 0;
+            arr.forEach(exp => {
+              exIdx++;
+              const typeStr = exp.type || 'job';
+              const isFresher = (typeStr === 'fresher');
+              
+              let typeBadge = '';
+              if (typeStr === 'job') {
+                typeBadge = '<span class="type-badge job"><i class="fas fa-briefcase"></i> Job</span>';
+              } else if (typeStr === 'internship') {
+                typeBadge = '<span class="type-badge internship"><i class="fas fa-graduation-cap"></i> Internship</span>';
+              } else if (typeStr === 'fresher') {
+                typeBadge = '<span class="type-badge fresher"><i class="fas fa-seedling"></i> Fresher</span>';
+              }
+
+              const title = exp.title || "Role";
+              const company = exp.company || "Company";
+              const duration = exp.duration || "Duration";
+              const location = exp.location || "";
+              const desc = exp.description || "Description here.";
+
+              expEl.innerHTML += `
+                <div class="edu-card">
+                  <div class="edu-year">${String(exIdx).padStart(2, "0")}</div>
+                  <div class="edu-body">
+                    ${typeBadge}
+                    <div class="edu-degree" contenteditable="true"
+                         data-collection="experience" data-docid="${exp.id}" data-field="title">
+                      ${isFresher ? "Academic / Objective" : title}
+                    </div>
+                    ${!isFresher ? `<div class="edu-institute" style="color:var(--accent); font-weight:600; margin-bottom:8px;" contenteditable="true"
+                         data-collection="experience" data-docid="${exp.id}" data-field="company">
+                      ${company}
+                    </div>` : ''}
+                    <div style="font-size:0.95rem; color:var(--muted); line-height:1.7; margin-bottom:12px;" contenteditable="true"
+                         data-collection="experience" data-docid="${exp.id}" data-field="description">
+                      ${desc}
+                    </div>
+                    <div style="display:flex; gap:16px; margin-top:5px; font-size:0.75rem; color:var(--muted);">
+                      ${!isFresher ? `<span><i class="fas fa-calendar-alt"></i> ${duration}</span>` : ''}
+                      ${!isFresher && location ? `<span><i class="fas fa-map-marker-alt"></i> ${location}</span>` : ''}
+                    </div>
+                  </div>
+                </div>
+              `;
+            });
+          } else {
+            expEl.innerHTML = `<p style="color:var(--muted); font-size:0.95rem; padding: 24px;">No experience added yet.</p>`;
+          }
+        } catch (e) {
+          console.error("Error loading experience:", e);
+        }
+      }
 
       /* — Education — */
       try {

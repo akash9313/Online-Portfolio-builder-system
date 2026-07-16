@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Premium Developer Portfolio | PortfolioX</title>
+  <title>Minimal Portfolio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Premium Fonts -->
@@ -10,6 +10,7 @@
   
   <!-- Icon Libraries -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
   
   <style>
     /* ─── RESET & VARS ─── */
@@ -357,10 +358,10 @@
     }
 
     .tech-chip-premium {
-      padding: 10px 18px;
+      padding: 12px 22px;
       border-radius: 12px;
       font-family: var(--font-mono);
-      font-size: 0.8rem;
+      font-size: 0.95rem;
       font-weight: 500;
       border: 1px solid var(--chip-border);
       background: rgba(255, 255, 255, 0.01);
@@ -369,7 +370,7 @@
       cursor: default;
       display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       position: relative;
       overflow: hidden;
     }
@@ -382,7 +383,7 @@
     }
     .tech-chip-premium i {
       color: var(--chip-text);
-      font-size: 0.9rem;
+      font-size: 1.25rem;
       transition: transform 0.3s ease;
     }
     .tech-chip-premium:hover i {
@@ -550,6 +551,21 @@
     }
     .timeline-desc {
       font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;
+    }
+
+    .exp-type-badge {
+      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 6px; text-transform: uppercase;
+      letter-spacing: 0.05em; border: 1px solid;
+    }
+    .exp-type-badge.job {
+      color: #10b981; border-color: rgba(16, 185, 129, 0.2); background: rgba(16, 185, 129, 0.05);
+    }
+    .exp-type-badge.internship {
+      color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); background: rgba(59, 130, 246, 0.05);
+    }
+    .exp-type-badge.fresher {
+      color: #8b5cf6; border-color: rgba(139, 92, 246, 0.2); background: rgba(139, 92, 246, 0.05);
     }
 
     /* Bento Grid Projects */
@@ -1357,9 +1373,10 @@
     <a class="nav-logo" href="#">Portfolio<span class="logo-accent">X</span></a>
     <div class="nav-links">
       <a href="#about" class="nav-link">About</a>
-      <a href="#projects" class="nav-link">Projects</a>
-      <a href="#education" class="nav-link">Education</a>
       <a href="#skills" class="nav-link">Skills</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#experience" class="nav-link">Experience</a>
+      <a href="#education" class="nav-link">Education</a>
       <a href="#contact" class="nav-link">Contact</a>
     </div>
     <div class="nav-actions">
@@ -1444,10 +1461,23 @@
           </p>
         </section>
 
+        <!-- Skills Section -->
+        <section id="skills" class="reveal">
+          <div class="section-header">
+            <span class="section-num">02 // Technical Proficiency</span>
+            <h2 class="section-title">My Toolkit</h2>
+            <div class="section-line"></div>
+          </div>
+          
+          <div class="skills-categories-box" id="skillsContainer">
+            <!-- Loaded from Firestore -->
+          </div>
+        </section>
+
         <!-- Projects Section -->
         <section id="projects" class="reveal">
           <div class="section-header">
-            <span class="section-num">02 // Interactive Bento Grid</span>
+            <span class="section-num">03 // Interactive Bento Grid</span>
             <h2 class="section-title">Selected Projects</h2>
             <div class="section-line"></div>
           </div>
@@ -1457,10 +1487,29 @@
           </div>
         </section>
 
+        <!-- Experience Section -->
+        <section id="experience" class="reveal">
+          <div class="section-header">
+            <span class="section-num">04 // Professional Trajectory</span>
+            <h2 class="section-title">Experience</h2>
+            <div class="section-line"></div>
+          </div>
+          
+          <div class="timeline-wrapper">
+            <div class="timeline-line">
+              <div class="timeline-fill" id="timeline-fill-bar-exp"></div>
+            </div>
+            
+            <div id="experienceTimeline">
+              <!-- Loaded from Firestore -->
+            </div>
+          </div>
+        </section>
+
         <!-- Education Section -->
         <section id="education" class="reveal">
           <div class="section-header">
-            <span class="section-num">03 // Academic Foundations</span>
+            <span class="section-num">05 // Academic Foundations</span>
             <h2 class="section-title">Education Journey</h2>
             <div class="section-line"></div>
           </div>
@@ -1476,23 +1525,10 @@
           </div>
         </section>
 
-        <!-- Skills Section -->
-        <section id="skills" class="reveal">
-          <div class="section-header">
-            <span class="section-num">04 // Technical Proficiency</span>
-            <h2 class="section-title">My Toolkit</h2>
-            <div class="section-line"></div>
-          </div>
-          
-          <div class="skills-categories-box" id="skillsContainer">
-            <!-- Loaded from Firestore -->
-          </div>
-        </section>
-
         <!-- Contact Section -->
         <section id="contact" class="reveal">
           <div class="section-header">
-            <span class="section-num">05 // Communication Portal</span>
+            <span class="section-num">06 // Communication Portal</span>
             <h2 class="section-title">Let's Connect</h2>
             <div class="section-line"></div>
           </div>
@@ -1625,164 +1661,162 @@
       return 'other';
     }
 
-    function getSkillIcon(name = '') {
-      const iconMap = {
-        react: 'fab fa-react',
-        nodejs: 'fab fa-node-js',
-        node: 'fab fa-node-js',
-        typescript: 'fab fa-js',
-        ts: 'fab fa-js',
-        javascript: 'fab fa-js',
-        js: 'fab fa-js',
-        python: 'fab fa-python',
-        py: 'fab fa-python',
-        firebase: 'fas fa-fire',
-        postgresql: 'fas fa-database',
-        postgres: 'fas fa-database',
-        mysql: 'fas fa-database',
-        sqlite: 'fas fa-database',
-        sql: 'fas fa-database',
-        database: 'fas fa-database',
-        db: 'fas fa-database',
-        mongodb: 'fas fa-leaf',
-        mongo: 'fas fa-leaf',
-        redis: 'fas fa-layer-group',
-        docker: 'fab fa-docker',
-        kubernetes: 'fas fa-dharmachakra',
-        k8s: 'fas fa-dharmachakra',
-        aws: 'fab fa-aws',
-        amazon: 'fab fa-aws',
-        googlecloud: 'fab fa-google',
-        gcp: 'fab fa-google',
-        azure: 'fas fa-cloud',
-        figma: 'fab fa-figma',
-        photoshop: 'fas fa-palette',
-        illustrator: 'fas fa-bezier-curve',
-        git: 'fab fa-git-alt',
-        github: 'fab fa-github',
-        gitlab: 'fab fa-gitlab',
-        graphql: 'fas fa-network-wired',
-        nextjs: 'fas fa-circle-notch',
-        next: 'fas fa-circle-notch',
-        vuejs: 'fab fa-vuejs',
-        vue: 'fab fa-vuejs',
-        angularjs: 'fab fa-angular',
-        angular: 'fab fa-angular',
-        tailwindcss: 'fas fa-wind',
-        tailwind: 'fas fa-wind',
-        bootstrap: 'fab fa-bootstrap',
-        html5: 'fab fa-html5',
-        html: 'fab fa-html5',
-        css3: 'fab fa-css3-alt',
-        css: 'fab fa-css3-alt',
-        java: 'fab fa-java',
-        'c++': 'fas fa-cog',
-        cpp: 'fas fa-cog',
-        'c#': 'fas fa-crosshairs',
-        csharp: 'fas fa-crosshairs',
-        c: 'fas fa-cog',
-        golang: 'fab fa-golang',
-        go: 'fab fa-golang',
-        rust: 'fas fa-cog',
-        php: 'fab fa-php',
-        ruby: 'fas fa-gem',
-        rails: 'fas fa-gem',
-        swift: 'fab fa-swift',
-        kotlin: 'fas fa-bullseye',
-        flutter: 'fas fa-mobile-alt',
-        dart: 'fas fa-bullseye',
-        sass: 'fab fa-sass',
-        scss: 'fab fa-sass',
-        less: 'fab fa-sass',
-        webpack: 'fas fa-cubes',
-        babel: 'fas fa-language',
-        npm: 'fab fa-npm',
-        yarn: 'fab fa-yarn',
-        linux: 'fab fa-linux',
-        windows: 'fab fa-windows',
-        macos: 'fab fa-apple',
-        ios: 'fab fa-apple',
-        apple: 'fab fa-apple',
-        android: 'fab fa-android',
-        django: 'fas fa-feather',
-        flask: 'fas fa-flask',
-        springboot: 'fas fa-leaf',
-        spring: 'fas fa-leaf',
-        laravel: 'fab fa-laravel',
-        dotnet: 'fas fa-cube',
-        '.net': 'fas fa-cube',
-        wordpress: 'fab fa-wordpress',
-        jquery: 'fas fa-dollar-sign',
-        bash: 'fas fa-terminal',
-        shell: 'fas fa-terminal',
-        terminal: 'fas fa-terminal',
-        nginx: 'fas fa-server',
-        apache: 'fas fa-server',
-        heroku: 'fas fa-cloud-upload-alt',
-        netlify: 'fas fa-cloud',
-        vercel: 'fas fa-caret-up',
-        digitalocean: 'fas fa-cloud',
-        jira: 'fab fa-jira',
-        confluence: 'fas fa-folder',
-        trello: 'fab fa-trello',
-        slack: 'fab fa-slack',
-        vscode: 'fas fa-code',
-        webstorm: 'fas fa-code',
-        intellij: 'fas fa-code',
-        sublime: 'fas fa-code',
-        vim: 'fas fa-terminal',
-        chrome: 'fab fa-chrome',
-        firefox: 'fab fa-firefox',
-        safari: 'fab fa-safari',
-        edge: 'fab fa-edge',
-        salesforce: 'fab fa-salesforce',
-        shopify: 'fab fa-shopify',
-        woocommerce: 'fab fa-shopify',
-        unity: 'fab fa-unity',
-        unreal: 'fas fa-gamepad',
-        tensorflow: 'fas fa-brain',
-        pytorch: 'fas fa-brain',
-        opencv: 'fas fa-camera',
-        numpy: 'fas fa-calculator',
-        pandas: 'fas fa-table',
-        scipy: 'fas fa-calculator',
-        r: 'fas fa-calculator',
-        matlab: 'fas fa-calculator',
-        arduino: 'fas fa-microchip',
-        raspberrypi: 'fas fa-microchip',
-        sketch: 'fas fa-palette',
-        xd: 'fas fa-crop',
-        framer: 'fas fa-crop',
-        canva: 'fas fa-crop',
-        machinelearning: 'fas fa-brain',
-        ml: 'fas fa-brain',
-        deeplearning: 'fas fa-brain',
-        ai: 'fas fa-brain',
-        artificialintelligence: 'fas fa-brain',
-        testing: 'fas fa-flask',
-        qa: 'fas fa-flask',
-        agile: 'fas fa-tasks',
-        scrum: 'fas fa-tasks',
-        pm: 'fas fa-tasks',
-        projectmanagement: 'fas fa-tasks',
-        management: 'fas fa-tasks',
-        design: 'fas fa-crop',
-        ui: 'fas fa-crop',
-        ux: 'fas fa-crop',
-        security: 'fas fa-shield-alt',
-        cyber: 'fas fa-shield-alt',
-        hacking: 'fas fa-user-secret',
-        api: 'fas fa-plug',
-        rest: 'fas fa-plug',
-        blockchain: 'fas fa-link',
-        web3: 'fas fa-link',
-        solidity: 'fas fa-link'
+    function getDeviconClass(skillName) {
+      if (!skillName) return 'devicon-devicon-plain';
+      const key = skillName.toLowerCase().replace(/\s/g,'').replace(/[^a-z0-9+#\-]/g, '');
+      const deviconMap = {
+        react: 'react-original',
+        nodejs: 'nodejs-plain',
+        node: 'nodejs-plain',
+        typescript: 'typescript-plain',
+        ts: 'typescript-plain',
+        javascript: 'javascript-plain',
+        js: 'javascript-plain',
+        python: 'python-plain',
+        py: 'python-plain',
+        firebase: 'firebase-plain',
+        postgresql: 'postgresql-plain',
+        postgres: 'postgresql-plain',
+        mysql: 'mysql-plain',
+        sqlite: 'sqlite-plain',
+        sql: 'sqlite-plain',
+        database: 'sqlite-plain',
+        db: 'sqlite-plain',
+        mongodb: 'mongodb-plain',
+        mongo: 'mongodb-plain',
+        redis: 'redis-plain',
+        docker: 'docker-plain',
+        kubernetes: 'kubernetes-plain',
+        k8s: 'kubernetes-plain',
+        aws: 'amazonwebservices-original',
+        amazon: 'amazonwebservices-original',
+        googlecloud: 'googlecloud-plain',
+        gcp: 'googlecloud-plain',
+        azure: 'azure-plain',
+        figma: 'figma-plain',
+        photoshop: 'photoshop-plain',
+        illustrator: 'illustrator-plain',
+        git: 'git-plain',
+        github: 'github-original',
+        gitlab: 'gitlab-plain',
+        graphql: 'graphql-plain',
+        nextjs: 'nextjs-plain',
+        next: 'nextjs-plain',
+        vuejs: 'vuejs-plain',
+        vue: 'vuejs-plain',
+        angularjs: 'angularjs-plain',
+        angular: 'angularjs-plain',
+        tailwindcss: 'tailwindcss-original',
+        tailwind: 'tailwindcss-original',
+        bootstrap: 'bootstrap-plain',
+        html5: 'html5-plain',
+        html: 'html5-plain',
+        css3: 'css3-plain',
+        css: 'css3-plain',
+        java: 'java-plain',
+        'c++': 'cplusplus-plain',
+        cpp: 'cplusplus-plain',
+        'c#': 'csharp-plain',
+        csharp: 'csharp-plain',
+        c: 'c-plain',
+        golang: 'go-original-wordmark',
+        go: 'go-original-wordmark',
+        rust: 'rust-plain',
+        php: 'php-plain',
+        ruby: 'ruby-plain',
+        rails: 'rails-plain',
+        swift: 'swift-plain',
+        kotlin: 'kotlin-plain',
+        flutter: 'flutter-plain',
+        dart: 'dart-plain',
+        sass: 'sass-original',
+        scss: 'sass-original',
+        less: 'less-plain-wordmark',
+        webpack: 'webpack-plain',
+        babel: 'babel-plain',
+        npm: 'npm-original-wordmark',
+        yarn: 'yarn-original',
+        linux: 'linux-plain',
+        windows: 'windows8-original',
+        macos: 'apple-original',
+        ios: 'apple-original',
+        apple: 'apple-original',
+        android: 'android-plain',
+        django: 'django-plain',
+        flask: 'flask-original',
+        springboot: 'spring-original',
+        spring: 'spring-original',
+        laravel: 'laravel-original',
+        dotnet: 'dot-net-plain',
+        '.net': 'dot-net-plain',
+        wordpress: 'wordpress-plain',
+        jquery: 'jquery-plain',
+        bash: 'bash-plain',
+        shell: 'bash-plain',
+        terminal: 'bash-plain',
+        nginx: 'nginx-original',
+        apache: 'apache-line',
+        heroku: 'heroku-original',
+        netlify: 'netlify-plain',
+        vercel: 'vercel-original',
+        digitalocean: 'digitalocean-original',
+        jira: 'jira-plain',
+        confluence: 'confluence-plain',
+        trello: 'trello-plain',
+        slack: 'slack-plain',
+        vscode: 'vscode-plain',
+        webstorm: 'webstorm-plain',
+        intellij: 'intellij-plain',
+        sublime: 'sublimetext-plain',
+        vim: 'vim-plain',
+        chrome: 'chrome-plain',
+        firefox: 'firefox-plain',
+        safari: 'safari-plain',
+        edge: 'edge-plain',
+        salesforce: 'salesforce-plain',
+        shopify: 'shopify-plain',
+        woocommerce: 'woocommerce-plain',
+        unity: 'unity-original',
+        unreal: 'unrealengine-original',
+        tensorflow: 'tensorflow-line',
+        pytorch: 'pytorch-original',
+        opencv: 'opencv-plain',
+        numpy: 'numpy-original',
+        pandas: 'pandas-original',
+        scipy: 'scipy-original',
+        r: 'r-original',
+        matlab: 'matlab-plain',
+        arduino: 'arduino-plain',
+        raspberrypi: 'raspberrypi-line',
+        sketch: 'sketch-line',
+        xd: 'xd-plain',
+        framer: 'framer-original',
+        canva: 'canva-original',
+        machinelearning: 'pytorch-original',
+        ml: 'pytorch-original',
+        deeplearning: 'pytorch-original',
+        ai: 'pytorch-original',
+        artificialintelligence: 'pytorch-original',
+        testing: 'jest-plain',
+        qa: 'jest-plain',
+        agile: 'jira-plain',
+        scrum: 'jira-plain',
+        pm: 'jira-plain',
+        projectmanagement: 'jira-plain',
+        management: 'jira-plain',
+        design: 'figma-plain',
+        ui: 'figma-plain',
+        ux: 'figma-plain',
+        security: 'ssh-original',
+        cyber: 'ssh-original',
+        hacking: 'ssh-original'
       };
-      const key = name.toLowerCase().replace(/\s/g,'');
-      for (const k in iconMap) {
-        if (key.includes(k)) return iconMap[k];
+
+      const sortedKeys = Object.keys(deviconMap).sort((a, b) => b.length - a.length);
+      for (const k of sortedKeys) {
+        if (key.includes(k)) return 'devicon-' + deviconMap[k];
       }
-      return 'fas fa-terminal';
+      return 'devicon-devicon-plain';
     }
 
     /* ── Timeline Scroll Progress ── */
@@ -1974,7 +2008,7 @@
                 <div class="skill-chip-wrap">
                   ${categorized[key].map(s => `
                     <div class="tech-chip-premium chip-${key}" data-level="${s.level || 'Intermediate'}">
-                      <i class="${getSkillIcon(s.name)}"></i>
+                      <i class="${getDeviconClass(s.name)} colored"></i>
                       <span contenteditable="true" data-collection="skills" data-docid="${s.id}" data-field="name">${s.name || 'Skill'}</span>
                       <div class="skill-level-meter" title="Proficiency: ${s.level || 'Intermediate'}">
                         <span class="meter-bar bar-1"></span>
@@ -2046,6 +2080,60 @@
 
 
         /* EDUCATION */
+        // --- EXPERIENCE LOAD ---
+        const expTimeline = document.getElementById('experienceTimeline');
+        let expCount = 0;
+        try {
+          const expSnap = await getDocs(collection(db, 'users', user.uid, 'experience'));
+          
+          expTimeline.innerHTML = '';
+
+          const renderExpItem = (title, company, duration, desc, type, docId) => {
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            
+            const badgeClass = type ? String(type).toLowerCase() : 'job';
+            let typeLabel = 'Job';
+            if(badgeClass.includes('intern')) typeLabel = 'Internship';
+            else if(badgeClass.includes('fresh')) typeLabel = 'Fresher';
+            
+            const finalBadgeClass = typeLabel === 'Job' ? 'job' : (typeLabel === 'Internship' ? 'internship' : 'fresher');
+            
+            item.innerHTML = `
+              <div class="timeline-dot"></div>
+              <div class="timeline-card tilt-card">
+                <div class="timeline-meta">
+                  <div>
+                    <h3 class="timeline-title" contenteditable="true" data-collection="experience" data-docid="${docId}" data-field="title">${title}</h3>
+                    <div class="timeline-company" contenteditable="true" data-collection="experience" data-docid="${docId}" data-field="company">${company}</div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+                    <span class="exp-type-badge ${finalBadgeClass}" contenteditable="true" data-collection="experience" data-docid="${docId}" data-field="type">${type}</span>
+                    <span class="timeline-period" contenteditable="true" data-collection="experience" data-docid="${docId}" data-field="duration">${duration}</span>
+                  </div>
+                </div>
+                ${desc ? `<p class="timeline-desc" contenteditable="true" data-collection="experience" data-docid="${docId}" data-field="description" style="margin-top: 1rem;">${desc}</p>` : ''}
+              </div>
+            `;
+            expTimeline.appendChild(item);
+            expCount++;
+          };
+
+          if (!expSnap.empty) {
+            expSnap.forEach(ds => {
+              const data = ds.data();
+              renderExpItem(data.title || 'Job Title', data.company || 'Company Name', data.duration || 'Duration', data.description || '', data.type || 'Job', ds.id);
+            });
+          }
+          
+          if (expCount === 0) {
+            renderExpItem('Senior Developer', 'Tech Solutions Inc.', '2021 - Present', 'Architected scalable microservices.', 'job', 'demo1');
+            renderExpItem('Frontend Intern', 'Creative Agency', '2020 - 2021', 'Developed interactive user interfaces using React.', 'internship', 'demo2');
+          }
+        } catch (expErr) {
+          console.error("Experience load failed:", expErr);
+        }
+
         const eduTimeline = document.getElementById('educationTimeline');
         let eduCount = 0;
         try {
@@ -2054,11 +2142,12 @@
           
           eduTimeline.innerHTML = '';
 
-          const renderEduItem = (degree, name, year, grade, fieldPrefix) => {
+          const renderEduItem = (degree, name, location, year, grade, fieldPrefix) => {
             const item = document.createElement('div');
             item.className = 'timeline-item';
             const boardField = fieldPrefix === 'school' ? 'school.board' : 'university.degree';
             const nameField = fieldPrefix === 'school' ? 'school.name' : 'university.name';
+            const locField = fieldPrefix === 'school' ? 'school.location' : 'university.location';
             const yearField = fieldPrefix === 'school' ? 'school.year' : 'university.year';
             const gradeField = fieldPrefix === 'school' ? 'school.grade' : 'university.grade';
             const gradeLabel = fieldPrefix === 'school' ? 'Score' : 'Grade';
@@ -2069,7 +2158,11 @@
                 <div class="timeline-meta">
                   <div>
                     <h3 class="timeline-title" contenteditable="true" data-collection="education" data-docid="main" data-field="${boardField}">${degree}</h3>
-                    <div class="timeline-company" contenteditable="true" data-collection="education" data-docid="main" data-field="${nameField}">${name}</div>
+                    <div class="timeline-company" style="display:flex; align-items:center; gap:8px;">
+                      <span contenteditable="true" data-collection="education" data-docid="main" data-field="${nameField}">${name}</span>
+                      <span style="color:var(--text-muted); font-size:0.85rem;">•</span>
+                      <span contenteditable="true" data-collection="education" data-docid="main" data-field="${locField}" style="color:var(--text-muted); font-size:0.85rem;"><i class="fas fa-map-marker-alt" style="margin-right:4px;"></i>${location || 'Location'}</span>
+                    </div>
                   </div>
                   <span class="timeline-period" contenteditable="true" data-collection="education" data-docid="main" data-field="${yearField}">${year}</span>
                 </div>
@@ -2085,18 +2178,18 @@
             
             if (hasData(eData.university)) {
               const u = eData.university;
-              renderEduItem(u.degree || 'B.S. Computer Science', u.name || 'Stanford University', u.year || '2018 - 2022', u.grade || '', 'university');
+              renderEduItem(u.degree || 'B.S. Computer Science', u.name || 'Stanford University', u.location || 'Stanford, CA', u.year || '2018 - 2022', u.grade || '', 'university');
             }
 
             if (hasData(eData.school)) {
               const s = eData.school;
-              renderEduItem(s.board || 'Secondary Education', s.name || 'High School Academy', s.year || '2014 - 2018', s.grade || '', 'school');
+              renderEduItem(s.board || 'Secondary Education', s.name || 'High School Academy', s.location || 'New York, NY', s.year || '2014 - 2018', s.grade || '', 'school');
             }
           }
           
           if (eduCount === 0) {
-            renderEduItem('M.S. Computer Science', 'Stanford University', '2021 - 2023', 'GPA: 3.9', 'university');
-            renderEduItem('B.S. Software Engineering', 'Massachusetts Institute of Technology', '2017 - 2021', 'GPA: 4.0', 'school');
+            renderEduItem('M.S. Computer Science', 'Stanford University', 'Stanford, CA', '2021 - 2023', 'GPA: 3.9', 'university');
+            renderEduItem('B.S. Software Engineering', 'Massachusetts Institute of Technology', 'Cambridge, MA', '2017 - 2021', 'GPA: 4.0', 'school');
           }
           document.getElementById('statEdu').textContent = eduCount;
 
@@ -2120,6 +2213,7 @@
 
       hideLoader();
       observeScrollReveals();
+      trackTimelineScroll('timeline-fill-bar-exp', '#experience .timeline-wrapper');
       trackTimelineScroll('timeline-fill-bar-edu', '#education .timeline-wrapper');
       initNavTracking();
     });

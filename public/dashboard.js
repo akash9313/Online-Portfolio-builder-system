@@ -19,6 +19,7 @@ const spName          = document.getElementById("spName");
 const profileStatus   = document.getElementById("profileStatus");
 const skillsCount     = document.getElementById("skillsCount");
 const educationCount  = document.getElementById("educationCount");
+const experienceCount = document.getElementById("experienceCount");
 const projectsCount   = document.getElementById("projectsCount");
 const progressFill    = document.getElementById("progressFill");
 const progressPercent = document.getElementById("progressPercent");
@@ -58,9 +59,10 @@ onAuthStateChanged(auth, async (user) => {
 /* ── Load data ── */
 async function loadDashboard(uid) {
   try {
-    const [skillsSnap, eduSnap, projSnap, profileDoc] = await Promise.all([
+    const [skillsSnap, eduSnap, expSnap, projSnap, profileDoc] = await Promise.all([
       getDocs(collection(db, "users", uid, "skills")),
       getDoc(doc(db, "users", uid, "education", "main")),
+      getDocs(collection(db, "users", uid, "experience")),
       getDocs(collection(db, "users", uid, "projects")),
       getDoc(doc(db, "users", uid))
     ]);
@@ -76,6 +78,7 @@ async function loadDashboard(uid) {
       if (hasData(eData.school)) numEdu++;
     }
 
+    const numExp    = expSnap.size;
     const numProj   = projSnap.size;
     const profileOk = profileDoc.exists();
     
@@ -95,19 +98,21 @@ async function loadDashboard(uid) {
     if (profileStatus)  profileStatus.textContent  = profileOk    ? "✅ Completed"  : "⚠️ Incomplete";
     if (skillsCount)    skillsCount.textContent     = numSkills;
     if (educationCount) educationCount.textContent  = numEdu;
+    if (experienceCount) experienceCount.textContent= numExp;
     if (projectsCount)  projectsCount.textContent   = numProj;
 
     // Completion percentages per section
     const pProfile = profileOk    ? 100 : 0;
     const pSkills  = numSkills > 0 ? 100 : 0;
     const pEdu     = numEdu    > 0 ? 100 : 0;
+    const pExp     = numExp    > 0 ? 100 : 0;
     const pProj    = numProj   > 0 ? 100 : 0;
-    const total    = Math.round((pProfile + pSkills + pEdu + pProj) / 4);
+    const total    = Math.round((pProfile + pSkills + pEdu + pExp + pProj) / 5);
 
     // Animate after short delay so transitions fire
-    setTimeout(() => animateProgress(total, pProfile, pSkills, pEdu, pProj), 350);
+    setTimeout(() => animateProgress(total, pProfile, pSkills, pEdu, pProj), 350); // Using 4 values for now
 
-    appendActivity(profileOk, numSkills, numEdu, numProj);
+    appendActivity(profileOk, numSkills, numEdu, numProj); // Ignoring pExp for recent activity for simplicity
 
     // Load Recruiter Messages
     const inboxList = document.getElementById("inboxList");

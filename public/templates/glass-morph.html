@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 
   <style>
     html {
@@ -490,24 +491,21 @@
     }
 
     /* ── ABOUT ── */
-    .about-wrap { border-radius: 24px; padding: 40px 44px; margin-bottom: 32px; }
+    .about-wrap { border-radius: 24px; padding: 40px 44px; margin-bottom: 80px; }
     #aboutText {
       font-size: 1.05rem; line-height: 1.9;
       color: var(--text-soft); font-weight: 400;
     }
 
     /* ── SKILLS / DIALS ── */
-    .skills-wrap { margin-bottom: 32px; }
+    .skills-wrap { margin-bottom: 80px; }
     .skills-dial-grid {
       display: flex;
       flex-direction: row;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      gap: 20px;
+      flex-wrap: wrap;
+      gap: 28px;
       width: 100%;
       padding: 15px 5px 25px;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
       justify-content: center;
     }
     @media (max-width: 900px) {
@@ -515,26 +513,10 @@
         justify-content: flex-start;
       }
     }
-    
-    /* Premium thin horizontal scrollbar styling */
-    .skills-dial-grid::-webkit-scrollbar {
-      height: 6px;
-    }
-    .skills-dial-grid::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 10px;
-    }
-    .skills-dial-grid::-webkit-scrollbar-thumb {
-      background: rgba(167, 139, 250, 0.3);
-      border-radius: 10px;
-    }
-    .skills-dial-grid::-webkit-scrollbar-thumb:hover {
-      background: rgba(167, 139, 250, 0.6);
-    }
 
     .skill-dial-card {
-      flex: 0 0 160px;
-      height: 160px;
+      flex: 0 0 180px;
+      height: 180px;
       border-radius: 20px;
       padding: 20px 16px;
       text-align: center;
@@ -588,8 +570,8 @@
     }
     .skill-dial-wrap {
       position: relative;
-      width: 68px;
-      height: 68px;
+      width: 76px;
+      height: 76px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -648,7 +630,7 @@
     }
 
     /* ── PROJECTS ── */
-    .projects-wrap { margin-bottom: 32px; }
+    .projects-wrap { margin-bottom: 80px; }
     .projects-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
@@ -739,7 +721,7 @@
     }
 
     /* ── EDUCATION GRID / CARDS ── */
-    .edu-wrap { margin-bottom: 32px; }
+    .edu-wrap { margin-bottom: 80px; }
     .edu-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -866,9 +848,38 @@
       color: var(--accent-4);
     }
 
+    /* Experience Badges */
+    .exp-type-badge {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 12px;
+      backdrop-filter: blur(5px);
+    }
+    .exp-type-badge.job {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .exp-type-badge.internship {
+      color: #f472b6;
+      background: rgba(244, 114, 182, 0.12);
+      border: 1px solid rgba(244, 114, 182, 0.25);
+    }
+    .exp-type-badge.fresher {
+      color: #34d399;
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+    }
+
     /* ── CONTACT SECTION ── */
     .contact-wrap {
-      margin-bottom: 32px;
+      margin-bottom: 80px;
     }
     .contact-grid {
       display: grid;
@@ -1347,6 +1358,7 @@
     <a href="#about" class="nav-link active" data-section="about">About</a>
     <a href="#skills" class="nav-link" data-section="skills">Skills</a>
     <a href="#projects" class="nav-link" data-section="projects">Projects</a>
+    <a href="#experience" class="nav-link" data-section="experience">Experience</a>
     <a href="#education" class="nav-link" data-section="education">Education</a>
     <a href="#contact" class="nav-link" data-section="contact">Contact</a>
     <div class="nav-active-pill" id="navActivePill"></div>
@@ -1430,10 +1442,20 @@
     <div class="projects-grid" id="projectsContainer"></div>
   </div>
 
+  <!-- ── EXPERIENCE ── -->
+  <div class="edu-wrap" id="experience">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Experience</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="edu-grid" id="experienceContainer"></div>
+  </div>
+
   <!-- ── EDUCATION ── -->
   <div class="edu-wrap" id="education">
     <div class="section-head">
-      <span class="section-num">04</span>
+      <span class="section-num">05</span>
       <h2 class="section-title">Education</h2>
       <div class="section-divider"></div>
     </div>
@@ -1443,7 +1465,7 @@
   <!-- ── CONTACT ── -->
   <div class="contact-wrap" id="contact">
     <div class="section-head">
-      <span class="section-num">05</span>
+      <span class="section-num">06</span>
       <h2 class="section-title">Get In Touch</h2>
       <div class="section-divider"></div>
     </div>
@@ -1546,6 +1568,55 @@
   const db   = getFirestore(app);
 
   let currentUser = null;
+
+  /* ── ICONOGRAPHY MAPPER ── */
+  function getDeviconClass(skillName) {
+    if (!skillName) return 'devicon-devicon-plain';
+    const key = skillName.toLowerCase().replace(/\s/g,'').replace(/[^a-z0-9+#\-]/g, '');
+    const deviconMap = {
+      react: 'react-original', nodejs: 'nodejs-plain', node: 'nodejs-plain', typescript: 'typescript-plain',
+      ts: 'typescript-plain', javascript: 'javascript-plain', js: 'javascript-plain', python: 'python-plain',
+      py: 'python-plain', firebase: 'firebase-plain', postgresql: 'postgresql-plain', postgres: 'postgresql-plain',
+      mysql: 'mysql-plain', sqlite: 'sqlite-plain', sql: 'sqlite-plain', database: 'sqlite-plain', db: 'sqlite-plain',
+      mongodb: 'mongodb-plain', mongo: 'mongodb-plain', redis: 'redis-plain', docker: 'docker-plain',
+      kubernetes: 'kubernetes-plain', k8s: 'kubernetes-plain', aws: 'amazonwebservices-original',
+      amazon: 'amazonwebservices-original', googlecloud: 'googlecloud-plain', gcp: 'googlecloud-plain',
+      azure: 'azure-plain', figma: 'figma-plain', photoshop: 'photoshop-plain', illustrator: 'illustrator-plain',
+      git: 'git-plain', github: 'github-original', gitlab: 'gitlab-plain', graphql: 'graphql-plain',
+      nextjs: 'nextjs-plain', next: 'nextjs-plain', vuejs: 'vuejs-plain', vue: 'vuejs-plain',
+      angularjs: 'angularjs-plain', angular: 'angularjs-plain', tailwindcss: 'tailwindcss-original',
+      tailwind: 'tailwindcss-original', bootstrap: 'bootstrap-plain', html5: 'html5-plain', html: 'html5-plain',
+      css3: 'css3-plain', css: 'css3-plain', java: 'java-plain', 'c++': 'cplusplus-plain', cpp: 'cplusplus-plain',
+      'c#': 'csharp-plain', csharp: 'csharp-plain', c: 'c-plain', golang: 'go-original-wordmark',
+      go: 'go-original-wordmark', rust: 'rust-plain', php: 'php-plain', ruby: 'ruby-plain', rails: 'rails-plain',
+      swift: 'swift-plain', kotlin: 'kotlin-plain', flutter: 'flutter-plain', dart: 'dart-plain',
+      sass: 'sass-original', scss: 'sass-original', less: 'less-plain-wordmark', webpack: 'webpack-plain',
+      babel: 'babel-plain', npm: 'npm-original-wordmark', yarn: 'yarn-original', linux: 'linux-plain',
+      windows: 'windows8-original', macos: 'apple-original', ios: 'apple-original', apple: 'apple-original',
+      android: 'android-plain', django: 'django-plain', flask: 'flask-original', springboot: 'spring-original',
+      spring: 'spring-original', laravel: 'laravel-original', dotnet: 'dot-net-plain', '.net': 'dot-net-plain',
+      wordpress: 'wordpress-plain', jquery: 'jquery-plain', bash: 'bash-plain', shell: 'bash-plain',
+      terminal: 'bash-plain', nginx: 'nginx-original', apache: 'apache-line', heroku: 'heroku-original',
+      netlify: 'netlify-plain', vercel: 'vercel-original', digitalocean: 'digitalocean-original',
+      jira: 'jira-plain', confluence: 'confluence-plain', trello: 'trello-plain', slack: 'slack-plain',
+      vscode: 'vscode-plain', webstorm: 'webstorm-plain', intellij: 'intellij-plain', sublime: 'sublimetext-plain',
+      vim: 'vim-plain', chrome: 'chrome-plain', firefox: 'firefox-plain', safari: 'safari-plain', edge: 'edge-plain',
+      salesforce: 'salesforce-plain', shopify: 'shopify-plain', woocommerce: 'woocommerce-plain', unity: 'unity-original',
+      unreal: 'unrealengine-original', tensorflow: 'tensorflow-line', pytorch: 'pytorch-original', opencv: 'opencv-plain',
+      numpy: 'numpy-original', pandas: 'pandas-original', scipy: 'scipy-original', r: 'r-original', matlab: 'matlab-plain',
+      arduino: 'arduino-plain', raspberrypi: 'raspberrypi-line', sketch: 'sketch-line', xd: 'xd-plain',
+      framer: 'framer-original', canva: 'canva-original', machinelearning: 'pytorch-original', ml: 'pytorch-original',
+      deeplearning: 'pytorch-original', ai: 'pytorch-original', artificialintelligence: 'pytorch-original',
+      testing: 'jest-plain', qa: 'jest-plain', agile: 'jira-plain', scrum: 'jira-plain', pm: 'jira-plain',
+      projectmanagement: 'jira-plain', management: 'jira-plain', design: 'figma-plain', ui: 'figma-plain',
+      ux: 'figma-plain', security: 'ssh-original', cyber: 'ssh-original', hacking: 'ssh-original'
+    };
+    const sortedKeys = Object.keys(deviconMap).sort((a, b) => b.length - a.length);
+    for (const k of sortedKeys) {
+      if (key.includes(k)) return 'devicon-' + deviconMap[k];
+    }
+    return 'devicon-devicon-plain';
+  }
 
   onAuthStateChanged(auth, async (user) => {
     const _pubUid = new URLSearchParams(window.location.search).get("uid");
@@ -1713,9 +1784,9 @@
               ${nodesHtml}
             </div>
           </div>
-          <div class="skill-dial-name" contenteditable="true"
+          <div class="skill-dial-name" style="display:flex; align-items:center; gap:8px; justify-content:center;" contenteditable="true"
             data-collection="skills" data-docid="${docSnap.id}" data-field="name">
-            ${s.name || ''}
+            <i class="${getDeviconClass(s.name)} colored" style="font-size:1.2rem;"></i> ${s.name || ''}
           </div>
         </div>`;
     });
@@ -1765,6 +1836,72 @@
         </div>`;
     });
 
+    /* ── EXPERIENCE ── */
+    const experienceContainer = document.getElementById('experienceContainer');
+    if (experienceContainer) {
+      try {
+        const expSnap = await getDocs(collection(db, "users", user.uid, "experience"));
+        if (expSnap.empty) {
+          experienceContainer.innerHTML = `<p style="color:rgba(255,255,255,0.3);font-size:.9rem;font-style:italic;">No professional experience added yet.</p>`;
+        } else {
+          experienceContainer.innerHTML = '';
+          let expIdx = 0;
+          expSnap.forEach(docSnap => {
+            const data = docSnap.data();
+            const title = data.title || 'Job Title';
+            const company = data.company || 'Company';
+            const location = data.location || '';
+            const duration = data.duration || 'Duration';
+            const description = data.description || '';
+            const type = data.type ? String(data.type).toLowerCase() : 'job';
+            
+            let typeLabel = 'Job';
+            let badgeClass = 'job';
+            let iconClass = 'fas fa-briefcase';
+            
+            if(type.includes('intern')) { 
+              typeLabel = 'Internship'; 
+              badgeClass = 'internship'; 
+              iconClass = 'fas fa-laptop-code';
+            } else if(type.includes('fresh')) { 
+              typeLabel = 'Fresher'; 
+              badgeClass = 'fresher'; 
+              iconClass = 'fas fa-seedling';
+            }
+            
+            const accent = expIdx % 2 === 0 ? 'linear-gradient(90deg, var(--accent-2), var(--accent-3))' : 'linear-gradient(90deg, var(--accent-1), var(--accent-2))';
+            expIdx++;
+            
+            experienceContainer.innerHTML += `
+              <div class="edu-card">
+                <div>
+                  <div class="edu-card-header">
+                    <div class="edu-accent" style="background:${accent};"></div>
+                    <div class="edu-icon-badge"><i class="${iconClass}"></i></div>
+                  </div>
+                  <span class="exp-type-badge ${badgeClass}" contenteditable="true" data-collection="experience" data-docid="${docSnap.id}" data-field="type">${typeLabel}</span>
+                  <h3 class="edu-degree" contenteditable="true"
+                    data-collection="experience" data-docid="${docSnap.id}" data-field="title">
+                    ${title}
+                  </h3>
+                  <p class="edu-institute" style="display:flex; flex-direction:column; gap:6px;">
+                    <span contenteditable="true" data-collection="experience" data-docid="${docSnap.id}" data-field="company">${company}</span>
+                    <span contenteditable="true" data-collection="experience" data-docid="${docSnap.id}" data-field="location" style="color:var(--text-muted); font-size:0.85rem; display:flex; align-items:center; gap:6px;"><i class="fas fa-map-marker-alt"></i>${location || 'Location'}</span>
+                  </p>
+                </div>
+                <div class="edu-meta-row" style="margin-top:12px;">
+                  <span class="edu-year" contenteditable="true"
+                    data-collection="experience" data-docid="${docSnap.id}" data-field="duration">
+                    ${duration}
+                  </span>
+                </div>
+                ${description ? `<p style="margin-top:12px; font-size:0.9rem; color:var(--text-soft);" contenteditable="true" data-collection="experience" data-docid="${docSnap.id}" data-field="description">${description}</p>` : ''}
+              </div>`;
+          });
+        }
+      } catch(e) { console.error("Exp load fail:", e); }
+    }
+
     /* ── EDUCATION ── */
     const educationContainer = document.getElementById('educationContainer');
     try {
@@ -1789,6 +1926,7 @@
           eduDocs.forEach((e, i) => {
             const degree    = e.type === 'university' ? (e.degree || 'Degree') : (e.name || 'Degree');
             const institute = e.type === 'university' ? (e.name || 'Institution') : (e.board || 'Institution');
+            const location  = e.location || '';
             const year      = e.year      || 'Year';
             const grade     = e.grade     || '';
 
@@ -1806,9 +1944,9 @@
                     data-collection="education" data-docid="main" data-field="${e.type}.degree">
                     ${degree}
                   </h3>
-                  <p class="edu-institute" contenteditable="true"
-                    data-collection="education" data-docid="main" data-field="${e.type}.${e.type === 'university' ? 'name' : 'board'}">
-                    ${institute}
+                  <p class="edu-institute" style="display:flex; flex-direction:column; gap:6px;">
+                    <span contenteditable="true" data-collection="education" data-docid="main" data-field="${e.type}.${e.type === 'university' ? 'name' : 'board'}">${institute}</span>
+                    <span contenteditable="true" data-collection="education" data-docid="main" data-field="${e.type}.location" style="color:var(--text-muted); font-size:0.85rem; display:flex; align-items:center; gap:6px;"><i class="fas fa-map-marker-alt"></i>${location || 'Location'}</span>
                   </p>
                 </div>
                 <div class="edu-meta-row">

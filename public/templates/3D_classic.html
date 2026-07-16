@@ -6,7 +6,7 @@
   <meta name="description" content="Akash — Creative Developer Portfolio. Crafting premium digital experiences through code and design.">
   <meta name="keywords" content="developer, portfolio, web developer, full stack, creative developer">
   <meta name="author" content="Akash">
-  <title>Akash — Creative Developer Portfolio</title>
+  <title>3D Creative Developer Portfolio</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 
   <!-- Google Fonts -->
@@ -448,8 +448,8 @@
     }
 
 
-    /* --- Premium 3D Education --- */
-    #educationList {
+    /* --- Premium 3D Education & Experience --- */
+    #educationList, #experienceList {
       position: relative;
       padding: 0 !important;
       display: grid;
@@ -458,8 +458,20 @@
       perspective: 1500px; /* Enable 3D space */
     }
     
-    #educationList::before {
+    #educationList::before, #experienceList::before {
       display: none !important; /* Remove old 2D line */
+    }
+
+    .exp-badge {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--badge-color);
+      text-shadow: 0 0 10px var(--badge-color), 0 0 20px var(--badge-color);
+      display: inline-block;
+      padding: 0;
     }
     
     .edu-3d-card {
@@ -855,6 +867,7 @@
         <li><a href="#about" class="nav-link" data-section="about">About</a></li>
         <li><a href="#skills" class="nav-link" data-section="skills">Skills</a></li>
         <li><a href="#projects" class="nav-link" data-section="projects">Projects</a></li>
+        <li><a href="#experience" class="nav-link" data-section="experience">Experience</a></li>
         <li><a href="#education" class="nav-link" data-section="education">Education</a></li>
         <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
       </ul>
@@ -993,13 +1006,33 @@
   </section>
 
   <!-- ============================================= -->
+  <!-- EXPERIENCE                                     -->
+  <!-- ============================================= -->
+  <section class="section section--experience" id="experience">
+    <div class="section-inner">
+
+      <div class="section-label reveal">
+        <span class="section-label__number">04</span>
+        <span class="section-label__line"></span>
+        <span class="section-label__text">Experience</span>
+      </div>
+
+      <h2 class="section-heading reveal">
+        Professional <span class="accent-cyan">Journey</span>
+      </h2>
+
+      <div class="timeline" id="experienceList"></div>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
   <!-- EDUCATION                                      -->
   <!-- ============================================= -->
   <section class="section section--education" id="education">
     <div class="section-inner">
 
       <div class="section-label reveal">
-        <span class="section-label__number">04</span>
+        <span class="section-label__number">05</span>
         <span class="section-label__line"></span>
         <span class="section-label__text">Education</span>
       </div>
@@ -1019,7 +1052,7 @@
     <div class="section-inner">
 
       <div class="section-label reveal">
-        <span class="section-label__number">05</span>
+        <span class="section-label__number">06</span>
         <span class="section-label__line"></span>
         <span class="section-label__text">Get In Touch</span>
       </div>
@@ -1097,6 +1130,7 @@
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
             <li><a href="#education">Education</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
@@ -1240,22 +1274,58 @@
       window.mouseY = -1000;
 
       function getDeviconClass(skillName) {
+        const key = skillName.toLowerCase().trim().replace(/[^a-z0-9+#-]/g, '');
         const map = {
-          'html': 'html5', 'css': 'css3', 'js': 'javascript', 'javascript': 'javascript',
-          'ts': 'typescript', 'typescript': 'typescript', 'react': 'react', 'reactjs': 'react', 'react native': 'react',
-          'node': 'nodejs', 'nodejs': 'nodejs', 'python': 'python', 'py': 'python',
-          'java': 'java', 'c++': 'cplusplus', 'cpp': 'cplusplus', 'c#': 'csharp', 'csharp': 'csharp', 'c': 'c',
-          'php': 'php', 'ruby': 'ruby', 'go': 'go', 'golang': 'go', 'rust': 'rust', 'swift': 'swift',
-          'kotlin': 'kotlin', 'sql': 'mysql', 'mysql': 'mysql', 'postgres': 'postgresql', 'postgresql': 'postgresql',
-          'mongodb': 'mongodb', 'mongo': 'mongodb', 'aws': 'amazonwebservices', 'azure': 'azure', 'gcp': 'googlecloud',
-          'docker': 'docker', 'kubernetes': 'kubernetes', 'k8s': 'kubernetes', 'git': 'git', 'github': 'github',
-          'linux': 'linux', 'bash': 'bash', 'firebase': 'firebase', 'angular': 'angularjs',
-          'vue': 'vuejs', 'vuejs': 'vuejs', 'svelte': 'svelte', 'tailwind': 'tailwindcss', 'tailwindcss': 'tailwindcss',
-          'bootstrap': 'bootstrap', 'sass': 'sass', 'figma': 'figma', 'photoshop': 'photoshop',
-          'unity': 'unity', 'unreal': 'unrealengine', 'android': 'android', 'apple': 'apple', 'ios': 'apple',
-          'graphql': 'graphql', 'nextjs': 'nextjs', 'next': 'nextjs', 'nuxt': 'nuxtjs', 'nuxtjs': 'nuxtjs'
+            'html': 'devicon-html5-plain', 'html5': 'devicon-html5-plain',
+            'css': 'devicon-css3-plain', 'css3': 'devicon-css3-plain',
+            'js': 'devicon-javascript-plain', 'javascript': 'devicon-javascript-plain',
+            'ts': 'devicon-typescript-plain', 'typescript': 'devicon-typescript-plain',
+            'react': 'devicon-react-original', 'reactjs': 'devicon-react-original', 'react.js': 'devicon-react-original',
+            'vue': 'devicon-vuejs-plain', 'vuejs': 'devicon-vuejs-plain', 'vue.js': 'devicon-vuejs-plain',
+            'angular': 'devicon-angularjs-plain',
+            'node': 'devicon-nodejs-plain', 'nodejs': 'devicon-nodejs-plain', 'node.js': 'devicon-nodejs-plain',
+            'express': 'devicon-express-original', 'expressjs': 'devicon-express-original', 'express.js': 'devicon-express-original',
+            'python': 'devicon-python-plain',
+            'django': 'devicon-django-plain',
+            'flask': 'devicon-flask-original',
+            'java': 'devicon-java-plain',
+            'spring': 'devicon-spring-plain', 'springboot': 'devicon-spring-plain',
+            'c': 'devicon-c-plain',
+            'c++': 'devicon-cplusplus-plain', 'cpp': 'devicon-cplusplus-plain',
+            'c#': 'devicon-csharp-plain', 'csharp': 'devicon-csharp-plain',
+            'php': 'devicon-php-plain',
+            'laravel': 'devicon-laravel-plain',
+            'ruby': 'devicon-ruby-plain',
+            'rails': 'devicon-rails-plain', 'rubyonrails': 'devicon-rails-plain',
+            'go': 'devicon-go-plain', 'golang': 'devicon-go-plain',
+            'rust': 'devicon-rust-plain',
+            'swift': 'devicon-swift-plain',
+            'kotlin': 'devicon-kotlin-plain',
+            'dart': 'devicon-dart-plain',
+            'flutter': 'devicon-flutter-plain',
+            'sql': 'devicon-mysql-plain',
+            'mysql': 'devicon-mysql-plain',
+            'postgresql': 'devicon-postgresql-plain', 'postgres': 'devicon-postgresql-plain',
+            'mongodb': 'devicon-mongodb-plain', 'mongo': 'devicon-mongodb-plain',
+            'redis': 'devicon-redis-plain',
+            'firebase': 'devicon-firebase-plain',
+            'aws': 'devicon-amazonwebservices-plain-wordmark', 'amazonwebservices': 'devicon-amazonwebservices-plain-wordmark',
+            'docker': 'devicon-docker-plain',
+            'kubernetes': 'devicon-kubernetes-plain', 'k8s': 'devicon-kubernetes-plain',
+            'git': 'devicon-git-plain',
+            'github': 'devicon-github-original',
+            'gitlab': 'devicon-gitlab-plain',
+            'linux': 'devicon-linux-plain',
+            'bash': 'devicon-bash-plain',
+            'nextjs': 'devicon-nextjs-plain', 'next.js': 'devicon-nextjs-plain', 'next': 'devicon-nextjs-plain',
+            'tailwind': 'devicon-tailwindcss-original', 'tailwindcss': 'devicon-tailwindcss-original',
+            'bootstrap': 'devicon-bootstrap-plain',
+            'sass': 'devicon-sass-original', 'scss': 'devicon-sass-original',
+            'figma': 'devicon-figma-plain',
+            'graphql': 'devicon-graphql-plain',
+            'jest': 'devicon-jest-plain',
+            'redux': 'devicon-redux-original'
         };
-        const key = skillName.toLowerCase().replace(/[^a-z+#]/g, '');
         return map[key] || 'devicon';
       }
 
@@ -1393,7 +1463,7 @@
           const iconName = getDeviconClass(s.name || "Skill");
           let iconHtml = "";
           if (iconName !== 'devicon') {
-            iconHtml = `<i class="devicon-${iconName}-plain colored" style="font-size: 45px;"></i>`;
+            iconHtml = `<i class="${iconName} colored" style="font-size: 45px;"></i>`;
           } else {
             iconHtml = `<span>${(s.name || "S").charAt(0).toUpperCase()}</span>`;
           }
@@ -1471,6 +1541,50 @@
         
         const statProj = document.getElementById('statProjects');
         if(statProj) { statProj.dataset.target = pIdx; statProj.textContent = pIdx; }
+      }
+
+      // 4.5 Experience
+      const expList = document.getElementById("experienceList");
+      if(expList) {
+        let eIdx = 0;
+        let eHTML = "";
+        try {
+          const expSnap = await getDocs(collection(db,"users",user.uid,"experience"));
+          expSnap.forEach(docSnap => {
+            const exp = docSnap.data();
+            eIdx++;
+            
+            const type = exp.type ? String(exp.type).toLowerCase() : 'job';
+            let typeLabel = 'JOB';
+            let badgeColor = 'var(--accent-cyan)';
+            
+            if(type.includes('intern')) { 
+                typeLabel = 'INTERNSHIP'; 
+                badgeColor = 'var(--accent-purple)'; 
+            } else if(type.includes('fresh')) { 
+                typeLabel = 'FRESHER'; 
+                badgeColor = 'var(--accent-pink)'; 
+            }
+
+            eHTML += `
+              <div class="edu-3d-card reveal is-visible">
+                <div class="edu-3d-year" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+                  <span style="font-size: 1.1rem; color: #fff;">${exp.duration || "YYYY"}</span>
+                  <span class="exp-badge" style="--badge-color: ${badgeColor};">${typeLabel}</span>
+                </div>
+                <h3 class="edu-3d-title" style="margin-bottom: 0.5rem; font-size: 1.4rem;">${exp.title || "Job Title"}</h3>
+                <p class="edu-3d-institution" style="color: var(--badge-color); font-weight: 500; font-size: 1.1rem; margin-bottom: 0.25rem;">${exp.company || "Company"}</p>
+                <p class="edu-3d-desc" style="font-size: 0.9rem; opacity: 0.8;">${exp.location || ""}</p>
+                ${exp.description ? `<p class="edu-3d-desc" style="margin-top: 1rem; line-height: 1.6; color: #cbd5e1;">${exp.description}</p>` : ""}
+              </div>`;
+          });
+        } catch(e) {}
+        
+        if(eIdx > 0) {
+           expList.innerHTML = eHTML;
+        } else {
+           expList.innerHTML = `<p style="color:var(--muted); text-align:center;">No experience added yet.</p>`;
+        }
       }
 
       // 4. Education

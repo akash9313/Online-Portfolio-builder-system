@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -454,12 +455,13 @@
 
     /* ── SKILL TAGS ── */
     .skills-wrap {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
       gap: 16px;
       margin-top: 16px;
     }
     .skill-card {
+      flex: 0 0 190px;
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -560,6 +562,98 @@
     .proj-link:hover { color: var(--cyan); text-shadow: 0 0 10px rgba(0,240,255,0.4); }
     .proj-link::before { content: '→ ['; color: var(--muted-dim); }
     .proj-link::after { content: ']'; color: var(--muted-dim); }
+
+    /* ── EXPERIENCE ── */
+    .exp-list { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+    .exp-item {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 24px;
+      display: grid; grid-template-columns: auto 1fr; gap: 18px;
+      align-items: center;
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .exp-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: rgba(0, 240, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+    .exp-item::after {
+      content: '';
+      position: absolute;
+      top: -100px; left: 0;
+      width: 100%; height: 60px;
+      background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.08), transparent);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .exp-item:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 8px 30px rgba(0, 240, 255, 0.12);
+      transform: translateX(6px);
+    }
+    .exp-item:hover::before {
+      background: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan);
+    }
+    .exp-item:hover::after {
+      top: 100%;
+      transition: top 0.9s cubic-bezier(0.1, 0.8, 0.3, 1);
+    }
+    .exp-num {
+      color: var(--cyan); font-size: 0.82rem; font-family: monospace;
+      background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 6px 12px; border-radius: 4px;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+    .exp-item:hover .exp-num {
+      background: var(--cyan);
+      color: var(--bg);
+      box-shadow: 0 0 12px var(--cyan);
+      border-color: var(--cyan);
+    }
+    .exp-type-badge {
+      font-size: 0.65rem;
+      border: 1px solid;
+      padding: 2px 8px; border-radius: 3px;
+      font-weight: 600;
+      font-family: monospace;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .exp-type-badge.job {
+      color: var(--cyan);
+      border-color: rgba(0, 240, 255, 0.3);
+      background: rgba(0, 240, 255, 0.08);
+    }
+    .exp-type-badge.internship {
+      color: var(--purple);
+      border-color: rgba(189, 0, 255, 0.3);
+      background: rgba(189, 0, 255, 0.08);
+    }
+    .exp-type-badge.fresher {
+      color: var(--green);
+      border-color: rgba(57, 211, 83, 0.3);
+      background: rgba(57, 211, 83, 0.08);
+    }
+    .exp-title {
+      color: var(--white); font-size: 0.95rem; font-weight: 700;
+      margin-bottom: 2px;
+      transition: all 0.3s ease;
+    }
+    .exp-item:hover .exp-title {
+      color: var(--white);
+      text-shadow: 0 0 8px rgba(255,255,255,0.4);
+    }
+    .exp-company { color: var(--yellow); font-size: 0.82rem; margin-bottom: 4px; font-weight: 500; }
+    .exp-meta { color: var(--muted); font-size: 0.76rem; display: flex; flex-direction: column; gap: 4px; }
 
     /* ── EDUCATION ── */
     .edu-list { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
@@ -1011,6 +1105,7 @@
       <a href="#whoami"   class="tree-item file-green"><i class="fas fa-file-code tree-icon"></i> whoami.sh</a>
       <a href="#skills"   class="tree-item file-cyan"><i class="fas fa-file-code tree-icon"></i> skills.json</a>
       <a href="#projects" class="tree-item file-yellow"><i class="fas fa-file-code tree-icon"></i> projects.md</a>
+      <a href="#experience" class="tree-item file-cyan"><i class="fas fa-file-code tree-icon"></i> experience.log</a>
       <a href="#education"class="tree-item file-purple"><i class="fas fa-file-code tree-icon"></i> education.log</a>
       <a href="#contact"  class="tree-item file-orange"><i class="fas fa-file-code tree-icon"></i> contact.cfg</a>
     </div>
@@ -1159,6 +1254,27 @@
         <div class="output-block">
           <div class="comment-line">Listing all projects — sorted by last modified</div>
           <div class="proj-list" id="projectsContainer"></div>
+        </div>
+      </div>
+
+      <hr class="term-divider" data-label="SECTION: experience.log">
+
+      <!-- ── EXPERIENCE ── -->
+      <div id="experience">
+        <div class="prompt-line">
+          <span class="prompt-user">user</span>
+          <span class="prompt-at">@</span>
+          <span class="prompt-host">portfoliox</span>
+          <span class="prompt-colon">:</span>
+          <span class="prompt-path">~/portfolio</span>
+          <span class="prompt-sym">$</span>
+          <span class="prompt-cmd">tail</span>
+          <span class="prompt-flag">-n 50</span>
+          <span class="prompt-arg">experience.log</span>
+        </div>
+        <div class="output-block">
+          <div class="comment-line">Professional history — all entries</div>
+          <div class="exp-list" id="experienceContainer"></div>
         </div>
       </div>
 
@@ -1515,6 +1631,62 @@
     }
 
     /* ── SKILLS ── */
+    const getDeviconClass = (skillName) => {
+      const name = skillName.toLowerCase().replace(/[^a-z0-9+#-]/g, '');
+      const iconMap = {
+        'html': 'devicon-html5-plain', 'html5': 'devicon-html5-plain',
+        'css': 'devicon-css3-plain', 'css3': 'devicon-css3-plain',
+        'js': 'devicon-javascript-plain', 'javascript': 'devicon-javascript-plain',
+        'ts': 'devicon-typescript-plain', 'typescript': 'devicon-typescript-plain',
+        'react': 'devicon-react-original', 'reactjs': 'devicon-react-original', 'react.js': 'devicon-react-original',
+        'vue': 'devicon-vuejs-plain', 'vuejs': 'devicon-vuejs-plain', 'vue.js': 'devicon-vuejs-plain',
+        'angular': 'devicon-angularjs-plain',
+        'node': 'devicon-nodejs-plain', 'nodejs': 'devicon-nodejs-plain', 'node.js': 'devicon-nodejs-plain',
+        'express': 'devicon-express-original', 'expressjs': 'devicon-express-original', 'express.js': 'devicon-express-original',
+        'python': 'devicon-python-plain',
+        'django': 'devicon-django-plain',
+        'flask': 'devicon-flask-original',
+        'java': 'devicon-java-plain',
+        'spring': 'devicon-spring-plain', 'springboot': 'devicon-spring-plain',
+        'c': 'devicon-c-plain',
+        'c++': 'devicon-cplusplus-plain', 'cpp': 'devicon-cplusplus-plain',
+        'c#': 'devicon-csharp-plain', 'csharp': 'devicon-csharp-plain',
+        'php': 'devicon-php-plain',
+        'laravel': 'devicon-laravel-plain',
+        'ruby': 'devicon-ruby-plain',
+        'rails': 'devicon-rails-plain', 'rubyonrails': 'devicon-rails-plain',
+        'go': 'devicon-go-plain', 'golang': 'devicon-go-plain',
+        'rust': 'devicon-rust-plain',
+        'swift': 'devicon-swift-plain',
+        'kotlin': 'devicon-kotlin-plain',
+        'dart': 'devicon-dart-plain',
+        'flutter': 'devicon-flutter-plain',
+        'sql': 'devicon-mysql-plain',
+        'mysql': 'devicon-mysql-plain',
+        'postgresql': 'devicon-postgresql-plain', 'postgres': 'devicon-postgresql-plain',
+        'mongodb': 'devicon-mongodb-plain', 'mongo': 'devicon-mongodb-plain',
+        'redis': 'devicon-redis-plain',
+        'firebase': 'devicon-firebase-plain',
+        'aws': 'devicon-amazonwebservices-plain', 'amazonwebservices': 'devicon-amazonwebservices-plain',
+        'docker': 'devicon-docker-plain',
+        'kubernetes': 'devicon-kubernetes-plain', 'k8s': 'devicon-kubernetes-plain',
+        'git': 'devicon-git-plain',
+        'github': 'devicon-github-original',
+        'gitlab': 'devicon-gitlab-plain',
+        'linux': 'devicon-linux-plain',
+        'bash': 'devicon-bash-plain',
+        'nextjs': 'devicon-nextjs-plain', 'next.js': 'devicon-nextjs-plain',
+        'tailwind': 'devicon-tailwindcss-original', 'tailwindcss': 'devicon-tailwindcss-original',
+        'bootstrap': 'devicon-bootstrap-plain',
+        'sass': 'devicon-sass-original', 'scss': 'devicon-sass-original',
+        'figma': 'devicon-figma-plain',
+        'graphql': 'devicon-graphql-plain',
+        'jest': 'devicon-jest-plain',
+        'redux': 'devicon-redux-original'
+      };
+      return iconMap[name] || 'devicon-linux-plain';
+    };
+
     const skillsContainer = document.getElementById('skillsContainer');
     const skillsSnap = await getDocs(collection(db, "users", user.uid, "skills"));
 
@@ -1539,6 +1711,7 @@
         // Render skill card with transition support
         skillsContainer.innerHTML += `
           <div class="skill-card">
+            <i class="${getDeviconClass(s.name || '')} colored" style="font-size:2.4rem; margin-bottom:8px; text-shadow: 0 0 10px rgba(255,255,255,0.1);"></i>
             <div class="skill-card-header">
               <span class="skill-card-name"
                 data-collection="skills" data-docid="${docSnap.id}" data-field="name">
@@ -1610,6 +1783,63 @@
             ${p.link ? `<a href="${p.link}" target="_blank" class="proj-link">open ${p.link}</a>` : ''}
           </div>`;
       });
+    }
+
+    /* ── EXPERIENCE ── */
+    const experienceContainer = document.getElementById('experienceContainer');
+    if (experienceContainer) {
+      try {
+        const expSnap = await getDocs(collection(db, "users", user.uid, "experience"));
+        if (expSnap.empty) {
+          experienceContainer.innerHTML = `<span style="color:var(--muted);font-size:.8rem;">// No professional experience records found</span>`;
+        } else {
+          experienceContainer.innerHTML = '';
+          let expIdx = 0;
+          expSnap.forEach(docSnap => {
+            const data = docSnap.data();
+            const title = data.title || 'Job Title';
+            const company = data.company || 'Company';
+            const location = data.location || '';
+            const duration = data.duration || 'Duration';
+            const description = data.description || '';
+            const type = data.type ? String(data.type).toLowerCase() : 'job';
+            
+            let typeLabel = 'JOB';
+            let badgeClass = 'job';
+            
+            if(type.includes('intern')) { 
+              typeLabel = 'INTERNSHIP'; 
+              badgeClass = 'internship'; 
+            } else if(type.includes('fresh')) { 
+              typeLabel = 'FRESHER'; 
+              badgeClass = 'fresher'; 
+            }
+            
+            const num = String(++expIdx).padStart(2, '0');
+            
+            experienceContainer.innerHTML += `
+              <div class="exp-item">
+                <div class="exp-num">[${num}]</div>
+                <div>
+                  <span class="exp-type-badge ${badgeClass}" contenteditable="true" data-collection="experience" data-docid="${docSnap.id}" data-field="type">${typeLabel}</span>
+                  <div class="exp-title"
+                    data-collection="experience" data-docid="${docSnap.id}" data-field="title">
+                    ${title}
+                  </div>
+                  <div class="exp-company"
+                    data-collection="experience" data-docid="${docSnap.id}" data-field="company">
+                    ${company}
+                  </div>
+                  <div class="exp-meta">
+                    <span data-collection="experience" data-docid="${docSnap.id}" data-field="duration">${duration}</span>
+                    <span data-collection="experience" data-docid="${docSnap.id}" data-field="location"><i class="fas fa-map-marker-alt"></i> ${location || 'Location'}</span>
+                  </div>
+                  ${description ? `<div style="color:var(--muted); font-size:0.8rem; margin-top:8px; line-height:1.6;" data-collection="experience" data-docid="${docSnap.id}" data-field="description">${description}</div>` : ''}
+                </div>
+              </div>`;
+          });
+        }
+      } catch(e) { console.error("Exp load fail:", e); }
     }
 
     /* ── EDUCATION ── */
