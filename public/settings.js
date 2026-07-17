@@ -649,6 +649,43 @@ async function fetchAllData(uid) {
   };
 }
 
+/* Fetch all data as collections (matching how templates load data) */
+async function fetchAllDataForPortfolio(uid) {
+  // Profile
+  const profileSnap = await getDoc(doc(db,'users',uid));
+  const profile = profileSnap.exists() ? profileSnap.data() : {};
+
+  // Skills (each skill is a separate doc in collection)
+  const skillsDocs = [];
+  const skillsColSnap = await getDocs(collection(db,'users',uid,'skills'));
+  skillsColSnap.forEach(ds => {
+    skillsDocs.push({ id: ds.id, ...ds.data() });
+  });
+
+  // Projects (each project is a separate doc)
+  const projectsDocs = [];
+  const projColSnap = await getDocs(collection(db,'users',uid,'projects'));
+  projColSnap.forEach(ds => {
+    projectsDocs.push({ id: ds.id, ...ds.data() });
+  });
+
+  // Education (single doc: users/uid/education/data)
+  const eduSnap = await getDoc(doc(db,'users',uid,'education','data'));
+  const education = eduSnap.exists() ? eduSnap.data() : {};
+
+  // Experience (each experience is a separate doc)
+  const experienceDocs = [];
+  const expColSnap = await getDocs(collection(db,'users',uid,'experience'));
+  expColSnap.forEach(ds => {
+    experienceDocs.push({ id: ds.id, ...ds.data() });
+  });
+
+  // Template selection
+  const templateName = profile.template || '';
+
+  return { profile, skills: skillsDocs, projects: projectsDocs, education, experience: experienceDocs, templateName };
+}
+
 document.getElementById('exportJsonBtn').addEventListener('click', async () => {
   const btn = document.getElementById('exportJsonBtn');
   btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
@@ -696,9 +733,259 @@ document.getElementById('exportCsvBtn').addEventListener('click', async () => {
     btn.innerHTML = '<i class="fas fa-download"></i> Export';
   }
 });
+/* ─────────────────────────────────────────
+   DOWNLOAD PORTFOLIO AS SELF-CONTAINED HTML
+───────────────────────────────────────── */
+const templateMap = {
+  'Classic Developer':   'templates/classic.html',
+  'Modern Professional': 'templates/modern.html',
+  'Creative Designer':   'templates/creative.html',
+  'Minimal Resume':      'templates/minimal.html',
+  'Neon Dark':           'templates/neon-dark.html',
+  'Glass Morph':         'templates/glass-morph.html',
+  'Terminal Hacker':     'templates/terminal-hacker.html',
+  'Gradient Splash':     'templates/gradient-splash.html',
+  'Executive Pro':       'templates/executive-pro.html',
+  'Bento Grid':          'templates/bento-grid.html',
+  '3D Modern':           'templates/3D_Modern.html',
+  '3D Classic':          'templates/3D_classic.html'
+};
+
+document.getElementById('exportPortfolioBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('exportPortfolioBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Building...';
+
+  try {
+    // 1. Get user's template name from profile
+    const profileSnap = await getDoc(doc(db, 'users', currentUser.uid));
+    const profile = profileSnap.exists() ? profileSnap.data() : {};
+    const templateName = profile.template || '';
+
+    if (!templateName) {
+      showToast('No template selected. Please choose a template first from the Templates page.', 'warn', 'No Template');
+      return;
+    }
+
+    const templateFile = templateMap[templateName];
+    if (!templateFile) {
+      showToast(`Template "${templateName}" not found. Please re-select your template.`, 'error', 'Template Error');
+      return;
+    }
+
+    // 2. Load template in a hidden iframe and let it render with real Firebase data
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rendering portfolio...';
+    
+    const renderedHTML = await renderTemplateInIframe(templateFile, currentUser.uid);
+
+    // 3. Post-process the captured HTML
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Packaging...';
+    let html = renderedHTML;
+
+    // 3a. Inline external CSS files (e.g. style.css used by 3D templates)
+    const templateDir = templateFile.substring(0, templateFile.lastIndexOf('/') + 1);
+    
+    const cssReplacements = [];
+    let cssMatch;
+    const allCssRegex = /<link[^>]*(?:href\s*=\s*["']([^"']+\.css)["'])[^>]*>/gi;
+    while ((cssMatch = allCssRegex.exec(html)) !== null) {
+      const fullTag = cssMatch[0];
+      const href = cssMatch[1];
+      if (href && !href.startsWith('http') && !href.startsWith('//')) {
+        const cssUrl = templateDir + href;
+        try {
+          const cssResp = await fetch(cssUrl);
+          if (cssResp.ok) {
+            const cssText = await cssResp.text();
+            cssReplacements.push({ tag: fullTag, css: cssText, href: href });
+          }
+        } catch (e) {
+          console.warn(`Could not inline CSS: ${href}`, e);
+        }
+      }
+    }
+    for (const r of cssReplacements) {
+      html = html.replace(r.tag, `<style>/* Inlined from ${r.href} */\n${r.css}\n</style>`);
+    }
+
+    // 3b. Inline external JS files (e.g. script.js)
+    const jsReplacements = [];
+    const allJsRegex = /<script[^>]*src\s*=\s*["']([^"']+\.js)["'][^>]*>\s*<\/script>/gi;
+    let jsMatch;
+    while ((jsMatch = allJsRegex.exec(html)) !== null) {
+      const fullTag = jsMatch[0];
+      const src = jsMatch[1];
+      if (src && !src.startsWith('http') && !src.startsWith('//') && !src.includes('firebase')) {
+        const jsUrl = templateDir + src;
+        try {
+          const jsResp = await fetch(jsUrl);
+          if (jsResp.ok) {
+            const jsText = await jsResp.text();
+            jsReplacements.push({ tag: fullTag, js: jsText, src: src });
+          }
+        } catch (e) {
+          console.warn(`Could not inline JS: ${src}`, e);
+        }
+      }
+    }
+    for (const r of jsReplacements) {
+      html = html.replace(r.tag, `<script>/* Inlined from ${r.src} */\n${r.js}\n</script>`);
+    }
+
+    // 3c. Remove Firebase script blocks (data already rendered in DOM)
+    html = html.replace(/<script\s+type\s*=\s*["']module["'][^>]*>([\s\S]*?)<\/script>/gi, (match, content) => {
+      if (content.includes('gstatic.com/firebasejs') || content.includes('firebaseConfig') || content.includes('firebase-config')) {
+        return '<!-- Firebase script removed for offline export -->';
+      }
+      return match;
+    });
+    html = html.replace(/<script[^>]*src\s*=\s*["'][^"']*(?:gstatic\.com\/firebasejs|firebase)[^"']*["'][^>]*>\s*<\/script>/gi, 
+      '<!-- Firebase external script removed -->');
+
+    // 3d. Remove contenteditable attributes
+    html = html.replace(/\s+contenteditable\s*=\s*["'][^"']*["']/gi, '');
+
+    // 3e. Add override styles + hide loader
+    const overrideCSS = `
+<style>
+  [contenteditable="true"]:hover,
+  [contenteditable="true"]:focus { outline: none !important; background: none !important; cursor: default !important; }
+  #globalLoader, .global-loader, .loading-overlay { display: none !important; opacity: 0 !important; pointer-events: none !important; }
+</style>`;
+    html = html.replace('</head>', overrideCSS + '\n</head>');
+
+    // 3f. Inject a small script to disable contact form and remove edit UI
+    const cleanupScript = `
+<script>
+(function(){
+  // Hide loader
+  var ldr = document.getElementById('globalLoader');
+  if(ldr) { ldr.style.display='none'; ldr.classList.add('hidden'); }
+  // Remove edit UI elements
+  document.querySelectorAll('.edit-overlay, .save-indicator, .edit-mode-toggle, .editable-hint, .toast-container').forEach(function(el){ el.remove(); });
+  // Disable contact form
+  var cf = document.getElementById('contactForm');
+  if(cf) cf.addEventListener('submit', function(e){ e.preventDefault(); alert('This is a downloaded portfolio. Contact form is not available offline.'); });
+})();
+</script>`;
+    html = html.replace('</body>', cleanupScript + '\n</body>');
+
+    // 4. Download
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const slugName = (profile.fullName || 'portfolio').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    downloadBlob(blob, `${slugName}-portfolio.html`);
+
+    showToast('Portfolio downloaded! Open the .html file in any browser.', 'success', 'Download Complete');
+
+  } catch (err) {
+    console.error('Portfolio download error:', err);
+    showToast('Download failed: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-download"></i> Download';
+  }
+});
+
+/**
+ * Render the template in a hidden iframe, wait for Firebase data to load,
+ * then capture the fully-rendered HTML. This ensures PERFECT fidelity
+ * because the template's own code does all the rendering.
+ */
+function renderTemplateInIframe(templateFile, uid) {
+  return new Promise((resolve, reject) => {
+    // Create hidden iframe
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:fixed; top:-9999px; left:-9999px; width:1920px; height:1080px; border:none; opacity:0; pointer-events:none;';
+    document.body.appendChild(iframe);
+
+    // Load template with ?uid= parameter so it loads data without auth
+    const templateUrl = templateFile + '?uid=' + uid;
+    iframe.src = templateUrl;
+
+    let resolved = false;
+
+    // Wait for iframe to load, then wait additional time for Firebase data
+    iframe.onload = () => {
+      // Poll for data loading completion
+      let checkCount = 0;
+      const maxChecks = 40; // 40 * 250ms = 10 seconds max wait
+
+      const checkReady = () => {
+        checkCount++;
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          const iframeWin = iframe.contentWindow;
+          
+          // Check if globalLoader is hidden (template hides it after data loads)
+          const loader = iframeDoc.getElementById('globalLoader');
+          const loaderHidden = !loader || 
+            loader.classList.contains('hidden') || 
+            loader.style.display === 'none' || 
+            loader.style.opacity === '0' ||
+            iframeWin.getComputedStyle(loader).display === 'none' ||
+            iframeWin.getComputedStyle(loader).opacity === '0';
+
+          if (loaderHidden || checkCount >= maxChecks) {
+            // Give an extra 2 seconds for animations to initialize and DOM to stabilize
+            setTimeout(() => {
+              if (resolved) return;
+              resolved = true;
+              try {
+                const iDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Capture the full rendered HTML
+                const html = '<!DOCTYPE html>\n<html lang="en">\n' + iDoc.documentElement.innerHTML + '\n</html>';
+                
+                // Clean up
+                document.body.removeChild(iframe);
+                resolve(html);
+              } catch (e) {
+                document.body.removeChild(iframe);
+                reject(new Error('Could not capture portfolio: ' + e.message));
+              }
+            }, 2000);
+          } else {
+            setTimeout(checkReady, 250);
+          }
+        } catch (e) {
+          // Cross-origin error or other issue
+          if (checkCount >= maxChecks) {
+            if (!resolved) {
+              resolved = true;
+              document.body.removeChild(iframe);
+              reject(new Error('Timed out waiting for portfolio to render. Please try again.'));
+            }
+          } else {
+            setTimeout(checkReady, 250);
+          }
+        }
+      };
+
+      // Start checking after a small initial delay
+      setTimeout(checkReady, 500);
+    };
+
+    iframe.onerror = () => {
+      if (!resolved) {
+        resolved = true;
+        document.body.removeChild(iframe);
+        reject(new Error('Failed to load template in iframe'));
+      }
+    };
+
+    // Absolute timeout fallback
+    setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        try { document.body.removeChild(iframe); } catch(e) {}
+        reject(new Error('Portfolio rendering timed out. Please try again.'));
+      }
+    }, 15000);
+  });
+}
 
 document.getElementById('exportPdfBtn').addEventListener('click', () => {
-  showToast('PDF export — opening your portfolio preview to print...', 'success', 'Opening Preview');
+  showToast('Opening portfolio preview for printing...', 'success', 'Opening Preview');
   setTimeout(() => window.open('preview.html', '_blank'), 800);
 });
 

@@ -475,6 +475,7 @@ body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring { width:48px
 .qi-pink   { background: rgba(236,72,153,0.12) !important; color: #f9a8d4 !important; }
 .qi-green  { background: rgba(34,197,94,0.12)  !important; color: #86efac !important; }
 .qi-yellow { background: rgba(245,158,11,0.12) !important; color: #fcd34d !important; }
+.qi-cyan   { background: rgba(6,182,212,0.12) !important; color: #67e8f9 !important; }
 .qa-body { flex: 1; }
 .qa-name { display: block; font-weight: 600; font-size: 0.84rem; margin-bottom: 2px; }
 .qa-hint { font-size: 0.72rem; color: var(--muted); }
