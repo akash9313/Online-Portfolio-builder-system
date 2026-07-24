@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, getDocs, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { firebaseConfig } from "./firebase-config.js";
+import { escapeHTML } from "./security.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -67,15 +68,19 @@ async function fetchAllReviews() {
         hour: '2-digit', minute: '2-digit'
       }) : 'Just now';
 
+      const safeText = escapeHTML(data.text || data.content || '');
+      const safeName = escapeHTML(data.name || data.author || 'Anonymous');
+      const safeRole = escapeHTML(data.role || 'User');
+
       div.innerHTML = `
-        ${isAdmin ? `<button class="delete-review-btn" data-id="${docSnap.id}" title="Delete review"><i class="fas fa-trash"></i></button>` : ''}
-        <div class="t-stars">${renderStars(data.rating)}</div>
-        <p class="t-text">"${data.text}"</p>
+        ${isAdmin ? `<button class="delete-review-btn" data-id="${escapeHTML(docSnap.id)}" title="Delete review"><i class="fas fa-trash"></i></button>` : ''}
+        <div class="t-stars">${renderStars(Number(data.rating) || 5)}</div>
+        <p class="t-text">"${safeText}"</p>
         <div class="t-author">
-          <div class="t-avatar" style="background:${getRandomColor()}">${getInitials(data.name)}</div>
+          <div class="t-avatar" style="background:${getRandomColor()}">${getInitials(safeName)}</div>
           <div>
-            <div class="t-name">${data.name}</div>
-            <div class="t-role">${data.role}</div>
+            <div class="t-name">${safeName}</div>
+            <div class="t-role">${safeRole}</div>
             <div style="font-size: 0.75rem; color: var(--muted); margin-top: 2px;">${dateStr}</div>
           </div>
         </div>

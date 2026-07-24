@@ -3031,47 +3031,41 @@ a { color: inherit; text-decoration: none; }
 
   init();
 })();
+</script>
 
-  </script>
+<!-- FIREBASE DATA FETCH & SYNC -->
+<script type="module">
+  import { firebaseConfig } from "/firebase-config.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, collection, getDocs, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  <!-- FIREBASE DATA FETCH & SYNC -->
-  <script type="module">
-    const firebaseConfig = {
-      apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
-      authDomain: "portfoliox-2e787.firebaseapp.com",
-      projectId: "portfoliox-2e787"
-    };
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  let currentUser = null;
 
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, getDocs, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    const app  = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db   = getFirestore(app);
-    let currentUser = null;
-
-    function setText(id, val, fb="—") {
-      const el = document.getElementById(id);
-      if(el) el.textContent = val || fb;
-    }
-    function setLink(id, href, label) {
-      const el = document.getElementById(id);
-      if(el && href) { 
-        if(!href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && href !== '#') {
-          href = 'https://' + href;
-        }
-        el.href = href;
-        el.target = '_blank';
-        if(label) { 
-          const span = el.querySelector('span'); 
-          if(span) span.textContent = label; 
-        } 
+  function setText(id, val, fb="—") {
+    const el = document.getElementById(id);
+    if(el) el.textContent = val || fb;
+  }
+  function setLink(id, href, label) {
+    const el = document.getElementById(id);
+    if(el && href) { 
+      if(!href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && href !== '#') {
+        href = 'https://' + href;
       }
+      el.href = href;
+      el.target = '_blank';
+      if(label) { 
+        const span = el.querySelector('span'); 
+        if(span) span.textContent = label; 
+      } 
     }
+  }
 
-    onAuthStateChanged(auth, async (user) => {
-      const _pubUid = new URLSearchParams(window.location.search).get("uid");
+  onAuthStateChanged(auth, async (user) => {
+    const _pubUid = new URLSearchParams(window.location.search).get("uid");
       if (_pubUid) user = { uid: _pubUid };
       if (!user) {
         const ldr = document.getElementById('globalLoader');

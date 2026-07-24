@@ -1073,6 +1073,19 @@ document.getElementById('deleteBtn').addEventListener('click', async () => {
   btn.disabled = true;
   try {
     const uid = currentUser.uid;
+    // Get username if stored to release username mapping
+    try {
+      const userSnap = await getDoc(doc(db, 'users', uid));
+      if (userSnap.exists()) {
+        const uData = userSnap.data();
+        if (uData.username) {
+          await deleteDoc(doc(db, 'usernames', uData.username.toLowerCase()));
+        }
+      }
+    } catch (e) {
+      console.warn("Could not clean up username doc:", e);
+    }
+
     // Delete all Firestore collections
     const colls = ['skills','education','projects','settings'];
     for (const c of colls) {

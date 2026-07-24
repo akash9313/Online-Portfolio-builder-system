@@ -5,7 +5,9 @@
 
 class AIService {
     constructor() {
-        this.baseUrl = 'https://online-portfolio-builder-system.vercel.app/api/generateAI';
+        this.baseUrl = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+            ? '/api/generateAI'
+            : 'https://online-portfolio-builder-system.vercel.app/api/generateAI';
     }
 
     async callAI(prompt, isJson = false) {

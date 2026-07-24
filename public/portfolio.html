@@ -218,17 +218,10 @@
   <iframe id="portfolioFrame" title="Portfolio"></iframe>
 
   <script type="module">
+  import { firebaseConfig } from "/firebase-config.js";
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD4q_KzBCxVtS6mjH6Xh6-Bd1u-21RSNG4",
-    authDomain: "portfoliox-2e787.firebaseapp.com",
-    projectId: "portfoliox-2e787",
-    storageBucket: "portfoliox-2e787.firebasestorage.app",
-    messagingSenderId: "562709786891",
-    appId: "1:562709786891:web:2d0f575ab7d3bda5fdf20e"
-  };
+  import { isValidTemplatePath, escapeHTML } from "/security.js";
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
@@ -265,7 +258,11 @@
 
     // Allow published portfolio routes at /u/username or legacy /p/username
     if (parts.length >= 2 && (parts[0] === "u" || parts[0] === "p") && parts[1]) {
-      return decodeURIComponent(parts[1]).trim().toLowerCase();
+      const cleaned = decodeURIComponent(parts[1]).trim().toLowerCase();
+      // Ensure username only contains alphanumeric, underscore, hyphen
+      if (/^[a-z0-9_\-]+$/.test(cleaned)) {
+        return cleaned;
+      }
     }
 
     return null;
@@ -276,30 +273,24 @@
     const username = getUsernameFromURL();
 
     if (!username || username === "templates" || username === "portfolio.html") {
-      console.warn("Invalid or missing username:", username);
       showScreen(notFoundEl);
       hideLoader();
       return;
     }
 
     try {
-      console.log("Looking up username:", username);
-
       const usernameRef = doc(db, "usernames", username);
       const usernameSnap = await getDoc(usernameRef);
 
       if (!usernameSnap.exists()) {
-        console.warn("Username doc not found:", username);
         showScreen(notFoundEl);
         hideLoader();
         return;
       }
 
       const uid = usernameSnap.data().uid;
-      console.log("Mapped UID:", uid);
 
-      if (!uid) {
-        console.warn("UID missing inside usernames doc");
+      if (!uid || typeof uid !== "string" || !/^[a-zA-Z0-9_\-]+$/.test(uid)) {
         showScreen(notFoundEl);
         hideLoader();
         return;
@@ -309,53 +300,46 @@
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
-        console.warn("User document not found for UID:", uid);
         showScreen(notFoundEl);
         hideLoader();
         return;
       }
 
       const userData = userSnap.data();
-      console.log("User document loaded:", userData);
 
       if (userData.visibility === "private") {
-        console.warn("Portfolio is private");
         showScreen(privateEl);
         hideLoader();
         return;
       }
 
       if (userData.published !== true) {
-        console.warn("Portfolio is not published");
         showScreen(notFoundEl);
         hideLoader();
         return;
       }
 
-      const templateFile = userData.templateFile || "templates/classic.html";
-      console.log("Template file:", templateFile);
+      const rawTemplateFile = userData.templateFile || "templates/classic.html";
+      const cleanTemplateFile = rawTemplateFile.startsWith("/") ? rawTemplateFile.slice(1) : rawTemplateFile;
 
-      if (!templateFile.startsWith("templates/")) {
-        console.warn("Invalid template path:", templateFile);
+      if (!isValidTemplatePath(cleanTemplateFile)) {
+        console.warn("Security rejection: invalid template path:", cleanTemplateFile);
         showScreen(notFoundEl);
         hideLoader();
         return;
       }
 
-      const displayName = userData.fullName || userData.name || username;
+      const displayName = escapeHTML(userData.fullName || userData.name || username);
       document.title = `${displayName} | PortfolioX`;
 
-      const templateSrc = templateFile.startsWith('/') ? templateFile : `/${templateFile}`;
-      frameEl.src = `${templateSrc}?uid=${encodeURIComponent(uid)}&mode=readonly`;
+      frameEl.src = `/${cleanTemplateFile}?uid=${encodeURIComponent(uid)}&mode=readonly`;
       frameEl.style.display = "block";
 
       frameEl.onload = () => {
-        console.log("Iframe template loaded successfully");
         hideLoader();
       };
 
       frameEl.onerror = () => {
-        console.error("Template failed to load");
         showScreen(notFoundEl);
         hideLoader();
       };

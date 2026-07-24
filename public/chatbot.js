@@ -7,7 +7,9 @@ class PortfolioChatbot {
     constructor(userData) {
         this.userData = userData;
         this.isOpen = false;
-        this.baseUrl = 'https://online-portfolio-builder-system.vercel.app/api/generateAI';
+        this.baseUrl = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+            ? '/api/generateAI'
+            : 'https://online-portfolio-builder-system.vercel.app/api/generateAI';
         this.init();
     }
 
