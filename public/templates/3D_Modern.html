@@ -2981,7 +2981,7 @@
                             <span class="project-num">0${i + 1}</span>
                             <span class="project-num" style="font-size: 0.8rem; color: var(--accent-cyan)">[ SYS_MODULE_${i+1} ]</span>
                         </div>
-                        <h3 class="project-title">${p.title}</h3>
+                        <h3 class="project-title">${p.title} ${p.isFeatured ? `<span style="background:rgba(251,191,36,0.18); border:1px solid rgba(251,191,36,0.4); color:#fbbf24; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:100px; margin-left:8px; vertical-align:middle;">★ FEATURED</span>` : ''}</h3>
                         <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan); margin-bottom: 20px;">
                             > ${p.subtitle || 'INITIALIZING...'}
                         </div>
@@ -3589,8 +3589,9 @@
               description: p.description || '',
               tags,
               accentColor: ACCENT_COLORS[i % ACCENT_COLORS.length],
-              liveUrl: p.link || '#',
-              githubUrl: p.github || p.link || '#',
+              liveUrl: p.liveLink || p.link || '#',
+              githubUrl: p.githubLink || p.github || '#',
+              isFeatured: !!(p.isFeatured || p.featured),
               stats: { stars: '—', users: '—', version: 'v1.0' }
             };
           });

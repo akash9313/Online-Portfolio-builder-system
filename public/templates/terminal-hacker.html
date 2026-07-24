@@ -1754,17 +1754,20 @@
         const num  = String(projIdx + 1).padStart(2, '0');
         const perm = permissions[projIdx % permissions.length];
         const mockChecksum = 'SHA-256::' + Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0');
+        const githubUrl = p.githubLink || p.github || '';
+        const liveUrl = p.liveLink || p.link || '';
+        const isFeatured = !!(p.isFeatured || p.featured);
         projIdx++;
 
         projectsContainer.innerHTML += `
-          <div class="proj-card">
+          <div class="proj-card ${isFeatured ? 'is-featured' : ''}">
             <div class="proj-header">
               <span class="proj-num">${perm}</span>
               <span class="proj-name"
                 data-collection="projects" data-docid="${docSnap.id}" data-field="title">
                 ${p.title || 'untitled-project'}
               </span>
-              <span class="proj-badge">PROJECT_${num}</span>
+              <span class="proj-badge">${isFeatured ? '★ FEATURED' : `PROJECT_${num}`}</span>
             </div>
             <p class="proj-desc"
               data-collection="projects" data-docid="${docSnap.id}" data-field="description">
@@ -1780,7 +1783,10 @@
                 ${mockChecksum}
               </span>
             </div>
-            ${p.link ? `<a href="${p.link}" target="_blank" class="proj-link">open ${p.link}</a>` : ''}
+            <div style="display:flex; gap:12px; margin-top:8px; flex-wrap:wrap;">
+              ${githubUrl ? `<a href="${githubUrl}" target="_blank" class="proj-link"><i class="fab fa-github"></i> ./repo</a>` : ''}
+              ${liveUrl ? `<a href="${liveUrl}" target="_blank" class="proj-link"><i class="fas fa-terminal"></i> ./launch</a>` : ''}
+            </div>
           </div>`;
       });
     }

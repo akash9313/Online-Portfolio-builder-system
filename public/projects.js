@@ -1,7 +1,7 @@
 import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut }
       from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, serverTimestamp }
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, updateDoc, serverTimestamp }
       from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { aiService } from "./aiService.js";
     import { firebaseConfig } from "./firebase-config.js";
@@ -62,7 +62,6 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       try {
         const improved = await aiService.improveProjectDesc(title, tech || 'Various technologies', desc);
         document.getElementById('projDesc').value = improved;
-        // Trigger input to update char count
         document.getElementById('projDesc').dispatchEvent(new Event('input'));
         showToast('Project description professionalized! ✨');
       } catch (err) {
@@ -102,10 +101,16 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       });
 
       // Stats
-      document.getElementById('statTotal').textContent = allProjects.length;
-      document.getElementById('statLive').textContent  = allProjects.filter(p => p.link).length;
-      const allTech = allProjects.flatMap(p => p.tech.split(',').map(s=>s.trim()).filter(Boolean));
-      document.getElementById('statTech').textContent  = new Set(allTech).size;
+      const statTotalEl    = document.getElementById('statTotal');
+      const statGithubEl   = document.getElementById('statGithub');
+      const statLiveEl     = document.getElementById('statLive');
+      const statFeaturedEl = document.getElementById('statFeatured');
+
+      if (statTotalEl)    statTotalEl.textContent    = allProjects.length;
+      if (statGithubEl)   statGithubEl.textContent   = allProjects.filter(p => p.githubLink || p.github).length;
+      if (statLiveEl)     statLiveEl.textContent     = allProjects.filter(p => p.liveLink || p.link).length;
+      if (statFeaturedEl) statFeaturedEl.textContent = allProjects.filter(p => p.isFeatured || p.featured).length;
+
       document.getElementById('countBadge').textContent = `${allProjects.length} ${allProjects.length === 1 ? 'project' : 'projects'}`;
 
       grid.innerHTML = '';
@@ -121,29 +126,44 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       empty.style.display = 'none';
 
       filtered.forEach((proj, i) => {
-        const rawTech = Array.isArray(proj.tech) ? proj.tech.join(', ') : (proj.tech || '');
-        const tags    = rawTech.split(',').map(s => s.trim()).filter(Boolean);
-        const title   = proj.title || 'Untitled Project';
+        const rawTech     = Array.isArray(proj.tech) ? proj.tech.join(', ') : (proj.tech || '');
+        const tags        = rawTech.split(',').map(s => s.trim()).filter(Boolean);
+        const title       = proj.title || 'Untitled Project';
         const description = proj.description || proj.desc || 'No description provided.';
-        const initial = title.trim().charAt(0).toUpperCase();
-        let dateStr   = 'Recently';
+        const initial     = title.trim().charAt(0).toUpperCase();
+
+        const githubUrl   = proj.githubLink || proj.github || '';
+        const liveUrl     = proj.liveLink || proj.link || '';
+        const isFeatured  = !!(proj.isFeatured || proj.featured);
+
+        let dateStr = 'Recently';
         try {
           if (proj.createdAt?.toDate) dateStr = proj.createdAt.toDate().toLocaleDateString('en-US',{month:'short',year:'numeric'});
           else if (proj.createdAt instanceof Date) dateStr = proj.createdAt.toLocaleDateString('en-US',{month:'short',year:'numeric'});
         } catch {}
 
         const card = document.createElement('div');
-        card.className = 'proj-card';
+        card.className = 'proj-card' + (isFeatured ? ' is-featured' : '');
         card.style.animationDelay = (i * 0.06) + 's';
+
+        const featuredBadgeHtml = isFeatured ? `<span class="featured-badge"><i class="fas fa-star"></i> Featured</span>` : '';
+        const githubBtnHtml = githubUrl ? `<a href="${githubUrl}" target="_blank" class="proj-github-btn" title="GitHub Repo"><i class="fab fa-github"></i> Code</a>` : '';
+        const liveBtnHtml = liveUrl ? `<a href="${liveUrl}" target="_blank" class="proj-live-btn" title="Live Demo"><i class="fas fa-external-link-alt"></i> Live</a>` : '';
+        const featureBtnHtml = `<button class="proj-feature-btn ${isFeatured ? 'active' : ''}" data-id="${proj.id}" title="${isFeatured ? 'Unfeature project' : 'Mark as Featured'}"><i class="fas fa-star"></i></button>`;
 
         if (isListView) {
           card.innerHTML = `
             <div class="proj-initial">${initial}</div>
             <div class="proj-body">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.8rem;">
-                <div class="proj-title">${title}</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="proj-title">${title}</div>
+                  ${featuredBadgeHtml}
+                </div>
                 <div class="proj-actions">
-                  ${proj.link ? `<a href="${proj.link}" target="_blank" class="proj-link-btn" title="View project"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                  ${featureBtnHtml}
+                  ${githubBtnHtml}
+                  ${liveBtnHtml}
                   <button class="proj-del-btn" data-id="${proj.id}" data-name="${title}" title="Delete"><i class="fas fa-trash"></i></button>
                 </div>
               </div>
@@ -151,7 +171,10 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
               <div class="proj-techs">${tags.map(t=>`<span class="proj-tech">${t}</span>`).join('')}</div>
               <div class="proj-footer">
                 <span class="proj-date"><i class="fas fa-clock"></i>${dateStr}</span>
-                ${proj.link ? `<a href="${proj.link}" target="_blank" class="proj-link-chip"><i class="fas fa-external-link-alt"></i>Live</a>` : ''}
+                <div style="display:flex;gap:6px;align-items:center;">
+                  ${githubUrl ? `<a href="${githubUrl}" target="_blank" class="proj-github-btn"><i class="fab fa-github"></i> GitHub</a>` : ''}
+                  ${liveUrl ? `<a href="${liveUrl}" target="_blank" class="proj-link-chip"><i class="fas fa-external-link-alt"></i>Live Demo</a>` : ''}
+                </div>
               </div>
             </div>`;
         } else {
@@ -159,20 +182,47 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
             <div class="proj-card-top">
               <div class="proj-initial">${initial}</div>
               <div class="proj-actions">
-                ${proj.link ? `<a href="${proj.link}" target="_blank" class="proj-link-btn" title="View project"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                ${featureBtnHtml}
                 <button class="proj-del-btn" data-id="${proj.id}" data-name="${title}" title="Delete"><i class="fas fa-trash"></i></button>
               </div>
             </div>
-            <div class="proj-title">${title}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+              <div class="proj-title">${title}</div>
+              ${featuredBadgeHtml}
+            </div>
             <div class="proj-desc">${description}</div>
             <div class="proj-techs">${tags.map(t=>`<span class="proj-tech">${t}</span>`).join('')}</div>
             <div class="proj-footer">
               <span class="proj-date"><i class="fas fa-clock"></i>${dateStr}</span>
-              ${proj.link ? `<a href="${proj.link}" target="_blank" class="proj-link-chip"><i class="fas fa-external-link-alt"></i>Live</a>` : ''}
+              <div style="display:flex;gap:6px;align-items:center;">
+                ${githubUrl ? `<a href="${githubUrl}" target="_blank" class="proj-github-btn"><i class="fab fa-github"></i> Code</a>` : ''}
+                ${liveUrl ? `<a href="${liveUrl}" target="_blank" class="proj-link-chip"><i class="fas fa-external-link-alt"></i>Live</a>` : ''}
+              </div>
             </div>`;
         }
 
-        card.querySelector('.proj-del-btn').addEventListener('click', () => {
+        // Feature toggle event
+        card.querySelector('.proj-feature-btn').addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const nextFeatured = !isFeatured;
+          try {
+            await updateDoc(doc(db, 'users', currentUser.uid, 'projects', proj.id), {
+              isFeatured: nextFeatured,
+              featured: nextFeatured
+            });
+            proj.isFeatured = nextFeatured;
+            proj.featured = nextFeatured;
+            renderProjects();
+            showToast(`"${title}" ${nextFeatured ? 'marked as Featured ⭐' : 'removed from Featured'}`);
+          } catch (err) {
+            console.error("Error updating project featured status:", err);
+            showToast("Failed to update featured status.", true);
+          }
+        });
+
+        // Delete event
+        card.querySelector('.proj-del-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
           pendingDeleteId   = proj.id;
           pendingDeleteName = proj.title;
           document.getElementById('deleteProjectName').textContent = proj.title;
@@ -188,13 +238,15 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
       const snap  = await getDocs(collection(db, 'users', currentUser.uid, 'projects'));
       allProjects = snap.docs.map(d => {
         const data = d.data();
-        // Ensure description/tech exist for sorting or other logic
         return { 
           id: d.id, 
           ...data,
           title: data.title || 'Untitled Project',
           tech: Array.isArray(data.tech) ? data.tech.join(', ') : (data.tech || ''),
-          description: data.description || data.desc || ''
+          description: data.description || data.desc || '',
+          githubLink: data.githubLink || data.github || '',
+          liveLink: data.liveLink || data.link || '',
+          isFeatured: !!(data.isFeatured || data.featured)
         };
       });
       allProjects.sort((a,b) => {
@@ -207,10 +259,12 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
 
     /* ── Add ── */
     document.getElementById('addProjectBtn').addEventListener('click', async () => {
-      const title = document.getElementById('projTitle').value.trim();
-      const tech  = document.getElementById('projTech').value.trim();
-      const link  = document.getElementById('projLink').value.trim();
-      const desc  = document.getElementById('projDesc').value.trim();
+      const title    = document.getElementById('projTitle').value.trim();
+      const tech     = document.getElementById('projTech').value.trim();
+      const github   = (document.getElementById('projGithub') ? document.getElementById('projGithub').value.trim() : '');
+      const live     = (document.getElementById('projLive') ? document.getElementById('projLive').value.trim() : '');
+      const featured = (document.getElementById('projFeatured') ? document.getElementById('projFeatured').checked : false);
+      const desc     = document.getElementById('projDesc').value.trim();
 
       if (!title) { showToast('Please enter a project title.', true);       return; }
       if (!tech)  { showToast('Please enter technologies used.', true);     return; }
@@ -225,14 +279,28 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
 
       try {
         const now = new Date();
-        const ref = await addDoc(collection(db, 'users', currentUser.uid, 'projects'), {
-          title, tech, link, description: desc, createdAt: serverTimestamp()
-        });
-        allProjects.unshift({ id: ref.id, title, tech, link, description: desc, createdAt: { toDate: () => now } });
+        const projectData = {
+          title, 
+          tech, 
+          githubLink: github,
+          github: github,
+          liveLink: live,
+          link: live,
+          isFeatured: featured,
+          featured: featured,
+          description: desc, 
+          createdAt: serverTimestamp()
+        };
+        const ref = await addDoc(collection(db, 'users', currentUser.uid, 'projects'), projectData);
+        allProjects.unshift({ id: ref.id, ...projectData, createdAt: { toDate: () => now } });
         renderProjects();
 
         // Reset form
-        ['projTitle','projTech','projLink','projDesc'].forEach(id => document.getElementById(id).value = '');
+        ['projTitle','projTech','projGithub','projLive','projLink','projDesc'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.value = '';
+        });
+        if (document.getElementById('projFeatured')) document.getElementById('projFeatured').checked = false;
         document.getElementById('techPreview').innerHTML = '';
         document.getElementById('descCount').textContent = '0 / 400';
         document.getElementById('descCount').className   = 'char-count';
@@ -249,7 +317,11 @@ import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.7.1/fi
 
     /* ── Reset ── */
     document.getElementById('resetBtn').addEventListener('click', () => {
-      ['projTitle','projTech','projLink','projDesc'].forEach(id => document.getElementById(id).value = '');
+      ['projTitle','projTech','projGithub','projLive','projLink','projDesc'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      if (document.getElementById('projFeatured')) document.getElementById('projFeatured').checked = false;
       document.getElementById('techPreview').innerHTML = '';
       document.getElementById('descCount').textContent = '0 / 400';
       document.getElementById('descCount').className   = 'char-count';

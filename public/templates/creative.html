@@ -3046,16 +3046,19 @@
       let pc = 0;
       projSnap.forEach(ds => {
         const p = ds.data(); pc++;
+        const githubUrl = p.githubLink || p.github || '';
+        const liveUrl = p.liveLink || p.link || '';
+        const isFeatured = !!(p.isFeatured || p.featured);
         const chips = (p.tech || '').split(',').map(t => t.trim()).filter(Boolean)
           .map(t => `<span class="proj-tech-badge">${t}</span>`).join('');
         projEl.innerHTML += `
-      <div class="proj-item reveal">
+      <div class="proj-item reveal ${isFeatured ? 'is-featured' : ''}">
         <div class="proj-trigger">
           <div class="proj-n">${String(pc).padStart(2, '0')}</div>
           <div>
             <div class="proj-trigger-title"
                  contenteditable="true"
-                 data-collection="projects" data-docid="${ds.id}" data-field="title">${p.title || 'Untitled'}</div>
+                 data-collection="projects" data-docid="${ds.id}" data-field="title">${p.title || 'Untitled'} ${isFeatured ? `<span style="background:rgba(251,191,36,0.2); border:1px solid rgba(251,191,36,0.4); color:#fbbf24; font-size:0.65rem; font-weight:700; padding:2px 7px; border-radius:100px; margin-left:6px;">★ FEATURED</span>` : ''}</div>
             <div class="proj-meta-row">${chips || `<span class="proj-tech-badge" contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="tech">${p.tech || ''}</span>`}</div>
           </div>
           <div class="proj-plus">+</div>
@@ -3063,8 +3066,10 @@
         <div class="proj-body">
           <p class="proj-desc" contenteditable="true"
              data-collection="projects" data-docid="${ds.id}" data-field="description">${p.description || ''}</p>
-          ${p.link ? `<a href="${p.link}" target="_blank" class="proj-action"
-             contenteditable="true" data-collection="projects" data-docid="${ds.id}" data-field="link">View Project →</a>` : ''}
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;">
+            ${githubUrl ? `<a href="${githubUrl}" target="_blank" class="proj-action" style="text-decoration:none;"><i class="fab fa-github"></i> Code Repository</a>` : ''}
+            ${liveUrl ? `<a href="${liveUrl}" target="_blank" class="proj-action" style="text-decoration:none;"><i class="fas fa-external-link-alt"></i> Live Demo →</a>` : ''}
+          </div>
         </div>
       </div>`;
       });

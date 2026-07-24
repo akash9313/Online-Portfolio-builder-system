@@ -2203,9 +2203,18 @@
           card.style.setProperty("--mouse-y", `${y}px`);
         });
 
+        const githubUrl = p.githubLink || p.github || "";
+        const liveUrl = p.liveLink || p.link || "";
+        const isFeatured = !!(p.isFeatured || p.featured);
+
+        if (isFeatured) card.classList.add("is-featured");
+
         card.innerHTML = `
         <div class="project-content">
-          <div class="project-number">Project ${String(pIdx).padStart(2, "0")}</div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="project-number">Project ${String(pIdx).padStart(2, "0")}</div>
+            ${isFeatured ? `<span style="background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#fbbf24; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:100px;">★ FEATURED</span>` : ''}
+          </div>
           <h3 class="project-title"
               contenteditable="true"
               data-collection="projects"
@@ -2221,14 +2230,9 @@
              data-collection="projects"
              data-docid="${docSnap.id}"
              data-field="tech">${p.tech || ""}</div>
-          <div class="project-link-wrapper">
-            ${p.link
-            ? `<a href="${p.link}" target="_blank" class="project-link"
-                    contenteditable="true"
-                    data-collection="projects"
-                    data-docid="${docSnap.id}"
-                    data-field="link">View Project ↗</a>`
-            : ""}
+          <div class="project-link-wrapper" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;">
+            ${githubUrl ? `<a href="${githubUrl}" target="_blank" class="project-link" style="text-decoration:none;"><i class="fab fa-github"></i> Code Repository</a>` : ""}
+            ${liveUrl ? `<a href="${liveUrl}" target="_blank" class="project-link" style="text-decoration:none;"><i class="fas fa-external-link-alt"></i> Live Demo ↗</a>` : ""}
           </div>
         </div>
       `;

@@ -2051,15 +2051,19 @@
           projectsGrid.innerHTML = '';
           projects.forEach((p, idx) => {
             const techList = (p.tech || '').split(/[,，\s]+/).filter(Boolean);
+            const githubUrl = p.githubLink || p.github || '';
+            const liveUrl = p.liveLink || p.link || '';
+            const isFeatured = !!(p.isFeatured || p.featured);
+
             const card = document.createElement('div');
-            card.className = 'bento-card-wrap';
+            card.className = 'bento-card-wrap' + (isFeatured ? ' is-featured' : '');
             card.innerHTML = `
               <div class="bento-card tilt-card">
                 <div class="project-header">
-                  <span class="project-num">0${idx+1} // PROJECT</span>
+                  <span class="project-num">0${idx+1} // PROJECT ${isFeatured ? '★ FEATURED' : ''}</span>
                   <div style="display:flex; gap:6px;">
-                    ${p.github ? `<a href="${p.github}" target="_blank" class="project-link-btn" title="GitHub"><i class="fab fa-github"></i></a>` : ''}
-                    ${p.link ? `<a href="${p.link}" target="_blank" class="project-link-btn" title="Live"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                    ${githubUrl ? `<a href="${githubUrl}" target="_blank" class="project-link-btn" title="GitHub"><i class="fab fa-github"></i></a>` : ''}
+                    ${liveUrl ? `<a href="${liveUrl}" target="_blank" class="project-link-btn" title="Live"><i class="fas fa-external-link-alt"></i></a>` : ''}
                   </div>
                 </div>
                 <div class="project-body">

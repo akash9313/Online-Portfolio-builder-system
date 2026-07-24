@@ -1813,14 +1813,20 @@
     projectSnap.forEach(docSnap => {
       const p       = docSnap.data();
       const accent  = accentColors[projIdx % accentColors.length];
+      const githubUrl = p.githubLink || p.github || "";
+      const liveUrl = p.liveLink || p.link || "";
+      const isFeatured = !!(p.isFeatured || p.featured);
       projIdx++;
       projectsContainer.innerHTML += `
-        <div class="project-card glass">
+        <div class="project-card glass ${isFeatured ? 'is-featured' : ''}">
           <div class="proj-accent" style="background:${accent};"></div>
-          <h3 class="proj-title" contenteditable="true"
-            data-collection="projects" data-docid="${docSnap.id}" data-field="title">
-            ${p.title || 'Untitled Project'}
-          </h3>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 class="proj-title" contenteditable="true"
+              data-collection="projects" data-docid="${docSnap.id}" data-field="title">
+              ${p.title || 'Untitled Project'}
+            </h3>
+            ${isFeatured ? `<span style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fbbf24; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:100px;">★ FEATURED</span>` : ''}
+          </div>
           <p class="proj-desc" contenteditable="true"
             data-collection="projects" data-docid="${docSnap.id}" data-field="description">
             ${p.description || ''}
@@ -1829,10 +1835,10 @@
             data-collection="projects" data-docid="${docSnap.id}" data-field="tech">
             ${p.tech || ''}
           </p>
-          ${p.link ? `
-          <a href="${p.link}" target="_blank" class="proj-link">
-            <i class="fas fa-arrow-up-right-from-square"></i> View Project
-          </a>` : ''}
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+            ${githubUrl ? `<a href="${githubUrl}" target="_blank" class="proj-link" style="text-decoration:none;"><i class="fab fa-github"></i> Code</a>` : ''}
+            ${liveUrl ? `<a href="${liveUrl}" target="_blank" class="proj-link" style="text-decoration:none;"><i class="fas fa-external-link-alt"></i> Live Demo</a>` : ''}
+          </div>
         </div>`;
     });
 

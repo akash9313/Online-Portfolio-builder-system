@@ -1771,10 +1771,16 @@ onAuthStateChanged(auth, async (user) => {
     const techTags = (p.tech || "")
       .split(",").map(t => t.trim()).filter(Boolean)
       .map(t => `<span class="proj-tag">${t}</span>`).join("");
+    const githubUrl = p.githubLink || p.github || "";
+    const liveUrl = p.liveLink || p.link || "";
+    const isFeatured = !!(p.isFeatured || p.featured);
 
     projGrid.innerHTML +=
-      `<div class="project-card">
-         <div class="proj-num">${String(pIdx).padStart(2,"0")}</div>
+      `<div class="project-card ${isFeatured ? 'is-featured' : ''}">
+         <div style="display:flex; justify-content:space-between; align-items:center;">
+           <div class="proj-num">${String(pIdx).padStart(2,"0")}</div>
+           ${isFeatured ? `<span style="background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#fbbf24; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:100px;">★ FEATURED</span>` : ''}
+         </div>
          <div class="proj-title" contenteditable="true"
               data-collection="projects" data-docid="${ds.id}" data-field="title">
            ${p.title || "Project Title"}
@@ -1784,11 +1790,10 @@ onAuthStateChanged(auth, async (user) => {
            ${p.description || "Description here."}
          </p>
          <div class="proj-tags">${techTags}</div>
-         ${p.link
-           ? `<a href="${p.link}" target="_blank" class="proj-link">
-                View Project <i class="fas fa-arrow-up-right-from-square" style="font-size:.6rem"></i>
-              </a>`
-           : ""}
+         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+           ${githubUrl ? `<a href="${githubUrl}" target="_blank" class="proj-link" style="text-decoration:none;"><i class="fab fa-github"></i> Code</a>` : ""}
+           ${liveUrl ? `<a href="${liveUrl}" target="_blank" class="proj-link" style="text-decoration:none;"><i class="fas fa-external-link-alt"></i> Live Demo</a>` : ""}
+         </div>
        </div>`;
   });
 
